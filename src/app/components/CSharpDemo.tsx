@@ -32,7 +32,7 @@ export default function CSharpDemo() {
 
   // ★★★【重要】★★★
   // 必ずご自身のC# APIのベースURLに書き換えてください！
-  const CSHARP_API_BASE_URL = 'https://yayokichi-csharp-api.onrender.com';
+  const CSHARP_API_BASE_URL = 'https://kuramitsu-csharp-api.onrender.com';
 
   // --- API呼び出し関数 ---
   const fetchCSharpStatus = async () => {

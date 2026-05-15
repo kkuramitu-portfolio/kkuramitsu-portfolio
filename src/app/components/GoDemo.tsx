@@ -32,7 +32,7 @@ export default function GoDemo() {
     setStatusLoading(true);
     setStatusError('');
     try {
-      const res = await fetch('https://yayokichi-go-api.onrender.com/api/status');
+      const res = await fetch('https://kuramitsu-go-api.onrender.com/api/status');
       if (!res.ok) throw new Error('APIの取得に失敗しました');
       const json: StatusData = await res.json();
       setStatusData(json);
