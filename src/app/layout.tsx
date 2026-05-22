@@ -35,7 +35,7 @@ export default function RootLayout({
         <Header /> 
         
         {/* ★ メインコンテンツは最大800pxに制限し、中央寄せにする */}
-        <main className="flex-grow w-full max-w-[800px] mx-auto p-6 md:p-8"> 
+        <main className="grow w-full max-w-200 mx-auto p-6 md:p-8"> 
           {children}
         </main>
 

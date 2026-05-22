@@ -178,7 +178,7 @@ return (
                 placeholder="https://example.com"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button 
                 onClick={checkSite} 
@@ -243,7 +243,7 @@ return (
                 placeholder="メッセージを入力" 
                 value={bbsInput}
                 onChange={(e) => setBbsInput(e.target.value)}
-                className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button 
                 onClick={submitBBS}
@@ -348,7 +348,7 @@ return (
               className="w-full h-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             ></textarea>
             <div 
-              className="result-area mt-4 p-4 border rounded-md bg-gray-50 min-h-[50px]"
+              className="result-area mt-4 p-4 border rounded-md bg-gray-50 min-h-12.5"
               id="mdPreview"
               dangerouslySetInnerHTML={{ __html: mdPreview }}
             ></div>
