@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "不屈のキャリアチェンジャー やよ吉 | Portfolio",
+  title: "蔵満賢治 | Portfolio",
   description: "Next.js/TypeScriptで構築したフルスタックエンジニア・ポートフォリオ",
 };
 

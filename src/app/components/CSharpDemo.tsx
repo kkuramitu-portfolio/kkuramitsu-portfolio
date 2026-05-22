@@ -29,6 +29,7 @@ export default function CSharpDemo() {
   const [category, setCategory] = useState('All');
   const [sortBy, setSortBy] = useState('price');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [isCSharpSecurityInfoOpen, setCSharpSecurityInfoOpen] = useState(false);
 
   // ★★★【重要】★★★
   // 必ずご自身のC# APIのベースURLに書き換えてください！
@@ -74,6 +75,20 @@ export default function CSharpDemo() {
   return (
     <div>
       {/* --- 1. 既存のステータス確認エリア --- */}
+        <div style={{ margin: '0px 0px 15px 0px', borderBottom: '1px solid #eee', padding: '5px 0px'}}>
+          <button 
+                onClick={() => setCSharpSecurityInfoOpen(!isCSharpSecurityInfoOpen)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
+          >
+            ▶ この機能のセキュリティ対策について
+          </button>
+          {isCSharpSecurityInfoOpen && (
+            <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
+              <p><strong>SQLインジェクション対策:</strong> このデモはデータベースを使用せず、サーバーのメモリ上にあるデータをLINQで操作しているため、SQLインジェクション攻撃の危険性は原理的にありません。これにより、LINQがインメモリデータに対して型安全なクエリを実行できることを示しています。</p>
+              <p style={{ marginBottom: 0 }}><strong>入力値の検証:</strong> フロントエンドから送られてくる並び替えのキー（`sortBy`）は、サーバーサイドの `switch` 文で検証しています。`"price"` や `"name"` など、意図した値以外が指定された場合はデフォルトの並び順が適用されるため、予期せぬ列でのソートやエラーの発生を防ぐ「ホワイトリスト方式」の入力値検証を実装しています。</p>
+            </div>
+          )}
+        </div>
       <button 
         onClick={fetchCSharpStatus} 
         disabled={statusLoading}

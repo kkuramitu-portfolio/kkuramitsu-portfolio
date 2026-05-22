@@ -20,6 +20,7 @@ export default function Home() {
   // --- マークダウン用 ---
   const [mdInput, setMdInput] = useState('');
   const [mdPreview, setMdPreview] = useState('');
+  const [isJavaSecurityInfoOpen, setJavaSecurityInfoOpen] = useState(false);
 
   // --- BBS用 ---
   const [bbsInput, setBbsInput] = useState('');
@@ -33,6 +34,7 @@ export default function Home() {
   const [result, setResult] = useState<CheckResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isPythonSecurityInfoOpen, setPythonSecurityInfoOpen] = useState(false);
 
   // --- 解析ロジック ---
   const parseMarkdown = (md: string): string => {
@@ -152,6 +154,23 @@ return (
             marginBottom: '40px'
           }}>
             <h3 style={{ marginBottom: '16px' }}>Python Demo: Webサイト情報チェッカー</h3>
+            <p className="mb-4 text-gray-700 leading-relaxed">
+            スクレイピング技術のデモンストレーションです。<br />外部Pythonサーバーと通信し、指定したWebサイトのHTMLをリアルタイムで解析して「タイトル（<code className="bg-gray-100 px-1 rounded text-sm text-pink-600">&lt;title&gt;</code>）」と「概要（<code className="bg-gray-100 px-1 rounded text-sm text-pink-600">&lt;meta name=&quot;description&quot;&gt;</code>）」を抽出・表示します。
+            </p>
+              <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+                <button 
+                  onClick={() => setPythonSecurityInfoOpen(!isPythonSecurityInfoOpen)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
+                >
+                  ▶ この機能のセキュリティ対策について
+                </button>
+                {isPythonSecurityInfoOpen && (
+                  <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
+                    <p><strong>サーバーサイドリクエストフォージェリ (SSRF) 対策:</strong> ユーザーが入力したURLにサーバーが直接アクセスするため、内部ネットワークへの攻撃（SSRF）が懸念されます。<br/>対策として、プロキシサーバー（Next.js API Route）側でリクエストのタイムアウトを厳格に設定し、意図しないリクエストが長時間サーバーリソースを占有することを防いでいます。</p>
+                    <p style={{ marginBottom: 0 }}><strong>入力値の検証:</strong> 本番環境では、許可するドメインのホワイトリストや、プライベートIPアドレス範囲へのアクセスを禁止するブラックリストを導入し、より堅牢なSSRF対策を施します。</p>
+                  </div>
+                )}
+              </div>
             {/* ★ 修正: inputとbuttonにclassNameを追加 */}
             <div className="flex gap-2">
               <input 
@@ -190,7 +209,6 @@ return (
               )}
             </div>
           </div>
-
           {/* PHP Demo (BBS) */}
           <div className="lab-card" style={{
             backgroundColor: '#ffffff',
@@ -204,20 +222,20 @@ return (
             <p>外部PHPサーバーと通信し、テキストファイルにデータを保存・読み込みします。</p>
             <p>投稿したメッセージは削除も可能です。</p>
             <p>外部PHPサーバーと通信し、テキストファイルにデータを保存・読み込みします。</p>
-  <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-    <button 
-      onClick={() => setBbsSecurityInfoOpen(!isBbsSecurityInfoOpen)}
-      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
-    >
-      ▶ この機能のセキュリティ対策について
-    </button>
-    {isBbsSecurityInfoOpen && (
-      <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
-        <p><strong>XSS対策:</strong> ユーザーからの入力は、サーバーサイドで特殊文字をエスケープ処理（htmlspecialchars）し、フロントエンド（React）でもデフォルトでエスケープされるため、悪意のあるスクリプトの埋め込みを防いでいます。</p>
-        <p style={{ marginBottom: 0 }}><strong>ファイル操作の堅牢性:</strong> ファイルの読み書きは排他的ロック（flock）を利用し、複数人による同時書き込み時のデータ破損を防止しています。</p>
-      </div>
-    )}
-  </div>
+              <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+                <button 
+                  onClick={() => setBbsSecurityInfoOpen(!isBbsSecurityInfoOpen)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
+                >
+                  ▶ この機能のセキュリティ対策について
+                </button>
+                {isBbsSecurityInfoOpen && (
+                  <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
+                    <p><strong>XSS対策:</strong> ユーザーからの入力は、サーバーサイドで特殊文字をエスケープ処理（htmlspecialchars）し、フロントエンド（React）でもデフォルトでエスケープされるため、悪意のあるスクリプトの埋め込みを防いでいます。</p>
+                    <p style={{ marginBottom: 0 }}><strong>ファイル操作の堅牢性:</strong> ファイルの読み書きは排他的ロック（flock）を利用し、複数人による同時書き込み時のデータ破損を防止しています。</p>
+                  </div>
+                )}
+              </div>
             {/* ★ 修正: inputとbuttonにclassNameを追加 */}
             <div className="flex gap-2 mb-4">
               <input 
@@ -308,6 +326,20 @@ return (
           }}>
             <h3 style={{ marginBottom: '16px' }}>Java Demo: 簡易マークダウン・プレビューア</h3>
             <p>Javaで構築したロジックを、Webブラウザ用にJavaScriptへ最適化して実装しています。</p>
+            <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+              <button 
+                onClick={() => setJavaSecurityInfoOpen(!isJavaSecurityInfoOpen)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
+              >
+                ▶ この機能のセキュリティ対策について
+              </button>
+              {isJavaSecurityInfoOpen && (
+                <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
+                  <p><strong>XSS対策（サニタイズの徹底）:</strong> ユーザーが入力したマークダウンからHTMLを動的生成してブラウザに直接描画（dangerouslySetInnerHTML）するため、悪意のあるスクリプト（&lt;script&gt;タグやonerror属性など）が挿入されるXSS（クロスサイトスクリプティング）のリスクが極めて高い機能です。</p>
+                  <p style={{ marginBottom: 0 }}><strong>DOMPurifyの導入:</strong> 本デモでは、HTML変換後にクライアントサイドで動作する堅牢なサニタイズライブラリである「DOMPurify」を実行し、不正なタグや属性を完全に除去した上で安全にプレビューを描画しています。</p>
+                </div>
+              )}
+            </div>
             {/* ★ 修正: textareaにclassNameを追加 */}
             <textarea 
               placeholder={"# 見出し1\n- リスト1"} 

@@ -27,6 +27,7 @@ export default function GoDemo() {
   const [speedResult, setSpeedResult] = useState<SpeedTestResult | null>(null);
   const [speedLoading, setSpeedLoading] = useState(false);
   const [speedError, setSpeedError] = useState('');
+  const [isGoTechInfoOpen, setGoTechInfoOpen] = useState(false);
 
   const fetchGoStatus = async () => {
     setStatusLoading(true);
@@ -63,6 +64,20 @@ export default function GoDemo() {
   return (
     <div>
       {/* --- 既存のステータス確認エリア --- */}
+      <div style={{ margin: '0px 0px 15px 0px', borderBottom: '1px solid #eee', padding: '5px 0px'}}>
+              <button 
+                onClick={() => setGoTechInfoOpen(!isGoTechInfoOpen)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
+              >
+              ▶ この機能の技術的なポイントについて
+              </button>
+        {isGoTechInfoOpen && (
+          <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
+            <p><strong>ロバストな並行処理:</strong> Goの並行処理で頻発する「レースコンディション」や「処理の終了待ち漏れ」を防ぐため、標準ライブラリの `sync.WaitGroup` を使用しています。これにより、全てのGoroutine（軽量スレッド）が完了したことを確実に保証してからレスポンスを返す、安全で信頼性の高い並行処理を実装しています。</p>
+            <p style={{ marginBottom: 0 }}><strong>リソース管理:</strong> 各Goroutineは自己完結したタスクを実行し、完了後には確実にリソースを解放（`wg.Done()`）するため、Goroutineリーク（処理が終了せず残り続ける問題）の発生を防いでいます。</p>
+          </div>
+        )}
+      </div>
       <button 
         onClick={fetchGoStatus} 
         disabled={statusLoading}
