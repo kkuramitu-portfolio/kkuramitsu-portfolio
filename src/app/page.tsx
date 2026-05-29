@@ -16,6 +16,43 @@ interface BbsMessage {
   message: string;
 }
 
+// ホワイトリストの定義に「根拠(evidence)」を追加
+const WHITELIST_ITEMS = [
+  { 
+    name: "Example Domain", 
+    url: "https://example.com",
+    evidence: {
+      text: "IANA提供のテスト用ドメイン",
+      url: "https://www.iana.org/domains/reserved"
+    }
+  },
+  { 
+    name: "気象庁HP", 
+    url: "https://www.jma.go.jp/",
+    evidence: {
+      text: "利用規約（政府標準利用規約に準拠しデータ利用可能）",
+      url: "https://www.jma.go.jp/jma/kishou/info/coment.html"
+    }
+  },
+  { 
+    name: "Next.js 公式", 
+    url: "https://nextjs.org",
+    evidence: {
+      text: "公式が機械読み取り用ファイル(llms.txt)を提供",
+      url: "https://nextjs.org/docs/llms-full.txt"
+    }
+  },
+  { 
+    name: "React 公式", 
+    url: "https://react.dev",
+    evidence: {
+      text: "robots.txt にて一般的なクローラーのアクセスが許可されており、かつオープンソースプロジェクトの技術ドキュメントとして\n広範な情報収集・利用が容認されているため。",
+      url: "https://react.dev/robots.txt"
+    }
+  }
+];
+const ALLOWED_DOMAINS = WHITELIST_ITEMS.map(item => new URL(item.url).hostname);
+
 export default function Home() {
   // --- マークダウン用 ---
   const [mdInput, setMdInput] = useState('');
@@ -35,6 +72,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isPythonSecurityInfoOpen, setPythonSecurityInfoOpen] = useState(false);
+  const [isWhitelistOpen, setIsWhitelistOpen] = useState(false);
 
   // --- 解析ロジック ---
   const parseMarkdown = (md: string): string => {
@@ -124,6 +162,20 @@ export default function Home() {
     setIsLoading(true);
     setError('');
     setResult(null);
+
+    try {
+      const parsedUrl = new URL(url);
+      if (!ALLOWED_DOMAINS.includes(parsedUrl.hostname)) {
+        setError('【実行ブロック】コンプライアンスおよび各サイトの利用規約を遵守するため、本デモ環境では事前に許可されたドメイン（ホワイトリスト）以外のスクレイピングを制限しています。お手数ですが、ホワイトリスト一覧を展開し、表示されているURLでお試しください（URLをクリックすると自動入力されます）。');
+        setIsLoading(false);
+        return;
+      }
+    } catch (e) {
+      setError('有効なURLを入力してください。（例: https://example.com）');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch(`/api/check?url=${encodeURIComponent(url)}`);
       if (!response.ok) {
@@ -156,6 +208,9 @@ return (
             <h3 style={{ marginBottom: '16px' }}>Python Demo: Webサイト情報チェッカー</h3>
             <p className="mb-4 text-gray-700 leading-relaxed">
             スクレイピング技術のデモンストレーションです。<br />外部Pythonサーバーと通信し、指定したWebサイトのHTMLをリアルタイムで解析して「タイトル（<code className="bg-gray-100 px-1 rounded text-sm text-pink-600">&lt;title&gt;</code>）」と「概要（<code className="bg-gray-100 px-1 rounded text-sm text-pink-600">&lt;meta name=&quot;description&quot;&gt;</code>）」を抽出・表示します。
+            <span className="text-sm text-gray-500 mt-2 inline-block">
+            ※コンプライアンス保護の観点から、無差別なデータ取得によるトラブルを防ぐため、本デモ環境では事前に許可したURL（ホワイトリスト）のみ検証可能としています。
+            </span>
             </p>
               <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
                 <button 
@@ -166,49 +221,104 @@ return (
                 </button>
                 {isPythonSecurityInfoOpen && (
                   <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
-                    <p><strong>サーバーサイドリクエストフォージェリ (SSRF) 対策:</strong> ユーザーが入力したURLにサーバーが直接アクセスするため、内部ネットワークへの攻撃（SSRF）が懸念されます。<br/>対策として、プロキシサーバー（Next.js API Route）側でリクエストのタイムアウトを厳格に設定し、意図しないリクエストが長時間サーバーリソースを占有することを防いでいます。</p>
-                    <p style={{ marginBottom: 0 }}><strong>入力値の検証:</strong> 本番環境では、許可するドメインのホワイトリストや、プライベートIPアドレス範囲へのアクセスを禁止するブラックリストを導入し、より堅牢なSSRF対策を施します。</p>
+                  <p><strong>サーバーサイドリクエストフォージェリ (SSRF) 対策:</strong> ユーザーが入力したURLにサーバーが直接アクセスするため、内部ネットワークへの攻撃（SSRF）が懸念されます。<br/>対策として、プロキシサーバー（Next.js API Route）側でリクエストのタイムアウトを厳格に設定し、意図しないリクエストが長時間サーバーリソースを占有することを防いでいます。</p>
+                  {/* ↓ ここを修正 ↓ */}
+                  <p style={{ marginBottom: 0 }}><strong>入力値の検証:</strong> 本デモ環境では、意図しないサーバーへのアクセスを防ぐため、許可するドメインを制限するホワイトリストを導入済みです。実際の運用環境では、これに加えてプライベートIPアドレス範囲へのアクセスを禁止するブラックリストなども組み合わせ、より堅牢なSSRF対策を施します。</p>
                   </div>
                 )}
               </div>
-            {/* ★ 修正: inputとbuttonにclassNameを追加 */}
-            <div className="flex gap-2">
-              <input 
-                type="text" 
-                placeholder="https://example.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button 
-                onClick={checkSite} 
-                disabled={isLoading}
-                className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {isLoading ? '解析中...' : '解析実行'}
-              </button>
-            </div>
-            <div className="result-area">
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-              {result && (
-                <div style={{
-                  marginTop: '15px',
-                  padding: '15px',
-                  backgroundColor: '#f9f9f9',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-                }}>
-                  <h4 style={{ marginTop: 0, marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px dashed #ccc' }}>
-                    タイトル: {result.title}
-                  </h4>
-                  <p style={{ margin: 0 }}>
-                    概要: {result.description}
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  placeholder="https://example.com"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button 
+                  onClick={checkSite} 
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? '解析中...' : '解析実行'}
+                </button>
+              </div>
+              {/* ホワイトリスト一覧のアコーディオン */}
+              <div className="mt-3">
+                <button 
+                  onClick={() => setIsWhitelistOpen(!isWhitelistOpen)}
+                  className="text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center bg-transparent border-none cursor-pointer p-0"
+                >
+                  {isWhitelistOpen ? '▼' : '▶'} ホワイトリスト一覧
+                </button>
+                {isWhitelistOpen && (
+                  <div className="mt-2 pl-2">
+                    <div className="inline-flex items-center text-xs text-gray-600 bg-gray-100 px-3 py-2 rounded-md mb-3 border border-gray-200">
+                      <span className="mr-1.5 text-base leading-none">💡</span> 
+                      <span>URLをクリックすると入力欄にセットされます（コピー＆ペースト不要）</span>
+                    </div>
+                    
+                    <ul className="text-sm text-gray-600 space-y-3 list-none">
+                      {WHITELIST_ITEMS.map((item, index) => (
+                        <li key={index} className="flex flex-col">
+                          <div className="flex items-center">
+                            ・{item.name} (
+                            <button 
+                              onClick={() => setUrl(item.url)}
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-1 rounded transition-colors bg-transparent border-none cursor-pointer mx-1 flex items-center"
+                              title="クリックして入力欄にセット"
+                            >
+                              {item.url}
+                              <span className="ml-1 text-xs opacity-70">👆</span>
+                            </button>
+                            )
+                          </div>
+                          {/* 根拠の表示部分 */}
+                          {item.evidence && (
+                            <div className="ml-4 mt-1 text-xs text-gray-500 flex items-start">
+                              {/* ★ 修正: ラベルをspanで囲み、改行と縮小を禁止 */}
+                              <span className="shrink-0 whitespace-nowrap mt-[2px]">└ 許可の根拠: </span>
+                              <a 
+                                href={item.evidence.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="ml-1 text-gray-500 hover:text-gray-700 underline leading-relaxed whitespace-pre-wrap"
+                              >
+                                {item.evidence.text}
+                              </a>
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              <div className="result-area mt-4">
+                {error && (
+                  <p style={{ color: '#dc2626', fontSize: '0.9rem', lineHeight: '1.5', backgroundColor: '#fef2f2', padding: '10px', borderRadius: '6px', border: '1px solid #f87171' }}>
+                    {error}
                   </p>
-                </div>
-              )}
+                )}
+                {result && (
+                  <div style={{
+                    marginTop: '15px',
+                    padding: '15px',
+                    backgroundColor: '#f9f9f9',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                  }}>
+                    <h4 style={{ marginTop: 0, marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px dashed #ccc' }}>
+                      タイトル: {result.title}
+                    </h4>
+                    <p style={{ margin: 0 }}>
+                      概要: {result.description}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
           {/* PHP Demo (BBS) */}
           <div className="lab-card" style={{
             backgroundColor: '#ffffff',
