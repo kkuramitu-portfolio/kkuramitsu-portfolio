@@ -277,7 +277,7 @@ return (
                           {item.evidence && (
                             <div className="ml-4 mt-1 text-xs text-gray-500 flex items-start">
                               {/* ★ 修正: ラベルをspanで囲み、改行と縮小を禁止 */}
-                              <span className="shrink-0 whitespace-nowrap mt-[2px]">└ 許可の根拠: </span>
+                              <span className="shrink-0 whitespace-nowrap mt-0.5">└ 許可の根拠: </span>
                               <a 
                                 href={item.evidence.url} 
                                 target="_blank" 
@@ -331,7 +331,7 @@ return (
             <h3 style={{ marginBottom: '16px' }}>PHP Demo: ひとことBBS</h3>
             <p>外部PHPサーバーと通信し、テキストファイルにデータを保存・読み込みします。</p>
             <p>投稿したメッセージは削除も可能です。</p>
-            <p>外部PHPサーバーと通信し、テキストファイルにデータを保存・読み込みします。</p>
+            <p>また、メッセージは投稿日から5日経過時点で自動削除されます。</p>
               <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
                 <button 
                   onClick={() => setBbsSecurityInfoOpen(!isBbsSecurityInfoOpen)}
@@ -452,16 +452,56 @@ return (
             </div>
             {/* ★ 修正: textareaにclassNameを追加 */}
             <textarea 
-              placeholder={"# 見出し1\n- リスト1"} 
+              placeholder={"【使用可能マークダウン】\n# 大見出し\n## 中見出し\n### 小見出し\n- 親リスト\n  - 子リスト\n    - 孫リスト"} 
               onChange={updatePreview}
               value={mdInput}
-              className="w-full h-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-50 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
             ></textarea>
             <div 
               className="result-area mt-4 p-4 border rounded-md bg-gray-50 min-h-12.5"
               id="mdPreview"
               dangerouslySetInnerHTML={{ __html: mdPreview }}
             ></div>
+            <div className="mt-8 bg-[#333333] border border-[#555555] rounded-md p-4">
+              <h4 className="text-[#58a6ff] text-lg font-bold mb-3">Base Logic (Java Source Code)</h4>
+              <hr className="border-[#555555] mb-4" />
+              
+              {/* text-sm を text-[15px] に変更し、行間(leading-relaxed)を追加してHTML版のサイズ感に近づける */}
+              <pre className="text-[#cccccc] text-sm leading-relaxed font-mono whitespace-pre-wrap overflow-x-auto">
+                <code>
+{`public class MarkdownParser {
+    public static String parse(String md) {
+        if (md == null || md.isEmpty()) return "";
+
+        // 1. まずは各要素をHTMLタグに変換
+        String html = md
+            .replaceAll("(?m)^### (.*)$", "<h3>$1</h3>")
+            .replaceAll("(?m)^## (.*)$", "<h2>$1</h2>")
+            .replaceAll("(?m)^# (.*)$", "<h1>$1</h1>")
+            .replaceAll("(?m)^    - (.*)$", 
+                "<li style='margin-left: 30px; list-style-type: square;'>$1</li>")
+            .replaceAll("(?m)^  - (.*)$", 
+                "<li style='margin-left: 10px; list-style-type: circle;'>$1</li>")
+            .replaceAll("(?m)^- (.*)$", 
+                "<li style='margin-left: -10px; list-style-type: disc;'>$1</li>");
+
+        // 2. 見出し(h1~h3)やリスト(li)の「閉じタグの直後」にある改行を1つだけ削除する
+        // ※Javaの正規表現では、JSの /g (グローバルマッチ) は
+        // replaceAll を使うことで自動的に適用されます
+        html = html.replaceAll("(</h[1-3]>|</li>)\\n", "$1");
+
+        // 3. 残った改行を <br> に変換
+        return html.replace("\\n", "<br>");
+    }
+}`}
+                </code>
+              </pre>
+              
+              {/* 注釈も text-sm から text-[15px] に変更 */}
+              <p className="mt-6 text-sm text-[#888888] italic leading-relaxed pl-4 -indent-4">
+                ※文字列解析の基礎ロジックはJavaで構築・検証しています（ソースコードはGitHubに格納）。実際のWebデモにおいては、通信遅延を防ぎUX（ユーザー体験）を最大化するため、同ロジックをクライアントサイドのJavaScriptへ移植・最適化して実行しています。
+              </p>
+            </div>
           </div>
         </section>
 

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const Header = () => {
   const oldVersionUrl = 'https://yayokichi-portfolio-v1.vercel.app/'; 
-  const lastUpdated = "2026.06.01"; 
+  const lastUpdated = "2026.05.23"; 
 
   return (
     <header className="px-6 py-8 border-b-4 border-gray-800 bg-white w-full">
