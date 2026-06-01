@@ -468,7 +468,20 @@ return (
         {/* ... (Microservices Architectureセクション以降は変更なし) ... */}
         <section className="mt-12">
           <h2 className="text-3xl font-bold mb-6">Microservices Architecture</h2>
-          
+          <div className="mb-10 p-5 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg shadow-sm flex gap-3 items-start">
+            <span className="text-xl leading-none mt-0.5">💡</span>
+            <div className="text-sm text-gray-700 leading-relaxed">
+              <p className="font-bold text-gray-900 mb-1">
+                アーキテクチャに関する注記 (Go / C# Demo)
+              </p>
+              <p>
+                処理時間は約3秒前後を想定していますが、Renderの仕様上、一定時間アクセスがないとスリープ状態になるため、初回リクエスト時に<strong>コールドスタートによる遅延（10〜30秒）</strong>が発生します。
+              </p>
+              <p className="mt-1">
+                ヘルスチェックAPIを用いたバックグラウンドでの事前ウォームアップも検討しましたが、クラウドリソースの最適化（無料枠の枯渇防止）の観点から、意図的に実装を見送っています。
+              </p>
+            </div>
+          </div>
           <div className="lab-card" style={{
             backgroundColor: '#ffffff',
             padding: '24px',
