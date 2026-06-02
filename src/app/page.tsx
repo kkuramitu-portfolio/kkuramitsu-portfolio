@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from 'react';
-import GoDemo from './components/GoDemo';
-import CSharpDemo from './components/CSharpDemo';
+import GoDemo from '../components/GoDemo';
+import CSharpDemo from '../components/CSharpDemo';
 import DOMPurify from 'dompurify';
+import ContactForm from "../components/ContactForm";
 
 interface CheckResult {
   title: string;
@@ -548,7 +549,7 @@ return (
             <CSharpDemo />
           </div>
         </section>
-
+<ContactForm />
         {/* ロードマップ・セクション */}
         <section className="mt-12 p-6 bg-gray-50 border-l-4 border-yellow-500 rounded shadow-sm mb-16">
           <h3 className="text-xl font-bold mb-4 flex items-center gap-2">

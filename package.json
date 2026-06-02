@@ -12,11 +12,17 @@
     "node": "20.x"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "cheerio": "^1.2.0",
     "dompurify": "^3.4.3",
     "next": "^16.2.4",
+    "next-recaptcha-v3": "^1.5.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-dropzone": "^15.0.0",
+    "react-hook-form": "^7.77.0",
+    "resend": "^6.12.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.0",
