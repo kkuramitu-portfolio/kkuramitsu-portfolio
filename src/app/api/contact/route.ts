@@ -35,11 +35,8 @@ export async function POST(request: Request) {
       await notifySlack(data, slackWebhookUrl).catch(console.error);
     }
 
-    // 5. Resendによる自動返信メール送信
-    const resendApiKey = process.env.RESEND_API_KEY;
-    if (resendApiKey) {
-      await sendAutoReplyEmail(data, resendApiKey).catch(console.error);
-    }
+    // 5. XREAのSMTPによる自動返信メール送信
+    await sendAutoReplyEmail(data).catch(console.error);
 
     return NextResponse.json({ success: true, message: "送信完了しました" }, { status: 200 });
 

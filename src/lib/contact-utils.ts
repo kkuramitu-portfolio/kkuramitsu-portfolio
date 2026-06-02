@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { ContactFormData } from "./schema";
 
 // reCAPTCHA v3 の検証
@@ -43,11 +43,19 @@ export async function notifySlack(data: ContactFormData, webhookUrl: string): Pr
   });
 }
 
-// Resendによる自動返信メール送信
-export async function sendAutoReplyEmail(data: ContactFormData, apiKey: string): Promise<void> {
-  const resend = new Resend(apiKey);
+// XREAのSMTPサーバー（Nodemailer）による自動返信メール送信
+export async function sendAutoReplyEmail(data: ContactFormData): Promise<void> {
+  // XREAのSMTPサーバー設定
+  const transporter = nodemailer.createTransport({
+    host: "s325.xrea.com", // 画像の右上にあったサーバー名
+    port: 465,             // SSL通信の標準ポート
+    secure: true,          // 465ポートの場合はtrue
+    auth: {
+      user: "info@kuramitsu.shop", // 作成したメールアドレス
+      pass: process.env.XREA_MAIL_PASSWORD, // .env.localに設定したパスワード
+    },
+  });
 
-  // ★ファイル名がある場合のみ、メール文面に追記するテキストを作成
   const fileInfoText = data.fileName 
     ? `\n【添付ファイル】\n📄 ${data.fileName}\n(※セキュリティ方針により、ファイル本体はサーバーへアップロードされず安全に破棄されました)\n` 
     : "";
@@ -72,15 +80,13 @@ ${fileInfoText}--------------------------------------------------
 何卒ご理解のほど、よろしくお願い申し上げます。
 `;
 
-  const result = await resend.emails.send({
-    from: "Your Portfolio <onboarding@resend.dev>",
-    to: data.email,
+  // メールの送信実行
+  const info = await transporter.sendMail({
+    from: '"Kuramitsu Portfolio" <info@kuramitsu.shop>', // 送信元（XREAのアドレス）
+    to: data.email,                                      // 宛先（フォームに入力されたアドレス）
     subject: "【自動返信】お問い合わせありがとうございます",
     text: textBody,
   });
 
-  console.log("RESEND:", result);
-  if (result?.error) {
-    throw new Error(result.error.message);
-  }
+  console.log("Nodemailer Message sent: %s", info.messageId);
 }
