@@ -6,6 +6,7 @@ export const contactSchema = z.object({
   message: z.string().min(1, "メッセージは必須です").max(1000, "メッセージは1000文字以内で入力してください"),
   bot_field: z.string().optional(), // ハニーポット
   recaptchaToken: z.string().min(1, "reCAPTCHAトークンが取得できませんでした"),
+  fileName: z.string().optional(),
   consent: z.literal(true, {
     message: "注意事項への同意が必要です",
   }),

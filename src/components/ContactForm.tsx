@@ -59,7 +59,11 @@ const {
       if (!token) throw new Error("reCAPTCHAの検証に失敗しました");
 
       // 2. APIへ送信（※demoFileは意図的に送信データに含めず破棄します）
-      const payload = { ...data, recaptchaToken: token };
+      const payload = {
+        ...data,
+          recaptchaToken: token,
+          fileName: demoFile ? demoFile.name : undefined
+        };
 
       const res = await fetch("/api/contact", {
         method: "POST",
