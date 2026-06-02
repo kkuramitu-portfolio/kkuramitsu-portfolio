@@ -16,6 +16,7 @@ export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [demoFile, setDemoFile] = useState<File | null>(null);
+  const [isSecurityInfoOpen, setIsSecurityInfoOpen] = useState(false);
 
 const {
   register,
@@ -88,9 +89,43 @@ const {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md text-gray-800">
+    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-gray-800 mb-10">
       <h2 className="text-2xl font-bold mb-6 text-center">お問い合わせ</h2>
-
+      <div className="mb-6 border-b border-gray-200 pb-3">
+        <button
+          type="button"
+          onClick={() => setIsSecurityInfoOpen(!isSecurityInfoOpen)}
+          className="w-full text-left font-bold text-gray-700 hover:text-gray-900 focus:outline-none flex items-center py-2 transition-colors"
+        >
+          <span className="mr-2 text-blue-600">{isSecurityInfoOpen ? "▼" : "▶"}</span>
+          この機能のセキュリティおよびコンプライアンス対策について
+        </button>
+        
+        {isSecurityInfoOpen && (
+          <div className="mt-3 p-5 bg-gray-50 rounded-md text-sm text-gray-600 space-y-4 border border-gray-100 shadow-inner">
+            <p>
+              <strong className="text-gray-800 block mb-1">スパム・Bot攻撃の多層防御（reCAPTCHA v3 & ハニーポット）:</strong>
+              悪意のあるBotによる大量のスパム送信やフォームの悪用を防ぐため、二段構えの防御を実装しています。Google reCAPTCHA v3によるスコアベースの振る舞い検知（バックエンドでのトークン検証）に加え、CSSで隠蔽した罠フィールド（ハニーポット）を設置。Bot特有の「すべての入力欄を埋める」挙動を検知し、不正なリクエストを即座に遮断（400/403エラー）します。
+            </p>
+            <p>
+              <strong className="text-gray-800 block mb-1">厳格なスキーマバリデーション（Zodの導入）:</strong>
+              予期せぬデータ型や異常に長い文字列の送信によるバッファオーバーフロー、およびバックエンドへのインジェクション攻撃を防ぐため、フロントエンドとバックエンドで共通の Zod スキーマによる検証を徹底しています。型や文字数制限を厳密に定義し、不正なペイロードがAPIのビジネスロジックに到達する前に弾く「フェイルセーフ」な設計としています。
+            </p>
+            <p>
+              <strong className="text-gray-800 block mb-1">マルウェア感染およびストレージ枯渇対策（ファイルアップロードの無害化）:</strong>
+              悪意のある実行ファイル（マルウェア）のアップロードや、巨大なファイルの連続送信によるサーバーのストレージ枯渇攻撃（DoS）を完全に防ぐための対策です。UI上はドラッグ＆ドロップ可能なアップロード機能を実装していますが、送信時にファイル本体は安全に破棄し、「ファイル名のみ」をログとして送信する設計を採用。UX（ユーザー体験）を損なわずにゼロトラストなファイルハンドリングを実現しています。
+            </p>
+            <p>
+              <strong className="text-gray-800 block mb-1">コンプライアンスとガバナンスのシステム的強制:</strong>
+              企業コンプライアンスやエージェント様との契約違反に繋がる「直接のスカウト連絡」を防ぐため、送信前に注意事項への同意を必須化しています。フロントエンドでのボタン非活性化（UI制御）だけでなく、バックエンドのスキーマ検証でも同意フラグ（consent: true）を厳格に要求し、APIへの直接攻撃（cURL等による送信）であってもガバナンスを強制できる堅牢な設計としています。
+            </p>
+            <p>
+              <strong className="text-gray-800 block mb-1">CORS制御とセキュアなAPI通信:</strong>
+              本フォームのAPI（Next.js Route Handlers）は、別ドメイン（HTML版ポートフォリオ）からの呼び出しを想定したマイクロサービス的な設計となっています。そのため、next.config.ts にて厳密なCORS（Cross-Origin Resource Sharing）ヘッダーを設定し、許可されたメソッドとヘッダーのみを受け付けることで、CSRF（クロスサイトリクエストフォージェリ）や不正なオリジンからのAPI悪用を防止しています。
+            </p>
+          </div>
+        )}
+      </div>
       {submitResult && (
         <div className={`p-4 mb-6 rounded ${submitResult.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
           {submitResult.message}
