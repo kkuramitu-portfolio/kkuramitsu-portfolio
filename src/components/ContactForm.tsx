@@ -98,11 +98,15 @@ const {
           className="w-full text-left font-bold text-gray-700 hover:text-gray-900 focus:outline-none flex items-center py-2 transition-colors"
         >
           <span className="mr-2 text-blue-600">{isSecurityInfoOpen ? "▼" : "▶"}</span>
-          この機能のセキュリティおよびコンプライアンス対策について
+          この機能のセキュリティ対策・ガバナンス・運用設計について
         </button>
         
         {isSecurityInfoOpen && (
           <div className="mt-3 p-5 bg-gray-50 rounded-md text-sm text-gray-600 space-y-4 border border-gray-100 shadow-inner">
+            <p>
+              <strong className="text-gray-800 block mb-1">システム連携によるリアルタイム監視（Slack Webhook / ChatOps）:</strong>
+              モダンな開発・運用フロー（ChatOps）を想定し、バックエンドでの処理完了と同時に、SlackのIncoming Webhookを経由して専用チャンネルへ通知を送信する仕組みを実装しています。お問い合わせ内容やシステムの挙動をリアルタイムに検知することで、迅速な対応と運用監視の自動化を実現しています。また、フォーム送信者への自動返信には、Nodemailerを用いて独自ドメインのSMTPサーバーと非同期で連携させています。実務における『外部SaaSと自社インフラのハイブリッド構成』を想定し、適材適所で技術を組み合わせた堅牢なアーキテクチャを構築しています。
+            </p>
             <p>
               <strong className="text-gray-800 block mb-1">スパム・Bot攻撃の多層防御（reCAPTCHA v3 & ハニーポット）:</strong>
               悪意のあるBotによる大量のスパム送信やフォームの悪用を防ぐため、二段構えの防御を実装しています。Google reCAPTCHA v3によるスコアベースの振る舞い検知（バックエンドでのトークン検証）に加え、CSSで隠蔽した罠フィールド（ハニーポット）を設置。Bot特有の「すべての入力欄を埋める」挙動を検知し、不正なリクエストを即座に遮断（400/403エラー）します。
