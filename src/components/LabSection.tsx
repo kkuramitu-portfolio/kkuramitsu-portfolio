@@ -174,7 +174,7 @@ export default function LabSection() {
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <input 
                 type="text" placeholder="メッセージを入力" value={bbsInput} onChange={(e) => setBbsInput(e.target.value)}
-                className="flex-grow p-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="grow p-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
               <button 
                 onClick={submitBBS}
@@ -189,8 +189,8 @@ export default function LabSection() {
                 <ul className="space-y-3">
                   {bbsMessages.map((msg, index) => (
                     <li key={msg.id} className={`flex justify-between items-start pb-3 ${index !== bbsMessages.length - 1 ? 'border-b border-slate-200' : ''}`}>
-                      <div className="flex-grow pr-4">
-                        <p className="text-sm text-slate-800 break-words"><span className="mr-2">💬</span>{msg.message}</p>
+                      <div className="grow pr-4">
+                        <p className="text-sm text-slate-800 wrap-break-word"><span className="mr-2">💬</span>{msg.message}</p>
                         <p className="text-xs text-slate-400 mt-1">{msg.timestamp}</p>
                       </div>
                       <button onClick={() => handleDeleteBbsMessage(msg.id)} className="shrink-0 px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold rounded transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500">削除</button>
@@ -209,7 +209,7 @@ export default function LabSection() {
               onChange={updatePreview} value={mdInput}
               className="w-full h-40 p-4 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-y"
             ></textarea>
-            <div className="mt-4 p-5 border border-slate-200 rounded-md bg-slate-50 min-h-[100px] prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: mdPreview }}></div>
+            <div className="mt-4 p-5 border border-slate-200 rounded-md bg-slate-50 min-h-25 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: mdPreview }}></div>
           </div>
 
           {/* Microservices */}
