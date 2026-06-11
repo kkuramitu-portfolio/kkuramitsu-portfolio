@@ -29,7 +29,6 @@ export default function CSharpDemo() {
   const [category, setCategory] = useState('All');
   const [sortBy, setSortBy] = useState('price');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [isCSharpSecurityInfoOpen, setCSharpSecurityInfoOpen] = useState(false);
 
   // ★★★【重要】★★★
   // 必ずご自身のC# APIのベースURLに書き換えてください！
@@ -74,58 +73,49 @@ export default function CSharpDemo() {
 
   return (
     <div>
-      {/* --- 1. 既存のステータス確認エリア --- */}
-        <div style={{ margin: '0px 0px 15px 0px', borderBottom: '1px solid #eee', padding: '5px 0px'}}>
-          <button 
-                onClick={() => setCSharpSecurityInfoOpen(!isCSharpSecurityInfoOpen)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '5px', width: '100%', textAlign: 'left', fontWeight: 'bold', color: '#333' }}
-          >
-            ▶ この機能のセキュリティ対策について
-          </button>
-          {isCSharpSecurityInfoOpen && (
-            <div style={{ padding: '10px', backgroundColor: '#f7f7f7', borderRadius: '4px', marginTop: '8px', fontSize: '0.9rem', color: '#555' }}>
-              <p><strong>SQLインジェクション対策:</strong> このデモはデータベースを使用せず、サーバーのメモリ上にあるデータをLINQで操作しているため、SQLインジェクション攻撃の危険性は原理的にありません。これにより、LINQがインメモリデータに対して型安全なクエリを実行できることを示しています。</p>
-              <p style={{ marginBottom: 0 }}><strong>入力値の検証:</strong> フロントエンドから送られてくる並び替えのキー（`sortBy`）は、サーバーサイドの `switch` 文で検証しています。`"price"` や `"name"` など、意図した値以外が指定された場合はデフォルトの並び順が適用されるため、予期せぬ列でのソートやエラーの発生を防ぐ「ホワイトリスト方式」の入力値検証を実装しています。</p>
-            </div>
-          )}
+      {/* 修正: アコーディオンをdetailsタグに統一し、アニメーションを追加 */}
+      <details className="mb-6 border-t border-slate-100 pt-4 group">
+        <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer w-full text-left font-bold text-slate-700 p-2 hover:bg-slate-50 rounded transition-colors flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
+          <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-2">▶</span>
+          この機能のセキュリティ対策について
+        </summary>
+        <div className="p-4 bg-slate-50 rounded-md mt-2 text-xs text-slate-600 space-y-3 border border-slate-200">
+          <p><strong>SQLインジェクション対策:</strong> このデモはデータベースを使用せず、サーバーのメモリ上にあるデータをLINQで操作しているため、SQLインジェクション攻撃の危険性は原理的にありません。これにより、LINQがインメモリデータに対して型安全なクエリを実行できることを示しています。</p>
+          <p><strong>入力値の検証:</strong> フロントエンドから送られてくる並び替えのキー（<code className="bg-slate-200 px-1 py-0.5 rounded text-slate-800 font-mono">sortBy</code>）は、サーバーサイドの <code className="bg-slate-200 px-1 py-0.5 rounded text-slate-800 font-mono">switch</code> 文で検証しています。<code className="bg-slate-200 px-1 py-0.5 rounded text-slate-800 font-mono">&quot;price&quot;</code> や <code className="bg-slate-200 px-1 py-0.5 rounded text-slate-800 font-mono">&quot;name&quot;</code> など、意図した値以外が指定された場合はデフォルトの並び順が適用されるため、予期せぬ列でのソートやエラーの発生を防ぐ「ホワイトリスト方式」の入力値検証を実装しています。</p>
         </div>
+      </details>
+
       <button 
         onClick={fetchCSharpStatus} 
         disabled={statusLoading}
-        className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        className="px-6 py-3 bg-blue-600 text-white text-sm font-bold rounded-md hover:bg-blue-700 disabled:bg-slate-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 whitespace-nowrap"
       >
         {statusLoading ? '通信中...' : 'C# APIからステータスを取得'}
       </button>
-      <div className="result-area" style={{ marginTop: '15px' }}>
-        {statusError && <p style={{ color: 'red' }}>Error: {statusError}</p>}
+      
+      <div className="mt-4">
+        {statusError && <p className="text-red-600 text-sm">Error: {statusError}</p>}
         {statusData && (
-          <div style={{
-            padding: '16px', backgroundColor: '#111827', border: '1px solid #374151',
-            borderRadius: '6px', fontFamily: '"Consolas", "Monaco", monospace',
-            fontSize: '14px', color: '#4ade80', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)'
-          }}>
-            <p><span style={{ color: '#9ca3af' }}>Message:</span> {statusData.message}</p>
-            <p><span style={{ color: '#9ca3af' }}>Status:</span> {statusData.status}</p>
-            <p><span style={{ color: '#9ca3af' }}>Language:</span> {statusData.language}</p>
-            <p><span style={{ color: '#9ca3af' }}>Timestamp:</span> {statusData.timestamp}</p>
+          <div className="p-4 bg-slate-900 border border-slate-700 rounded-md font-mono text-sm text-green-400 shadow-inner">
+            <p><span className="text-slate-400">Message:</span> {statusData.message}</p>
+            <p><span className="text-slate-400">Status:</span> {statusData.status}</p>
+            <p><span className="text-slate-400">Language:</span> {statusData.language}</p>
+            <p><span className="text-slate-400">Timestamp:</span> {statusData.timestamp}</p>
           </div>
         )}
       </div>
 
       {/* --- 2. 新しいLINQデモのエリア --- */}
-      <div style={{ marginTop: '32px', borderTop: '1px solid #e5e7eb', paddingTop: '24px' }}>
-        <h4 style={{ marginTop: 0, marginBottom: '16px', fontSize: '1.1rem', fontWeight: '600' }}>LINQによるデータフィルタリング</h4>
-        <p style={{ marginBottom: '16px' }}>
+      <div className="mt-8 border-t border-slate-200 pt-6">
+        <h4 className="text-lg font-bold text-slate-800 mb-3">LINQによるデータフィルタリング</h4>
+        <p className="mb-4 text-slate-600 text-sm leading-relaxed">
           C#の強力なデータ操作機能「LINQ」のデモです。サーバーのメモリ上にある商品リストに対し、以下の条件でフィルタリングと並び替えを動的に行います。
         </p>
-        <div style={{ 
-          display: 'flex', flexWrap: 'wrap', gap: '16px', padding: '16px', 
-          backgroundColor: '#f9fafb', borderRadius: '8px', marginBottom: '24px' 
-        }}>
-          {/* ... (コントロールパネルのUIは前回のまま) ... */}
+        
+        <div className="flex flex-wrap gap-4 p-4 bg-slate-50 border border-slate-200 rounded-md mb-6">
           <div>
-            <label htmlFor="category-select" style={{ display: 'block', fontSize: '0.9rem', marginBottom: '4px' }}>カテゴリ絞り込み:</label>
-            <select id="category-select" value={category} onChange={(e) => setCategory(e.target.value)} className="p-2 border border-gray-300 rounded-md">
+            <label htmlFor="category-select" className="block text-sm text-slate-700 mb-1">カテゴリ絞り込み:</label>
+            <select id="category-select" value={category} onChange={(e) => setCategory(e.target.value)} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="All">すべて</option>
               <option value="書籍">書籍</option>
               <option value="家電">家電</option>
@@ -134,43 +124,48 @@ export default function CSharpDemo() {
             </select>
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '4px' }}>並び替え:</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="p-2 border border-gray-300 rounded-md">
+            <label className="block text-sm text-slate-700 mb-1">並び替え:</label>
+            <div className="flex gap-2">
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="price">価格</option>
                 <option value="name">商品名</option>
               </select>
-              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="p-2 border border-gray-300 rounded-md">
+              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="asc">安い順 / 昇順</option>
                 <option value="desc">高い順 / 降順</option>
               </select>
             </div>
           </div>
         </div>
-        <div className="result-area">
-          {productsLoading && <p>読み込み中...</p>}
-          {productsError && <p style={{ color: 'red' }}>Error: {productsError}</p>}
+
+        <div className="overflow-x-auto">
+          {productsLoading && <p className="text-sm text-slate-500">読み込み中...</p>}
+          {productsError && <p className="text-red-600 text-sm">Error: {productsError}</p>}
           {!productsLoading && !productsError && (
             products.length > 0 ? (
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table className="w-full border-collapse text-sm">
                 <thead>
-                  <tr style={{ borderBottom: '2px solid #e5e7eb', textAlign: 'left' }}>
-                    <th style={{ padding: '8px' }}>商品名</th>
-                    <th style={{ padding: '8px' }}>カテゴリ</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>価格</th>
+                  <tr className="border-b-2 border-slate-200 text-left text-slate-700">
+                    <th className="p-2">商品名</th>
+                    <th className="p-2">カテゴリ</th>
+                    <th className="p-2 text-right">価格</th>
                   </tr>
                 </thead>
                 <tbody>
                   {products.map(p => (
-                    <tr key={p.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                      <td style={{ padding: '8px' }}>{p.name}</td>
-                      <td style={{ padding: '8px' }}><span style={{ backgroundColor: '#eef2ff', color: '#4f46e5', padding: '2px 6px', borderRadius: '12px', fontSize: '0.8rem' }}>{p.category}</span></td>
-                      <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace' }}>¥{p.price.toLocaleString()}</td>
+                    <tr key={p.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                      <td className="p-2 text-slate-800">{p.name}</td>
+                      <td className="p-2">
+                        <span className="bg-indigo-50 text-indigo-600 px-2 py-1 rounded-full text-xs font-medium border border-indigo-100">
+                          {p.category}
+                        </span>
+                      </td>
+                      <td className="p-2 text-right font-mono text-slate-700">¥{p.price.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            ) : <p>該当する商品が見つかりませんでした。</p>
+            ) : <p className="text-sm text-slate-500">該当する商品が見つかりませんでした。</p>
           )}
         </div>
       </div>

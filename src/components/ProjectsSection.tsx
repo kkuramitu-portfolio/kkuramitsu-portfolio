@@ -66,9 +66,10 @@ export default function ProjectsSection() {
                   </div>
                 </div>
 
+                {/* ★ 修正: デフォルトの三角を消し、アニメーションを追加 ★ */}
                 <details className="text-sm group">
-                  <summary className="cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1">
-                    <span className="inline-block transition-transform group-open:rotate-90 mr-1">▶</span> 技術的な詳細
+                  <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 flex items-center w-fit">
+                    <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-1">▶</span> 技術的な詳細
                   </summary>
                   <p className="mt-3 text-slate-600 leading-relaxed text-xs bg-slate-50 rounded p-3 border border-slate-100">
                     {p.detail}
