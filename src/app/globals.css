@@ -1,82 +1,14 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* ==========================================
-   コンポーネント固有のスタイル（Tailwindで書きにくいもの）
-   ========================================== */
-
-/* セクション共通 */
-section { margin-bottom: 80px; }
-
-/* 斜めの黒背景見出し（LAB: 技術の実験室 など） */
-h2 {
-    font-size: 1.5rem;
-    background: #333;
-    color: #fff;
-    padding: 10px 20px;
-    display: inline-block;
-    transform: skewX(-10deg);
-    margin-bottom: 1.5rem;
+html {
+  scroll-behavior: smooth;
 }
 
-/* 実験室のカードデザイン */
-.lab-card {
-    background: #fff;
-    padding: 20px;
-    border-left: 5px solid #333;
-    margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.lab-card h3 { 
-    color: #e63946; 
-    margin-top: 0; 
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-/* プレビュー・結果エリア */
-.result-area li {
-  display: list-item;
-  margin-bottom: 0;
-  line-height: 1.6;
-}
-
-.result-area h1, .result-area h2, .result-area h3 {
-  margin-bottom: 5px;
-}
-
-.result-area h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  border-bottom: 1px solid #ccc;
-  margin-top: 10px;
-}
-
-.result-area h2 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-top: 8px;
-  background: none; /* h2の斜め背景を打ち消す */
-  color: #333;
-  transform: none;
-  padding: 0;
-}
-
-/* プレビューエリアの最終ハック */
-#mdPreview {
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #ccc;
-    min-height: 100px;
-    margin-top: 10px;
-    word-wrap: break-word;
-}
-
-#mdPreview li {
-    list-style-position: inside;
-    margin-left: 0;
-    padding-left: 10px;
-    text-indent: -1.2em;
-    padding-left: 2em;
-}
+/* Labセクションのマークダウンプレビュー用スタイル */
+.prose h1 { font-size: 1.5rem; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 1rem; margin-top: 1.5rem; }
+.prose h2 { font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; margin-top: 1.25rem; }
+.prose h3 { font-size: 1.125rem; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem; }
+.prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+.prose li { margin-bottom: 0.25rem; }
