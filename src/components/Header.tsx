@@ -22,10 +22,10 @@ export default function Header() {
           className="group flex flex-col leading-tight hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         >
           <span className="text-slate-800 font-semibold text-base tracking-tight group-hover:text-blue-600 transition-colors duration-200">
-            蔵満 賢治
+            Kenji Kuramitsu | Portfolio
           </span>
           <span className="text-slate-400 text-xs tracking-wide">
-            自走型・業務改善人材
+            Tech & Business Process
           </span>
         </Link>
 

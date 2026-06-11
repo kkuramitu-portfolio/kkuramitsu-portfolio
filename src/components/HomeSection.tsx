@@ -8,21 +8,31 @@ export default function HomeSection() {
   return (
     <section
       id="home"
-      className="min-h-[80vh] bg-white flex flex-col justify-center py-20 px-4 sm:px-6"
-    >
+      className="min-h-[80vh] bg-white flex flex-col justify-center py-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto w-full">
         <div className="mb-16 text-center">
           <p className="text-sm font-bold text-blue-600 tracking-widest uppercase mb-4">
             DX推進 / 社内SE / バックオフィス改善
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-800 leading-tight mb-6">
-            言われるまで待たずに、
-            <br className="hidden sm:block" />
-            動いて、仕組みを変えます。
+          
+          {/* ▼ 修正1：h1に「駆使して」を追加し、文字サイズを微調整 */}
+          <h1 className="text-2xl sm:text-3xl md:text-3xl font-bold text-slate-800 leading-tight mb-8">
+            現場の「不便」を放置せず、さらなる「便利」を探求し、
+            <br className="hidden md:block" /> {/* sm:blockからmd:blockに変更し、スマホでは自然に改行させる */}
+            経験 × 技術 × AI を駆使して「仕組み」を創る社内SEを目指して。
           </h1>
-          <p className="text-slate-500 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            「誰かがやってくれる」を待たず、業務課題を自分で見つけて技術で解決する——
-            そのサイクルを回せる人材として、DX推進・社内SE・バックオフィス改善の現場に貢献します。
+          
+          {/* ▼ 修正2：max-w-xl を max-w-3xl に変更して幅を広げ、適度に改行を入れる */}
+          <p className="text-slate-500 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
+            「誰かが解決する」を待つのではなく、自ら課題を発見し、最適な技術を用いて解決まで導く——<br className="hidden sm:block" />
+            それが私の行動原理です。<br />
+            <br />
+            私は現在、11年間の品質管理で培った「現場の課題を正確に把握する力」と、<br className="hidden sm:block" />
+            生成AIを活用した「未知の技術を即座に形にする自走力」を掛け合わせ、<br className="hidden sm:block" />
+            事業会社のDX推進・社内SEへのキャリアチェンジに挑戦しています。<br />
+            <br />
+            開発現場での実務経験（PHP）と、AI駆動による圧倒的な学習スピードを武器に、<br className="hidden sm:block" />
+            組織の生産性を内側から支える人材として貢献したいと考えています。
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a
