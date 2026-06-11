@@ -126,7 +126,7 @@ export default function LabSection() {
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <input 
                 type="text" placeholder="https://example.com" value={url} onChange={(e) => setUrl(e.target.value)}
-                className="flex-grow p-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="grow p-3 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
               <button 
                 onClick={checkSite} disabled={isLoading}

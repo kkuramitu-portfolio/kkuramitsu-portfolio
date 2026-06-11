@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { ReCaptchaProvider } from "next-recaptcha-v3";
 
 const geistSans = Geist({
@@ -33,7 +33,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-slate-800 font-sans leading-relaxed">
         <ReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}>
           <Header />
-          <main className="flex-grow w-full">
+          <main className="grow w-full max-w-5xl mx-auto px-4 sm:px-6">
             {children}
           </main>
           <Footer />
