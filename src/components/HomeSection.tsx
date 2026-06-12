@@ -12,7 +12,7 @@ export default function HomeSection() {
       <div className="max-w-5xl mx-auto w-full">
         <div className="mb-16 text-center">
           <p className="text-sm font-bold text-blue-600 tracking-widest uppercase mb-4">
-            DX推進 / 社内SE / バックオフィス改善
+            TARGET ROLE : 社内SE / DX推進 / 業務改善
           </p>
           
           {/* ▼ 修正1：h1に「駆使して」を追加し、文字サイズを微調整 */}
@@ -29,10 +29,10 @@ export default function HomeSection() {
             <br />
             私は現在、11年間の品質管理で培った「現場の課題を正確に把握する力」と、<br className="hidden sm:block" />
             生成AIを活用した「未知の技術を即座に形にする自走力」を掛け合わせ、<br className="hidden sm:block" />
-            事業会社のDX推進・社内SEへのキャリアチェンジに挑戦しています。<br />
+            事業会社の業務改善に貢献する社内SE・DX推進担当へのキャリアチェンジに挑戦しています。<br />
             <br />
-            開発現場での実務経験（PHP）と、AI駆動による圧倒的な学習スピードを武器に、<br className="hidden sm:block" />
-            組織の生産性を内側から支える人材として貢献したいと考えています。
+            開発現場での実務経験（PHP）と、Pythonを活用した業務自動化・改善の経験を活かし、<br className="hidden sm:block" />
+            技術と現場理解の両面から組織の生産性向上に貢献したいと考えています。
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a
