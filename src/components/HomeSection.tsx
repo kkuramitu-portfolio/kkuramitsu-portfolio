@@ -31,7 +31,8 @@ export default function HomeSection() {
             生成AIを活用した「未知の技術を即座に形にする自走力」を掛け合わせ、<br className="hidden sm:block" />
             事業会社の業務改善に貢献する社内SE・DX推進担当へのキャリアチェンジに挑戦しています。<br />
             <br />
-            開発現場での実務経験（PHP）と、Pythonを活用した業務自動化・改善の経験を活かし、<br className="hidden sm:block" />
+            品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
+            さらにPHPを用いたシステム開発経験を活かし、<br className="hidden sm:block" />
             技術と現場理解の両面から組織の生産性向上に貢献したいと考えています。
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
