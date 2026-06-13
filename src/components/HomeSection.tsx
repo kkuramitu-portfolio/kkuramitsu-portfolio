@@ -1,6 +1,6 @@
 const stats = [
-  { value: "20+", label: "構築・改善した社内システム" },
-  { value: "5言語", label: "実務で活用した開発言語" },
+  { value: "20+", label: "学習・実践してきた技術スタック" },
+  { value: "5言語", label: "実務・個人開発で実践した言語" },
   { value: "1ヶ月", label: "ポートフォリオ v1.0 到達まで" },
 ];
 
@@ -29,7 +29,7 @@ export default function HomeSection() {
             <br />
             私は現在、11年間の品質管理で培った「現場の課題を正確に把握する力」と、<br className="hidden sm:block" />
             生成AIを活用した「未知の技術を即座に形にする自走力」を掛け合わせ、<br className="hidden sm:block" />
-            事業会社の業務改善に貢献する社内SE・DX推進担当へのキャリアチェンジに挑戦しています。<br />
+            事業会社の社内SE・DX推進担当として、組織の生産性向上に貢献することを目指しています。<br />
             <br />
             品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
             さらにPHPを用いたシステム開発経験を活かし、<br className="hidden sm:block" />

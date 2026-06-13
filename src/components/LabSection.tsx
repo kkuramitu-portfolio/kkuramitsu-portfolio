@@ -125,9 +125,9 @@ export default function LabSection() {
         <div className="space-y-8">
           {/* Python Demo */}
           <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
-            <h3 className="text-xl font-bold text-red-600 mb-4">Python Demo: Webサイト情報チェッカー</h3>
+            <h3 className="text-xl font-bold text-red-600 mb-4">Scraping Demo: Webサイト情報チェッカー</h3>
             <p className="mb-4 text-slate-600 text-sm leading-relaxed">
-              スクレイピング技術のデモンストレーションです。<br />
+              Python（BeautifulSoup等）で培ったデータ抽出の知見を応用し、本デモではNext.jsのサーバーサイド機能（API Routes）を用いて実装しています。<br />
               外部Pythonサーバーと通信し、指定したWebサイトのHTMLをリアルタイムで解析して「タイトル（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono mx-0.5">&lt;title&gt;</code>）」と「概要（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono mx-0.5">&lt;meta name=&quot;description&quot;&gt;</code>）」を抽出・表示します。
               <span className="text-xs text-slate-500 mt-2 block">
                 ※コンプライアンス保護の観点から、無差別なデータ取得によるトラブルを防ぐため、本デモ環境では事前に許可したURL（ホワイトリスト）のみ検証可能としています。

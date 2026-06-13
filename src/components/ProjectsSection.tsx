@@ -54,6 +54,7 @@ const projects = [
       },
       { 
         title: "成果", 
+        fullWidth: true,
         items: [
           "2万件以上のデータ移行を完遂",
           "表記揺れやID変換を含む複雑なデータ移行を実現",
@@ -63,12 +64,11 @@ const projects = [
       },
       { 
         title: "学んだこと", 
-        // items の代わりに content を使い、自由にネストしたリストを作成
+        fullWidth: true,
         content: (
           <ul className="list-disc list-outside ml-4 text-sm text-slate-700 space-y-2">
             <li className="leading-relaxed pl-1">
               データ取り込み工程における品質管理の重要性
-              {/* 子リスト（白丸：list-[circle]） */}
               <ul className="list-[circle] list-outside ml-5 mt-1.5 space-y-1 text-slate-600">
                 <li className="leading-relaxed pl-1">Excelの自動変換機能による意図しないデータ変換リスクを経験</li>
                 <li className="leading-relaxed pl-1">Power Queryを活用した安全なデータ取り込み手法を習得</li>
@@ -92,14 +92,29 @@ const projects = [
     title: "2. Webサイト情報チェッカー",
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-    summary: "指定したWebサイトの情報を定期取得し、更新状況を確認できるスクレイピングシステム。",
+    summary: "Pythonで一般的に行われるスクレイピング処理を、あえてNext.jsのAPI RoutesとNode.js環境で再現したシステムです。指定したWebサイトの情報をサーバーサイドで取得し、タイトルや概要を抽出します。",
     sections: [
-      { title: "開発目的", items: ["Pythonによるスクレイピング技術習得", "Webデータ取得の仕組み理解"] },
-      { title: "使用技術", items: ["Python", "Playwright", "BeautifulSoup", "Next.js"] },
-      { title: "工夫した点", items: ["動的ページへの対応", "エラーハンドリング", "データ取得の安定化"] },
+      { 
+        title: "開発目的", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-3 text-sm text-slate-700">
+            <ul className="list-disc list-outside ml-4 space-y-1.5">
+              <li className="pl-1">Pythonのスクレイピングロジックを別言語（TypeScript/Node.js）で再現・比較</li>
+              <li className="pl-1">Next.jsのサーバーサイド機能（API Routes）の理解</li>
+            </ul>
+            <div className="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-blue-800 text-xs font-bold flex items-center gap-2">
+              <span>💡</span>
+              <p>※Pythonを用いた実務自動化の実績については「5. Pythonによる業務準備自動化」をご参照ください。</p>
+            </div>
+          </div>
+        )
+      },
+      { title: "使用技術", items: ["Next.js (API Routes)", "TypeScript", "Cheerio (PythonのBeautifulSoupに相当)", "Fetch API"] },
+      { title: "工夫した点", items: ["Pythonでの実装経験を活かしたDOM解析の設計", "User-Agentの偽装によるアクセス拒否の回避", "エラーハンドリングの実装"] },
       { title: "AI活用", items: ["初期実装", "デバッグ支援", "学習支援"] },
       { title: "自分で行ったこと", items: ["要件整理", "実装内容理解", "修正", "テスト", "デプロイ"] },
-      { title: "学んだこと", items: ["スクレイピングの実践", "DOM解析", "自動化処理"] }
+      { title: "学んだこと", items: ["言語やフレームワークに依存しないスクレイピングの基礎概念", "Next.jsにおけるAPI構築とサーバーサイドでの外部通信", "DOM解析の基礎"] }
     ],
     accordions: [
       { title: "技術的な詳細", content: "（ここに技術的な詳細を記載予定。いつでも入力できるように枠のみ用意しています。）" }
@@ -185,6 +200,7 @@ const projects = [
       },
       { 
         title: "成果", 
+        fullWidth: true,
         items: [
           "毎日の業務開始準備時間を短縮", 
           "複数システムへのアクセス作業を一元化", 
@@ -195,6 +211,7 @@ const projects = [
       },
       { 
         title: "学んだこと", 
+        fullWidth: true,
         items: [
           "小さな業務改善の積み重ねが生産性向上につながること", 
           "定型作業を自動化候補として捉える視点",
