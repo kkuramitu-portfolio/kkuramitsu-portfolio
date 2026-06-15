@@ -23,7 +23,7 @@ export default function HomeSection() {
           </h1>
           
           {/* ▼ 修正2：max-w-xl を max-w-3xl に変更して幅を広げ、適度に改行を入れる */}
-          <p className="text-slate-500 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
+          <p className="text-slate-700 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed">
             「誰かが解決する」を待つのではなく、自ら課題を発見し、最適な技術を用いて解決まで導く——<br className="hidden sm:block" />
             それが私の行動原理です。<br />
             <br />
