@@ -1,5 +1,27 @@
 import React from "react";
 
+type Section = {
+  title: string;
+  items?: string[];
+  content?: React.ReactNode;   // ← React. を付けました
+  fullWidth?: boolean;
+};
+
+type Accordion = {
+  title: string;
+  content: React.ReactNode;    // ← React. を付けました
+};
+
+type Project = {
+  id: string;
+  title: string;
+  badge: string;
+  badgeColor: string;
+  summary: string;
+  sections: Section[];
+  accordions: Accordion[];
+};
+
 const projects = [
   {
     id: "sql-migration",
@@ -353,8 +375,51 @@ WHERE
       { title: "自分で行ったこと", items: ["要件整理", "実装内容理解", "修正", "テスト", "デプロイ"] },
       { title: "学んだこと", items: ["言語やフレームワークに依存しないスクレイピングの基礎概念", "Next.jsにおけるAPI構築とサーバーサイドでの外部通信", "DOM解析の基礎"] }
     ],
-    accordions: [
-      { title: "技術的な詳細", content: "（ここに技術的な詳細を記載予定。いつでも入力できるように枠のみ用意しています。）" }
+accordions: [
+      { 
+        title: "技術的な詳細（API Routesの実装抜粋）", 
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              Labセクションに記載のセキュリティ対策（SSRF対策・ホワイトリスト制御）に加え、サーバーサイドのデータ取得処理では以下のような実践的な工夫を行っています。
+            </p>
+            <ul className="list-disc list-outside ml-4 space-y-2">
+              <li className="pl-1"><span className="font-bold text-slate-800">User-Agentの偽装:</span> プログラムからの機械的なアクセスを拒否するサイトに対応するため、一般的なブラウザのUser-Agentヘッダを付与してFetchリクエストを送信しています。</li>
+              <li className="pl-1"><span className="font-bold text-slate-800">CheerioによるDOM解析:</span> 取得したHTML文字列を軽量な解析ライブラリ（Cheerio）に渡し、jQueryライクな構文で効率的に目的のタグを抽出しています。</li>
+            </ul>
+            <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner mt-4">
+              <code>
+{`// src/app/api/check/route.ts (一部抜粋)
+
+// 外部サイトへリクエストを送信
+const response = await fetch(targetUrl, {
+  headers: {
+    // ボット弾きを回避するためのUser-Agent偽装
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+  },
+});
+
+if (!response.ok) {
+  throw new Error(\`外部サイトへのアクセスに失敗しました: \${response.statusText}\`);
+}
+
+// レスポンスのHTMLをテキストとして取得
+const htmlText = await response.text();
+
+// CheerioでHTMLを解析できるようにロード
+const $ = cheerio.load(htmlText);
+
+// titleタグとmeta descriptionタグを抽出
+const title = $('title').text();
+const description = $('meta[name="description"]').attr('content') || '概要が見つかりませんでした。';
+
+// クライアントへJSON形式で返却
+return NextResponse.json({ title, description });`}
+              </code>
+            </pre>
+          </div>
+        )
+      }
     ]
   },
   {
@@ -372,26 +437,173 @@ WHERE
       { title: "学んだこと", items: ["マイクロサービス設計", "API通信", "Docker運用"] }
     ],
     accordions: [
-      { title: "技術的な詳細", content: "（ここに技術的な詳細を記載予定。いつでも入力できるように枠のみ用意しています。）" }
-    ]
+          { 
+            title: "技術的な詳細（アーキテクチャと各APIの実装）", 
+            content: (
+              <div className="space-y-6 text-sm text-slate-700">
+                {/* アーキテクチャ設計とリソース最適化 */}
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">アーキテクチャ設計とリソース最適化</h4>
+                  <p className="leading-relaxed">
+                    Renderの仕様上、一定時間アクセスがないとスリープ状態になるため、初回リクエスト時にコールドスタートによる遅延（10〜30秒）が発生します。<br />
+                    ヘルスチェックAPIを用いたバックグラウンドでの事前ウォームアップも検討しましたが、クラウドリソースの最適化（無料枠の枯渇防止）の観点から、意図的に実装を見送るという実務的なトレードオフ判断を行っています。
+                  </p>
+                </div>
+                
+                {/* Go API */}
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Go API: ロバストな並行処理</h4>
+                  <ul className="list-disc list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">レースコンディションの防止:</span> 標準ライブラリの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">sync.WaitGroup</code> を使用し、全てのGoroutine（軽量スレッド）が完了したことを確実に保証してからレスポンスを返す、安全で信頼性の高い並行処理を実装しています。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">リソース管理:</span> 各Goroutineは自己完結したタスクを実行し、完了後には確実にリソースを解放（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">wg.Done()</code>）するため、Goroutineリーク（処理が終了せず残り続ける問題）の発生を防いでいます。</li>
+                  </ul>
+                </div>
+
+                {/* C# API */}
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">C# (ASP.NET Core) API: 堅牢なデータ操作とセキュリティ</h4>
+                  <p className="leading-relaxed mb-2">Dockerコンテナ上で稼働させ、堅牢なエンタープライズ技術とモダンフロントエンドの融合を証明しています。</p>
+                  <ul className="list-disc list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">SQLインジェクション対策:</span> データベースを使用せず、サーバーのメモリ上にあるデータをLINQで操作しているため、SQLインジェクション攻撃の危険性は原理的にありません。LINQによる型安全なクエリ実行を示しています。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">入力値の検証:</span> フロントエンドからの並び替えキー（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">sortBy</code>）は、サーバーサイドの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">switch</code> 文で検証する「ホワイトリスト方式」を採用。意図しない値が指定された場合はデフォルトの並び順を適用し、予期せぬエラーを防いでいます。</li>
+                  </ul>
+                </div>
+              </div>
+            )
+          }
+        ]
   },
   {
     id: "portfolio-renewal",
     title: "4. ポートフォリオ刷新プロジェクト",
-    badge: "学習・技術選定事例",
+    badge: "学習・技術キャッチアップ事例", // バッジ名もアドバイスに合わせて微修正
     badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
-    summary: "HTML/CSSで作成していたポートフォリオをNext.jsへ移行し、保守性・拡張性の向上を図りました。",
+    summary: "当初はHTML/CSS/JavaScriptでポートフォリオサイトを開発していましたが、開発途中でNext.jsを知り、保守性や拡張性を考慮してNext.jsへ移行しました。技術習得とサイト開発を並行しながら構築を進め、現在も継続的に機能追加・改善を行っています。",
     sections: [
-      { title: "背景・課題", items: ["静的HTMLによる保守負荷", "コンポーネント再利用が困難", "機能追加時の管理コスト増加"] },
-      { title: "実施内容", items: ["Next.js移行", "TypeScript導入", "コンポーネント化", "レスポンシブ対応"] },
-      { title: "技術選定理由", items: ["React系フレームワークの需要", "コンポーネント設計の学習", "将来的な機能拡張を考慮"] },
-      { title: "今後の展望", items: ["AWS環境構築", "Hono導入", "CI/CD改善"] },
-      { title: "学んだこと", items: ["フレームワーク移行", "技術選定プロセス", "保守性を考慮した設計"] }
+      { 
+        title: "背景・課題", 
+        fullWidth: true,
+        items: [
+          "ポートフォリオをHTML/CSS/JavaScriptで作成していた",
+          "開発途中でNext.jsを知った",
+          "今後の機能追加や保守性を考慮すると構成の見直し余地があった",
+          "未経験技術であっても実際に触れながら理解したいと考えた"
+        ] 
+      },
+      { 
+        title: "実施内容", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-3 text-sm text-slate-700">
+            <ul className="list-disc list-outside ml-4 space-y-1.5">
+              <li className="pl-1">既存HTMLサイトの構成を整理</li>
+              <li className="pl-1">Next.jsへの移行を実施</li>
+              <li className="pl-1">コンポーネント化による再利用性向上</li>
+              <li className="pl-1">TypeScriptの導入</li>
+              <li className="pl-1">GitHubによるバージョン管理</li>
+              <li className="pl-1">Vercelによるデプロイ環境構築</li>
+            </ul>
+            <p className="leading-relaxed pt-2">
+              現在は継続的な改善を実施中。今後はAWSやHonoの導入も検討している。
+            </p>
+          </div>
+        )
+      },
+      { 
+        title: "成果", 
+        fullWidth: true,
+        items: [
+          "未経験だったNext.jsをキャッチアップしながらサイトを完成",
+          "フレームワークを利用した開発経験を獲得",
+          "コンポーネント指向による開発手法を学習",
+          "継続的な機能追加が可能な構成へ移行",
+          "技術選定から実装までを一貫して経験"
+        ] 
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        items: [
+          "フレームワーク活用による開発効率向上",
+          "技術選定の重要性",
+          "保守性を考慮した設計の重要性",
+          "未経験技術のキャッチアップ方法",
+          "小規模でも継続的に改善できる構成づくり"
+        ] 
+      }
     ],
     accordions: [
-      { title: "移行前後の比較", content: "（ここに比較内容を記載予定。いつでも入力できるように枠のみ用意しています。）" },
-      { title: "技術的な詳細", content: "（ここに技術的な詳細を記載予定。いつでも入力できるように枠のみ用意しています。）" }
-    ]
+          { 
+            title: "移行前後の比較", 
+            content: (
+              <div className="space-y-6 text-sm text-slate-700">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* 移行前 */}
+                  <div className="bg-slate-100 border border-slate-200 rounded-md p-5">
+                    <h4 className="font-bold text-slate-500 mb-4 text-center border-b border-slate-200 pb-2">移行前（初期構想）</h4>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> HTML / CSS / JavaScript</li>
+                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> ページ単位のベタ書き管理</li>
+                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> 手動でのファイルアップロード</li>
+                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> 機能追加のたびに複数ページを修正</li>
+                    </ul>
+                  </div>
+                  {/* 移行後 */}
+                  <div className="bg-blue-50 border border-blue-100 rounded-md p-5 shadow-sm">
+                    <h4 className="font-bold text-blue-700 mb-4 text-center border-b border-blue-100 pb-2">移行後（現在）</h4>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> Next.js / Tailwind CSS / TypeScript</li>
+                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> コンポーネント分割による一元管理</li>
+                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> Vercel連携による自動デプロイ</li>
+                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> 拡張性を前提としたモダンな構成</li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="bg-white p-5 rounded border border-slate-200 shadow-sm">
+                  <p className="font-bold text-slate-800 mb-1">所感</p>
+                  <p className="leading-relaxed">
+                    静的なポートフォリオサイトであっても、モダンなフレームワークを導入することで、コードの保守性や将来の拡張性が劇的に向上することを実体験として学びました。
+                  </p>
+                </div>
+              </div>
+            )
+          },
+          { 
+            title: "技術的な詳細（技術選定と学習プロセス）", 
+            content: (
+              <div className="space-y-6 text-sm text-slate-700">
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Next.jsを選んだ理由</h4>
+                  <p className="leading-relaxed">
+                    当初はHTML/CSSで制作を進めていましたが、情報収集の中でNext.jsが現在のWeb開発のトレンドであることを知りました。<br />
+                    「良さそうだから実際に試してみよう」と考え、開発途中であったにもかかわらず、学習を兼ねて大胆に構成をNext.jsへ移行し、最後まで完成させました。
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">実際に感じたメリット</h4>
+                  <ul className="list-disc list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">コンポーネント化の恩恵:</span> ヘッダーやボタンなどのUIパーツを再利用でき、修正が1箇所で済む管理のしやすさに感動しました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">TypeScriptとの相性:</span> 型定義による入力補完やエラー検知により、開発体験が大きく向上しました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">デプロイの簡便さ:</span> GitHubにプッシュするだけでVercelへ自動デプロイされる環境を構築し、CI/CDの基礎を体感しました。</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善予定</h4>
+                  <p className="leading-relaxed mb-2">
+                    本ポートフォリオは完成ではなく、継続的な技術検証の場（Lab）として拡張していく予定です。
+                  </p>
+                  <ul className="list-disc list-outside ml-4 space-y-1.5">
+                    <li className="pl-1">AWS環境（EC2 / RDSなど）への展開</li>
+                    <li className="pl-1">軽量なWebフレームワーク「Hono」の導入検証</li>
+                    <li className="pl-1">フロントエンドとバックエンドの完全なAPI分離構成への挑戦</li>
+                  </ul>
+                </div>
+              </div>
+            )
+          }
+        ]
   },
   {
     id: "python-automation",
@@ -459,9 +671,45 @@ WHERE
       }
     ],
     accordions: [
-      { title: "使用コード（一部抜粋）", content: "（ここにPythonコードを記載予定。いつでも入力できるように枠のみ用意しています。）" },
-      { title: "詳細を見る", content: "（設計方針、利用ライブラリ、改善履歴、運用方法などを掲載予定）" }
-    ]
+          { 
+            title: "技術的な詳細と運用プロセス", 
+            content: (
+              <div className="space-y-6 text-sm text-slate-700">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-4">
+                  <p className="text-yellow-800 text-xs font-bold flex items-center gap-1.5">
+                    <span>⚠️</span> コードの公開について
+                  </p>
+                  <p className="text-yellow-700 mt-1 leading-relaxed text-xs">
+                    本ツールは実際の業務環境内で開発・運用しました。企業コンプライアンスおよび機密情報保護の観点からソースコードの持ち出しが不可であったため、以下に設計・運用の詳細のみを記載します。
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">利用技術</h4>
+                  <p className="leading-relaxed">
+                    Python / Selenium (WebDriver)
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">設計方針と工夫した点</h4>
+                  <ul className="list-disc list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">堅牢なエラーハンドリング:</span> ネットワークの遅延やシステムのロード時間によるエラーを防ぐため、Seleniumの明示的な待機（Explicit Wait）や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">try-except</code> による例外処理を実装し、途中で処理が落ちないように工夫しました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">セキュアな認証情報管理:</span> IDやパスワードなどの機密情報はスクリプト内に直接記述（ハードコード）せず、外部の設定ファイルや環境変数から読み込む設計とし、セキュリティに配慮しました。</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">運用と継続的な改善</h4>
+                  <ul className="list-disc list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">UI変更への追従:</span> 社内システムのアップデートによりHTML構造（DOM）が変更された際も、要素の取得ロジック（XPathやCSSセレクタ）を迅速に修正し、運用を継続させました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">実行の簡便化:</span> ターミナルを開かずともワンクリックで処理を開始できるよう、実行用のバッチファイル（.bat）を作成し、日々の利用ハードルを下げる工夫を行いました。</li>
+                  </ul>
+                </div>
+              </div>
+            )
+          }
+        ]
   }
 ];
 
@@ -494,7 +742,8 @@ export default function ProjectsSection() {
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  {p.sections.map((sec) => (
+                  {/* ▼ (sec) を (sec: Section) に変更 ▼ */}
+                  {p.sections.map((sec: Section) => (
                     <div 
                       key={sec.title} 
                       className={`bg-slate-50 border border-slate-100 rounded-md p-4 sm:p-5 ${sec.fullWidth ? 'sm:col-span-2' : ''}`}
@@ -516,7 +765,8 @@ export default function ProjectsSection() {
 
                 {p.accordions.length > 0 && (
                   <div className="space-y-3 mt-2">
-                    {p.accordions.map((acc) => (
+                    {/* ▼ (acc) を (acc: Accordion) に変更 ▼ */}
+                    {p.accordions.map((acc: Accordion) => (
                       <details key={acc.title} className="text-sm group">
                         <summary className="cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
                           <span className="inline-block transition-transform group-open:rotate-90 mr-1">▶</span> {acc.title}
