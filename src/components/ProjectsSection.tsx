@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 type Section = {
@@ -727,7 +728,7 @@ export default function ProjectsSection() {
 
         <div className="flex flex-col gap-10 max-w-3xl mx-auto">
           {projects.map((p) => (
-            <div key={p.id} className="bg-white rounded-lg shadow-sm border border-slate-200 flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
+            <div key={p.id} id={p.id} className="scroll-mt-24 bg-white rounded-lg shadow-sm border border-slate-200 flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
               <div className="p-6 sm:p-8 flex flex-col flex-1">
                 
                 <div className="mb-4">
@@ -773,6 +774,22 @@ export default function ProjectsSection() {
                         </summary>
                         <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-slate-50 rounded p-4 border border-slate-100">
                           {acc.content}
+                          <div className="mt-6 pt-4 border-t border-slate-200 text-right">
+                            <button
+                              onClick={(e) => {
+                                const details = e.currentTarget.closest('details');
+                                if (details) {
+                                  details.removeAttribute('open');
+                                  // ヘッダーの高さ(約80px)を考慮して、タイトルの位置へスムーズにスクロールして戻る
+                                  const y = details.getBoundingClientRect().top + window.scrollY - 80;
+                                  window.scrollTo({ top: y, behavior: 'smooth' });
+                                }
+                              }}
+                              className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-800 font-bold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-3 py-1.5 bg-white border border-slate-200 shadow-sm hover:shadow"
+                            >
+                              ▲ 閉じる
+                            </button>
+                          </div>
                         </div>
                       </details>
                     ))}

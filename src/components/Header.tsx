@@ -3,11 +3,31 @@
 import { useState } from "react";
 import Link from "next/link";
 
+// ▼ サブ項目を追加 ▼
 const navLinks = [
   { label: "Home", href: "#home" },
-  { label: "Projects & Case Studies", href: "#projects" },
+  { 
+    label: "Projects", 
+    href: "#projects",
+    subItems: [
+      { label: "1. SQLデータ移行", href: "#sql-migration" },
+      { label: "2. Webサイト情報チェッカー", href: "#web-scraper" },
+      { label: "3. マイクロサービス連携", href: "#microservices" },
+      { label: "4. ポートフォリオ刷新", href: "#portfolio-renewal" },
+      { label: "5. Python業務準備自動化", href: "#python-automation" },
+    ]
+  },
   { label: "Skills", href: "#skills" },
-  { label: "Lab", href: "#lab" },
+  { 
+    label: "Lab", 
+    href: "#lab",
+    subItems: [
+      { label: "Scraping Demo", href: "#lab-scraping" },
+      { label: "PHP Demo", href: "#lab-php" },
+      { label: "Java Demo", href: "#lab-java" },
+      { label: "Microservices", href: "#lab-microservices" },
+    ]
+  },
 ];
 
 export default function Header() {
@@ -22,23 +42,43 @@ export default function Header() {
           className="group flex flex-col leading-tight hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         >
           <span className="text-slate-800 font-semibold text-base tracking-tight group-hover:text-blue-600 transition-colors duration-200">
-            Kenji Kuramitsu | Portfolio
+            蔵満 賢治
           </span>
           <span className="text-slate-400 text-xs tracking-wide">
-            Tech & Business Process
+            自走型・業務改善人材
           </span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {link.label}
-            </Link>
+            <div key={link.href} className="relative group">
+              <Link
+                href={link.href}
+                className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-1"
+              >
+                {link.label}
+                {/* サブ項目がある場合は下矢印を表示 */}
+                {link.subItems && <span className="text-[10px] text-slate-400 group-hover:text-blue-500 transition-colors">▼</span>}
+              </Link>
+
+              {/* ▼ ホバー時に表示されるドロップダウン ▼ */}
+              {link.subItems && (
+                <div className="absolute left-0 top-full pt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left scale-95 group-hover:scale-100 z-50">
+                  <div className="bg-white border border-slate-200 rounded-md shadow-lg py-2">
+                    {link.subItems.map((sub) => (
+                      <Link
+                        key={sub.href}
+                        href={sub.href}
+                        className="block px-4 py-2 text-xs font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
           <Link
             href="#contact"
@@ -63,21 +103,37 @@ export default function Header() {
 
       {/* Mobile Nav Dropdown */}
       {menuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 py-3 flex flex-col gap-1 shadow-md">
+        <div className="md:hidden border-t border-slate-100 bg-white px-4 py-4 flex flex-col gap-3 shadow-md max-h-[80vh] overflow-y-auto">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-md transition-colors duration-200"
-            >
-              {link.label}
-            </Link>
+            <div key={link.href} className="flex flex-col">
+              <Link
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="px-3 py-2 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-md transition-colors duration-200"
+              >
+                {link.label}
+              </Link>
+              {/* スマホ版はインデントして全項目を表示 */}
+              {link.subItems && (
+                <div className="flex flex-col pl-4 ml-3 border-l-2 border-slate-100 mt-1 space-y-1">
+                  {link.subItems.map((sub) => (
+                    <Link
+                      key={sub.href}
+                      href={sub.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="py-1.5 px-2 text-xs font-medium text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                    >
+                      {sub.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
           <Link
             href="#contact"
             onClick={() => setMenuOpen(false)}
-            className="mt-1 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md text-center transition-colors duration-200"
+            className="mt-2 px-3 py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md text-center transition-colors duration-200"
           >
             Contact
           </Link>

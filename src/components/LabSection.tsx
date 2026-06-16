@@ -123,8 +123,8 @@ export default function LabSection() {
         </div>
 
         <div className="space-y-8">
-          {/* Python Demo */}
-          <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+          {/* Scraping Demo */}
+          <div id="lab-scraping" className="scroll-mt-24 bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-xl font-bold text-red-600 mb-4">Scraping Demo: Webサイト情報チェッカー</h3>
             <p className="mb-4 text-slate-600 text-sm leading-relaxed">
               Python（BeautifulSoup等）で培ったデータ抽出の知見を応用し、本デモではNext.jsのサーバーサイド機能（API Routes）を用いて実装しています。<br />
@@ -208,7 +208,7 @@ export default function LabSection() {
           </div>
 
           {/* PHP Demo */}
-          <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div id="lab-php" className="scroll-mt-24 bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-xl font-bold text-indigo-600 mb-4">PHP Demo: ひとことBBS</h3>
             <div className="mb-4 text-slate-600 text-sm leading-relaxed space-y-1">
               <p>外部PHPサーバーと通信し、テキストファイルにデータを保存・読み込みします。</p>
@@ -264,7 +264,7 @@ export default function LabSection() {
           </div>
 
           {/* Java Demo */}
-          <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div id="lab-java" className="scroll-mt-24 bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-xl font-bold text-orange-600 mb-4">Java Demo: 簡易マークダウン・プレビューア</h3>
             <p className="mb-4 text-slate-600 text-sm leading-relaxed">
               Javaで構築したロジックを、Webブラウザ用にJavaScriptへ最適化して実装しています。
@@ -328,7 +328,7 @@ export default function LabSection() {
 
           {/* Microservices Architecture */}
           <div className="mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Microservices Architecture</h2>
+            <h2 id="lab-microservices" className="scroll-mt-24 text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Microservices Architecture</h2>
             
             <div className="mb-8 p-5 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg shadow-sm flex gap-3 items-start">
               <span className="text-xl leading-none mt-0.5">💡</span>
