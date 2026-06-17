@@ -769,7 +769,7 @@ export default function ProjectsSection() {
                     {/* ▼ (acc) を (acc: Accordion) に変更 ▼ */}
                     {p.accordions.map((acc: Accordion) => (
                       <details key={acc.title} className="text-sm group">
-                        <summary className="cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
+                        <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
                           <span className="inline-block transition-transform group-open:rotate-90 mr-1">▶</span> {acc.title}
                         </summary>
                         <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-slate-50 rounded p-4 border border-slate-100">
