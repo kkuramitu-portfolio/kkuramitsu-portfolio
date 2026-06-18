@@ -11,10 +11,11 @@ const navLinks = [
     href: "#projects",
     subItems: [
       { label: "1. SQLデータ移行", href: "#sql-migration" },
-      { label: "2. Webサイト情報チェッカー", href: "#web-scraper" },
-      { label: "3. マイクロサービス連携", href: "#microservices" },
-      { label: "4. ポートフォリオ刷新", href: "#portfolio-renewal" },
-      { label: "5. Python業務準備自動化", href: "#python-automation" },
+      { label: "2. バックアップ運用改善", href: "#backup-improvement" }, // ← 追加
+      { label: "3. Webサイト情報チェッカー", href: "#web-scraper" },
+      { label: "4. マイクロサービス連携", href: "#microservices" },
+      { label: "5. ポートフォリオ刷新", href: "#portfolio-renewal" },
+      { label: "6. Python業務準備自動化", href: "#python-automation" },
     ]
   },
   { label: "Skills", href: "#skills" },

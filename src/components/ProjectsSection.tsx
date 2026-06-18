@@ -23,7 +23,7 @@ type Project = {
   accordions: Accordion[];
 };
 
-const projects = [
+const projects: Project[] = [
   {
     id: "sql-migration",
     title: "1. SQLデータ移行プロジェクト",
@@ -38,7 +38,7 @@ const projects = [
           <div className="space-y-3 text-sm text-slate-700">
             <ul className="list-disc list-outside ml-4 space-y-1.5">
               <li className="pl-1">Lotus Notesから新システムへの移行案件</li>
-              <li className="pl-1">データ件数は2万5000件以上</li>
+              <li className="pl-1">データ件数は2万件以上</li>
               <li className="pl-1">グループ会社名、部署名、取引先企業名などに大量の表記揺れが存在</li>
               <li className="pl-1">ステータスや関連情報を新システム用のIDへ変換する必要があった</li>
               <li className="pl-1">既存担当者が退職し、移行作業の継続が困難な状態だった</li>
@@ -105,7 +105,7 @@ const projects = [
         )
       }
     ],
-accordions: [
+    accordions: [
       { 
         title: "使用SQL（ETLパイプラインの抜粋）", 
         content: (
@@ -328,10 +328,6 @@ WHERE
                   <p className="font-bold text-slate-800">5. 自動差分検知SQLによる「品質100%」の保証</p>
                   <p className="leading-relaxed mt-1">目視確認のヒューマンエラーを排除するため、「変換前の生データ」と「変換後のテストテーブル」を直接比較する検証用SQLを構築。<br /><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">IF(NOT (... &lt;=&gt; ...))</code> を用いて、不一致が発生したカラム名のみを抽出する仕組みを作成し、数十項目のバリデーションを瞬時に実行。差分が「0件」になるまでロジックを修正し、移行データの品質を機械的に100%保証しました。</p>
                 </div>
-                <div>
-                  <p className="font-bold text-slate-800">6. マスタデータの重複整理とUI最適化（クリーンアップ）</p>
-                  <p className="leading-relaxed mt-1">移行完了後、アプリケーションのUI（プルダウンメニュー等）に同一名称の選択肢が複数表示されてしまうことを防ぐため、マスタデータの最終クリーンアップを実施しました。同じ正式名称を持つ重複レコード群の中から、名寄せ時に「正」と定めた最小ID以外のレコードをSQLで特定して一括で論理削除（無効化）し、ユーザーの操作性向上と運用後のデータ品質を担保しました。</p>
-                </div>
               </div>
             </div>
 
@@ -348,8 +344,269 @@ WHERE
     ]
   },
   {
+    id: "backup-improvement",
+    title: "2. バックアップ運用改善プロジェクト",
+    badge: "実務課題解決事例",
+    badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
+    summary: "業務管理システムのバックアップ運用において、NASへのバックアップが正常に作成されていない問題が発覚しました。バックアップは継続して取得されているものの、NASへの保存が停止しており、ローカルPCのみに保存され続けていたため、顧客からのクレームに発展していました。原因調査から運用設計の見直し、障害通知、復旧時の自動同期までを含めたバックアップ運用改善を実施しました。",
+    sections: [
+      { 
+        title: "背景・課題", 
+        fullWidth: true,
+        items: [
+          "業務管理システムは顧客企業のサーバー用PC上で運用",
+          "バックアップ保存先としてNASを導入",
+          "バッチ処理とタスクスケジューラによりバックアップを自動取得",
+          "NASへのバックアップは設定後約1週間で停止",
+          "その後はローカルPCにのみバックアップが保存され続けていた",
+          "障害発生時に検知できる仕組みが存在していなかった",
+          "顧客からバックアップ運用に関するクレームが発生"
+        ]
+      },
+      {
+        title: "実施内容",
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              まず既存運用を調査し、NASアクセス時の認証や権限設定に問題があることを確認しました。その上で、バックアップ処理の見直しを実施しました。
+            </p>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">1. NASアクセスの安定化</p>
+              <ul className="list-disc list-outside ml-4 space-y-1">
+                <li className="pl-1">NAS専用アカウントを利用したアクセス処理を実装</li>
+                <li className="pl-1">必要な権限設定を見直し</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">2. バックアップ取得優先順位の見直し</p>
+              <ul className="list-disc list-outside ml-4 space-y-1">
+                <li className="pl-1">NASへアクセス可能な場合は直接バックアップを保存</li>
+                <li className="pl-1">NASへアクセスできない場合はローカルへ一時保存</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">3. 障害検知の自動化</p>
+              <ul className="list-disc list-outside ml-4 space-y-1">
+                <li className="pl-1">NASアクセス失敗時にメール通知を実施</li>
+                <li className="pl-1">関係部署全員へ自動通知</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">4. 自動復旧処理の実装</p>
+              <ul className="list-disc list-outside ml-4 space-y-1">
+                <li className="pl-1">NAS復旧時に未同期バックアップを自動コピー</li>
+                <li className="pl-1">コピー完了後にローカルデータを自動削除</li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">5. バックアップ世代管理</p>
+              <ul className="list-disc list-outside ml-4 space-y-1">
+                <li className="pl-1">保存期間を365日以内に統一</li>
+                <li className="pl-1">保持期間を超過したバックアップを自動削除</li>
+              </ul>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "成果", 
+        fullWidth: true,
+        items: [
+          "NASへのバックアップ失敗を即時検知できる仕組みを構築",
+          "バックアップ取得失敗時のデータ保護を実現",
+          "障害発生時の運用リスクを低減",
+          "NAS復旧後の手動対応を不要化",
+          "バックアップ管理運用の安定化を実現"
+        ] 
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        items: [
+          "バックアップ取得だけでなく監視設計の重要性",
+          "障害発生を前提とした運用設計の重要性",
+          "フェイルセーフを考慮した仕組み作り",
+          "自動化と運用保守のバランス",
+          "システム運用における再発防止策の考え方",
+          "ユーザーが安心して利用できる仕組み作りの重要性"
+        ] 
+      }
+    ],
+    accordions: [
+          { 
+            title: "詳細を見る（システム概要と技術的な工夫）", 
+            content: (
+              <div className="space-y-6 text-sm text-slate-700">
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">ハイブリッド・自動バックアップ＆メンテナンスシステム</h4>
+                  <p className="leading-relaxed">
+                    NAS（ネットワークストレージ）へのバックアップを主軸としつつ、接続失敗時にはローカルストレージへ自動退避し、管理者へメール通知を行う堅牢なバックアップシステム。<br />
+                    NAS復旧時にはローカルデータを自動同期し、さらにNAS上の古いデータを自動削除するライフサイクル管理機能も備えています。
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">主な機能</h4>
+                  <ol className="list-decimal list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">管理者権限への自動昇格:</span> 実行時に権限をチェックし、必要に応じて自動で昇格。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">ハイブリッド・バックアップ:</span> NASの死活監視を行い、保存先を動的に切り替え。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">自動同期（Robocopy）:</span> NAS復旧時、ローカルに一時保存されたデータを属性を維持したまま自動転送。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">インテリジェント・クリーンアップ:</span> PowerShellを統合し、特定の重要フォルダを除外しながら、1年以上経過したバックアップフォルダのみを自動削除。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">エラー通知:</span> 異常発生時にPowerShell経由でSMTPメールを送信。</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">開発のポイントと技術的な工夫</h4>
+                  <ul className="list-disc list-outside ml-4 space-y-2">
+                    <li className="pl-1"><span className="font-bold text-slate-800">フェイルセーフ設計:</span> NASが不安定でバックアップが失敗するリスクがあったため、二段構えの自動復旧ロジックを構築しました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">言語の適材適所:</span> バッチファイルでは難しい日付判定や除外リスト処理を、PowerShellを呼び出すことで解決しました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">堅牢なコピー処理:</span> Robocopyのバックアップモード（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">/B</code>）を使用し、アクセス権限に左右されない確実なコピーを実現しました。</li>
+                    <li className="pl-1"><span className="font-bold text-slate-800">安全への配慮:</span> スクリプト自身を削除しないよう除外設定を施し、運用ミスを防ぐ設計にしました。</li>
+                  </ul>
+                </div>
+              </div>
+            )
+          },
+          { 
+            title: "使用コード（backup.bat / send_mail.ps1）", 
+            content: (
+              <div className="space-y-8 text-sm text-slate-700">
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2">1. backup.bat (簡易・匿名化版)</h4>
+                  <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+                    <code>
+    {`@echo off
+    setlocal enabledelayedexpansion
+
+    REM =================================================================
+    REM ---          0. 管理者権限への自動昇格                       ---
+    REM =================================================================
+    openfiles >nul 2>&1
+    if %errorlevel% neq 0 (
+        powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
+        exit /b
+    )
+
+    REM =================================================================
+    REM ---                  1. 設定項目                              ---
+    REM =================================================================
+    set DB_NAME=my_database
+    set NAS_PATH=\\\\192.168.x.x\\backup
+    set LOCAL_ROOT=C:\\backup_system
+    set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
+
+    REM 保存期間の設定 (日換算)
+    set RETENTION_DAYS=365
+
+    REM =================================================================
+    REM ---                  2. NAS接続確認                           ---
+    REM =================================================================
+    net use %NAS_PATH% /delete /yes >nul 2>&1
+    net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
+
+    if %ERRORLEVEL% NEQ 0 (
+        goto :NAS_FAIL
+    ) else (
+        goto :NAS_SUCCESS
+    )
+
+    REM =================================================================
+    REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
+    REM =================================================================
+    :NAS_FAIL
+    set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
+    if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+
+    REM バックアップ実行
+    call :EXECUTE_BACKUP "%RUN_DIR%"
+
+    REM 管理者へ通知
+    powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
+    goto :END
+
+    REM =================================================================
+    REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
+    REM =================================================================
+    :NAS_SUCCESS
+    set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
+    if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+
+    REM バックアップ実行
+    call :EXECUTE_BACKUP "%RUN_DIR%"
+
+    REM ローカルに一時保存されていた過去データをNASへ移動
+    for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
+        robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
+    )
+
+    REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
+    echo Cleaning up old data...
+    powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
+
+    goto :END
+
+    REM =================================================================
+    REM ---                バックアップ実行サブルーチン               ---
+    REM =================================================================
+    :EXECUTE_BACKUP
+    set "DEST=%~1"
+    REM DBダンプやファイルコピーのコマンドをここに記述
+    mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
+    robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
+    exit /b
+
+    :END
+    net use %NAS_PATH% /delete /yes >nul 2>&1
+    exit /b 0`}
+                    </code>
+                  </pre>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2">2. send_mail.ps1 (簡易・匿名化版)</h4>
+                  <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+                    <code>
+    {`param([string]$Subject, [string]$Body)
+
+    # --- メール送信設定 ---
+    $SmtpServer  = "smtp.example.com"
+    $SmtpPort    = 587
+    $Username    = "system@example.com"
+    $Password    = "secure_password"
+    $To          = "admin@example.com"
+
+    # --- 送信処理 ---
+    $SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
+    $Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
+
+    try {
+        Send-MailMessage -SmtpServer $SmtpServer \`
+                        -Port $SmtpPort \`
+                        -UseSsl \`
+                        -From $Username \`
+                        -To $To \`
+                        -Subject $Subject \`
+                        -Body $Body \`
+                        -Credential $Cred \`
+                        -Encoding UTF8 \`
+                        -ErrorAction Stop
+    } catch {
+        exit 1
+    }
+    exit 0`}
+                    </code>
+                  </pre>
+                </div>
+              </div>
+            )
+          }
+        ]
+  },
+  {
     id: "web-scraper",
-    title: "2. Webサイト情報チェッカー",
+    title: "3. Webサイト情報チェッカー",
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "Pythonで一般的に行われるスクレイピング処理を、あえてNext.jsのAPI RoutesとNode.js環境で再現したシステムです。指定したWebサイトの情報をサーバーサイドで取得し、タイトルや概要を抽出します。",
@@ -365,7 +622,7 @@ WHERE
             </ul>
             <div className="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-blue-800 text-xs font-bold flex items-center gap-2">
               <span>💡</span>
-              <p>※Pythonを用いた実務自動化の実績については「5. Pythonによる業務準備自動化」をご参照ください。</p>
+              <p>※Pythonを用いた実務自動化の実績については「6. Pythonによる業務準備自動化」をご参照ください。</p>
             </div>
           </div>
         )
@@ -376,7 +633,7 @@ WHERE
       { title: "自分で行ったこと", items: ["要件整理", "実装内容理解", "修正", "テスト", "デプロイ"] },
       { title: "学んだこと", items: ["言語やフレームワークに依存しないスクレイピングの基礎概念", "Next.jsにおけるAPI構築とサーバーサイドでの外部通信", "DOM解析の基礎"] }
     ],
-accordions: [
+    accordions: [
       { 
         title: "技術的な詳細（API Routesの実装抜粋）", 
         content: (
@@ -425,7 +682,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "microservices",
-    title: "3. マイクロサービス連携デモ",
+    title: "4. マイクロサービス連携デモ",
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "GoとC#による複数サービス間通信を検証するための学習プロジェクト。",
@@ -438,46 +695,46 @@ return NextResponse.json({ title, description });`}
       { title: "学んだこと", items: ["マイクロサービス設計", "API通信", "Docker運用"] }
     ],
     accordions: [
-          { 
-            title: "技術的な詳細（アーキテクチャと各APIの実装）", 
-            content: (
-              <div className="space-y-6 text-sm text-slate-700">
-                {/* アーキテクチャ設計とリソース最適化 */}
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">アーキテクチャ設計とリソース最適化</h4>
-                  <p className="leading-relaxed">
-                    Renderの仕様上、一定時間アクセスがないとスリープ状態になるため、初回リクエスト時にコールドスタートによる遅延（10〜30秒）が発生します。<br />
-                    ヘルスチェックAPIを用いたバックグラウンドでの事前ウォームアップも検討しましたが、クラウドリソースの最適化（無料枠の枯渇防止）の観点から、意図的に実装を見送るという実務的なトレードオフ判断を行っています。
-                  </p>
-                </div>
-                
-                {/* Go API */}
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Go API: ロバストな並行処理</h4>
-                  <ul className="list-disc list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">レースコンディションの防止:</span> 標準ライブラリの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">sync.WaitGroup</code> を使用し、全てのGoroutine（軽量スレッド）が完了したことを確実に保証してからレスポンスを返す、安全で信頼性の高い並行処理を実装しています。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">リソース管理:</span> 各Goroutineは自己完結したタスクを実行し、完了後には確実にリソースを解放（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">wg.Done()</code>）するため、Goroutineリーク（処理が終了せず残り続ける問題）の発生を防いでいます。</li>
-                  </ul>
-                </div>
+      { 
+        title: "技術的な詳細（アーキテクチャと各APIの実装）", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            {/* アーキテクチャ設計とリソース最適化 */}
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">アーキテクチャ設計とリソース最適化</h4>
+              <p className="leading-relaxed">
+                Renderの仕様上、一定時間アクセスがないとスリープ状態になるため、初回リクエスト時にコールドスタートによる遅延（10〜30秒）が発生します。<br />
+                ヘルスチェックAPIを用いたバックグラウンドでの事前ウォームアップも検討しましたが、クラウドリソースの最適化（無料枠の枯渇防止）の観点から、意図的に実装を見送るという実務的なトレードオフ判断を行っています。
+              </p>
+            </div>
+            
+            {/* Go API */}
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Go API: ロバストな並行処理</h4>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">レースコンディションの防止:</span> 標準ライブラリの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">sync.WaitGroup</code> を使用し、全てのGoroutine（軽量スレッド）が完了したことを確実に保証してからレスポンスを返す、安全で信頼性の高い並行処理を実装しています。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">リソース管理:</span> 各Goroutineは自己完結したタスクを実行し、完了後には確実にリソースを解放（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">wg.Done()</code>）するため、Goroutineリーク（処理が終了せず残り続ける問題）の発生を防いでいます。</li>
+              </ul>
+            </div>
 
-                {/* C# API */}
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">C# (ASP.NET Core) API: 堅牢なデータ操作とセキュリティ</h4>
-                  <p className="leading-relaxed mb-2">Dockerコンテナ上で稼働させ、堅牢なエンタープライズ技術とモダンフロントエンドの融合を証明しています。</p>
-                  <ul className="list-disc list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">SQLインジェクション対策:</span> データベースを使用せず、サーバーのメモリ上にあるデータをLINQで操作しているため、SQLインジェクション攻撃の危険性は原理的にありません。LINQによる型安全なクエリ実行を示しています。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">入力値の検証:</span> フロントエンドからの並び替えキー（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">sortBy</code>）は、サーバーサイドの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">switch</code> 文で検証する「ホワイトリスト方式」を採用。意図しない値が指定された場合はデフォルトの並び順を適用し、予期せぬエラーを防いでいます。</li>
-                  </ul>
-                </div>
-              </div>
-            )
-          }
-        ]
+            {/* C# API */}
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">C# (ASP.NET Core) API: 堅牢なデータ操作とセキュリティ</h4>
+              <p className="leading-relaxed mb-2">Dockerコンテナ上で稼働させ、堅牢なエンタープライズ技術とモダンフロントエンドの融合を証明しています。</p>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">SQLインジェクション対策:</span> データベースを使用せず、サーバーのメモリ上にあるデータをLINQで操作しているため、SQLインジェクション攻撃の危険性は原理的にありません。LINQによる型安全なクエリ実行を示しています。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">入力値の検証:</span> フロントエンドからの並び替えキー（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">sortBy</code>）は、サーバーサイドの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">switch</code> 文で検証する「ホワイトリスト方式」を採用。意図しない値が指定された場合はデフォルトの並び順を適用し、予期せぬエラーを防いでいます。</li>
+              </ul>
+            </div>
+          </div>
+        )
+      }
+    ]
   },
   {
     id: "portfolio-renewal",
-    title: "4. ポートフォリオ刷新プロジェクト",
-    badge: "学習・技術キャッチアップ事例", // バッジ名もアドバイスに合わせて微修正
+    title: "5. ポートフォリオ刷新プロジェクト",
+    badge: "学習・技術キャッチアップ事例",
     badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
     summary: "当初はHTML/CSS/JavaScriptでポートフォリオサイトを開発していましたが、開発途中でNext.jsを知り、保守性や拡張性を考慮してNext.jsへ移行しました。技術習得とサイト開発を並行しながら構築を進め、現在も継続的に機能追加・改善を行っています。",
     sections: [
@@ -534,81 +791,81 @@ return NextResponse.json({ title, description });`}
       }
     ],
     accordions: [
-          { 
-            title: "移行前後の比較", 
-            content: (
-              <div className="space-y-6 text-sm text-slate-700">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* 移行前 */}
-                  <div className="bg-slate-100 border border-slate-200 rounded-md p-5">
-                    <h4 className="font-bold text-slate-500 mb-4 text-center border-b border-slate-200 pb-2">移行前（初期構想）</h4>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> HTML / CSS / JavaScript</li>
-                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> ページ単位のベタ書き管理</li>
-                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> 手動でのファイルアップロード</li>
-                      <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> 機能追加のたびに複数ページを修正</li>
-                    </ul>
-                  </div>
-                  {/* 移行後 */}
-                  <div className="bg-blue-50 border border-blue-100 rounded-md p-5 shadow-sm">
-                    <h4 className="font-bold text-blue-700 mb-4 text-center border-b border-blue-100 pb-2">移行後（現在）</h4>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> Next.js / Tailwind CSS / TypeScript</li>
-                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> コンポーネント分割による一元管理</li>
-                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> Vercel連携による自動デプロイ</li>
-                      <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> 拡張性を前提としたモダンな構成</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="bg-white p-5 rounded border border-slate-200 shadow-sm">
-                  <p className="font-bold text-slate-800 mb-1">所感</p>
-                  <p className="leading-relaxed">
-                    静的なポートフォリオサイトであっても、モダンなフレームワークを導入することで、コードの保守性や将来の拡張性が劇的に向上することを実体験として学びました。
-                  </p>
-                </div>
+      { 
+        title: "移行前後の比較", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* 移行前 */}
+              <div className="bg-slate-100 border border-slate-200 rounded-md p-5">
+                <h4 className="font-bold text-slate-500 mb-4 text-center border-b border-slate-200 pb-2">移行前（初期構想）</h4>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> HTML / CSS / JavaScript</li>
+                  <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> ページ単位のベタ書き管理</li>
+                  <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> 手動でのファイルアップロード</li>
+                  <li className="flex items-start gap-2"><span className="text-slate-400 mt-0.5">▪</span> 機能追加のたびに複数ページを修正</li>
+                </ul>
               </div>
-            )
-          },
-          { 
-            title: "技術的な詳細（技術選定と学習プロセス）", 
-            content: (
-              <div className="space-y-6 text-sm text-slate-700">
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Next.jsを選んだ理由</h4>
-                  <p className="leading-relaxed">
-                    当初はHTML/CSSで制作を進めていましたが、情報収集の中でNext.jsが現在のWeb開発のトレンドであることを知りました。<br />
-                    「良さそうだから実際に試してみよう」と考え、開発途中であったにもかかわらず、学習を兼ねて大胆に構成をNext.jsへ移行し、最後まで完成させました。
-                  </p>
-                </div>
-                
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">実際に感じたメリット</h4>
-                  <ul className="list-disc list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">コンポーネント化の恩恵:</span> ヘッダーやボタンなどのUIパーツを再利用でき、修正が1箇所で済む管理のしやすさに感動しました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">TypeScriptとの相性:</span> 型定義による入力補完やエラー検知により、開発体験が大きく向上しました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">デプロイの簡便さ:</span> GitHubにプッシュするだけでVercelへ自動デプロイされる環境を構築し、CI/CDの基礎を体感しました。</li>
-                  </ul>
-                </div>
+              {/* 移行後 */}
+              <div className="bg-blue-50 border border-blue-100 rounded-md p-5 shadow-sm">
+                <h4 className="font-bold text-blue-700 mb-4 text-center border-b border-blue-100 pb-2">移行後（現在）</h4>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> Next.js / Tailwind CSS / TypeScript</li>
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> コンポーネント分割による一元管理</li>
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> Vercel連携による自動デプロイ</li>
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">▪</span> 拡張性を前提としたモダンな構成</li>
+                </ul>
+              </div>
+            </div>
+            <div className="bg-white p-5 rounded border border-slate-200 shadow-sm">
+              <p className="font-bold text-slate-800 mb-1">所感</p>
+              <p className="leading-relaxed">
+                静的なポートフォリオサイトであっても、モダンなフレームワークを導入することで、コードの保守性や将来の拡張性が劇的に向上することを実体験として学びました。
+              </p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "技術的な詳細（技術選定と学習プロセス）", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Next.jsを選んだ理由</h4>
+              <p className="leading-relaxed">
+                当初はHTML/CSSで制作を進めていましたが、情報収集の中でNext.jsが現在のWeb開発のトレンドであることを知りました。<br />
+                「良さそうだから実際に試してみよう」と考え、開発途中であったにもかかわらず、学習を兼ねて大胆に構成をNext.jsへ移行し、最後まで完成させました。
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">実際に感じたメリット</h4>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">コンポーネント化の恩恵:</span> ヘッダーやボタンなどのUIパーツを再利用でき、修正が1箇所で済む管理のしやすさに感動しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">TypeScriptとの相性:</span> 型定義による入力補完やエラー検知により、開発体験が大きく向上しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">デプロイの簡便さ:</span> GitHubにプッシュするだけでVercelへ自動デプロイされる環境を構築し、CI/CDの基礎を体感しました。</li>
+              </ul>
+            </div>
 
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善予定</h4>
-                  <p className="leading-relaxed mb-2">
-                    本ポートフォリオは完成ではなく、継続的な技術検証の場（Lab）として拡張していく予定です。
-                  </p>
-                  <ul className="list-disc list-outside ml-4 space-y-1.5">
-                    <li className="pl-1">AWS環境（EC2 / RDSなど）への展開</li>
-                    <li className="pl-1">軽量なWebフレームワーク「Hono」の導入検証</li>
-                    <li className="pl-1">フロントエンドとバックエンドの完全なAPI分離構成への挑戦</li>
-                  </ul>
-                </div>
-              </div>
-            )
-          }
-        ]
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善予定</h4>
+              <p className="leading-relaxed mb-2">
+                本ポートフォリオは完成ではなく、継続的な技術検証の場（Lab）として拡張していく予定です。
+              </p>
+              <ul className="list-disc list-outside ml-4 space-y-1.5">
+                <li className="pl-1">AWS環境（EC2 / RDSなど）への展開</li>
+                <li className="pl-1">軽量なWebフレームワーク「Hono」の導入検証</li>
+                <li className="pl-1">フロントエンドとバックエンドの完全なAPI分離構成への挑戦</li>
+              </ul>
+            </div>
+          </div>
+        )
+      }
+    ]
   },
   {
     id: "python-automation",
-    title: "5. Pythonによる業務準備自動化",
+    title: "6. Pythonによる業務準備自動化",
     badge: "個人生産性向上事例",
     badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
     summary: "日々の業務開始時に行っていた複数システムへのログインや打刻、スケジュール確認などの定型作業を効率化するため、Pythonを用いた業務準備自動化ツールを開発しました。業務開始前に必要な一連の操作をワンクリックで実行できるようにし、毎日の定型作業を削減しました。",
@@ -672,45 +929,45 @@ return NextResponse.json({ title, description });`}
       }
     ],
     accordions: [
-          { 
-            title: "技術的な詳細と運用プロセス", 
-            content: (
-              <div className="space-y-6 text-sm text-slate-700">
-                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-4">
-                  <p className="text-yellow-800 text-xs font-bold flex items-center gap-1.5">
-                    <span>⚠️</span> コードの公開について
-                  </p>
-                  <p className="text-yellow-700 mt-1 leading-relaxed text-xs">
-                    本ツールは実際の業務環境内で開発・運用しました。企業コンプライアンスおよび機密情報保護の観点からソースコードの持ち出しが不可であったため、以下に設計・運用の詳細のみを記載します。
-                  </p>
-                </div>
+      { 
+        title: "技術的な詳細と運用プロセス", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 mb-4">
+              <p className="text-yellow-800 text-xs font-bold flex items-center gap-1.5">
+                <span>⚠️</span> コードの公開について
+              </p>
+              <p className="text-yellow-700 mt-1 leading-relaxed text-xs">
+                本ツールは実際の業務環境内で開発・運用しました。企業コンプライアンスおよび機密情報保護の観点からソースコードの持ち出しが不可であったため、以下に設計・運用の詳細のみを記載します。
+              </p>
+            </div>
 
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">利用技術</h4>
-                  <p className="leading-relaxed">
-                    Python / Selenium (WebDriver)
-                  </p>
-                </div>
-                
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">設計方針と工夫した点</h4>
-                  <ul className="list-disc list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">堅牢なエラーハンドリング:</span> ネットワークの遅延やシステムのロード時間によるエラーを防ぐため、Seleniumの明示的な待機（Explicit Wait）や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">try-except</code> による例外処理を実装し、途中で処理が落ちないように工夫しました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">セキュアな認証情報管理:</span> IDやパスワードなどの機密情報はスクリプト内に直接記述（ハードコード）せず、外部の設定ファイルや環境変数から読み込む設計とし、セキュリティに配慮しました。</li>
-                  </ul>
-                </div>
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">利用技術</h4>
+              <p className="leading-relaxed">
+                Python / Selenium (WebDriver)
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">設計方針と工夫した点</h4>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">堅牢なエラーハンドリング:</span> ネットワークの遅延やシステムのロード時間によるエラーを防ぐため、Seleniumの明示的な待機（Explicit Wait）や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">try-except</code> による例外処理を実装し、途中で処理が落ちないように工夫しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">セキュアな認証情報管理:</span> IDやパスワードなどの機密情報はスクリプト内に直接記述（ハードコード）せず、外部の設定ファイルや環境変数から読み込む設計とし、セキュリティに配慮しました。</li>
+              </ul>
+            </div>
 
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">運用と継続的な改善</h4>
-                  <ul className="list-disc list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">UI変更への追従:</span> 社内システムのアップデートによりHTML構造（DOM）が変更された際も、要素の取得ロジック（XPathやCSSセレクタ）を迅速に修正し、運用を継続させました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">実行の簡便化:</span> ターミナルを開かずともワンクリックで処理を開始できるよう、実行用のバッチファイル（.bat）を作成し、日々の利用ハードルを下げる工夫を行いました。</li>
-                  </ul>
-                </div>
-              </div>
-            )
-          }
-        ]
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">運用と継続的な改善</h4>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">UI変更への追従:</span> 社内システムのアップデートによりHTML構造（DOM）が変更された際も、要素の取得ロジック（XPathやCSSセレクタ）を迅速に修正し、運用を継続させました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">実行の簡便化:</span> ターミナルを開かずともワンクリックで処理を開始できるよう、実行用のバッチファイル（.bat）を作成し、日々の利用ハードルを下げる工夫を行いました。</li>
+              </ul>
+            </div>
+          </div>
+        )
+      }
+    ]
   }
 ];
 
