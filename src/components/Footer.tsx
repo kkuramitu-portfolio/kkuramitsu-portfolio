@@ -7,7 +7,7 @@ export default function Footer() {
           <p className="text-xs text-slate-500">Portfolio Website</p>
         </div>
         <div className="text-center sm:text-right">
-          <p className="text-xs text-slate-500">© 2026 Yayokichi. All Rights Reserved.</p>
+          <p className="text-xs text-slate-500">© 2026 Kuramitsu. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
