@@ -76,7 +76,7 @@ export default function HomeSection() {
           
           {/* ★ href のURLをご自身のGitHubリポジトリのURLに変更してください ★ */}
           <a
-            href="https://github.com/yayokichi/kuramitsu-portfolio" 
+            href="https://github.com/kkuramitu-portfolio" 
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 flex items-center gap-2 shadow-sm"
