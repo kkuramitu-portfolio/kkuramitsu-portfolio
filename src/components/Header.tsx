@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 // ▼ サブ項目を追加 ▼
+// ▼ サブ項目を追加・番号を更新 ▼
 const navLinks = [
   { label: "Home", href: "#home" },
   { 
@@ -11,11 +12,12 @@ const navLinks = [
     href: "#projects",
     subItems: [
       { label: "1. SQLデータ移行", href: "#sql-migration" },
-      { label: "2. バックアップ運用改善", href: "#backup-improvement" }, // ← 追加
-      { label: "3. Webサイト情報チェッカー", href: "#web-scraper" },
-      { label: "4. マイクロサービス連携", href: "#microservices" },
-      { label: "5. ポートフォリオ刷新", href: "#portfolio-renewal" },
-      { label: "6. Python業務準備自動化", href: "#python-automation" },
+      { label: "2. バックアップ運用改善", href: "#backup-improvement" },
+      { label: "3. メール事故防止チェックツール", href: "#mail-checker" }, // ← 追加
+      { label: "4. Webサイト情報チェッカー", href: "#web-scraper" },
+      { label: "5. マイクロサービス連携", href: "#microservices" },
+      { label: "6. ポートフォリオ刷新", href: "#portfolio-renewal" },
+      { label: "7. Python業務準備自動化", href: "#python-automation" },
     ]
   },
   { label: "Skills", href: "#skills" },

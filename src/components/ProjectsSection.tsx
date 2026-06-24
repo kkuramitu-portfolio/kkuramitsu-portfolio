@@ -434,179 +434,343 @@ WHERE
       }
     ],
     accordions: [
-          { 
-            title: "詳細を見る（システム概要と技術的な工夫）", 
-            content: (
-              <div className="space-y-6 text-sm text-slate-700">
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">ハイブリッド・自動バックアップ＆メンテナンスシステム</h4>
-                  <p className="leading-relaxed">
-                    NAS（ネットワークストレージ）へのバックアップを主軸としつつ、接続失敗時にはローカルストレージへ自動退避し、管理者へメール通知を行う堅牢なバックアップシステム。<br />
-                    NAS復旧時にはローカルデータを自動同期し、さらにNAS上の古いデータを自動削除するライフサイクル管理機能も備えています。
-                  </p>
-                </div>
+      { 
+        title: "詳細を見る（システム概要と技術的な工夫）", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">ハイブリッド・自動バックアップ＆メンテナンスシステム</h4>
+              <p className="leading-relaxed">
+                NAS（ネットワークストレージ）へのバックアップを主軸としつつ、接続失敗時にはローカルストレージへ自動退避し、管理者へメール通知を行う堅牢なバックアップシステム。<br />
+                NAS復旧時にはローカルデータを自動同期し、さらにNAS上の古いデータを自動削除するライフサイクル管理機能も備えています。
+              </p>
+            </div>
 
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">主な機能</h4>
-                  <ol className="list-decimal list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">管理者権限への自動昇格:</span> 実行時に権限をチェックし、必要に応じて自動で昇格。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">ハイブリッド・バックアップ:</span> NASの死活監視を行い、保存先を動的に切り替え。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">自動同期（Robocopy）:</span> NAS復旧時、ローカルに一時保存されたデータを属性を維持したまま自動転送。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">インテリジェント・クリーンアップ:</span> PowerShellを統合し、特定の重要フォルダを除外しながら、1年以上経過したバックアップフォルダのみを自動削除。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">エラー通知:</span> 異常発生時にPowerShell経由でSMTPメールを送信。</li>
-                  </ol>
-                </div>
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">主な機能</h4>
+              <ol className="list-decimal list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">管理者権限への自動昇格:</span> 実行時に権限をチェックし、必要に応じて自動で昇格。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">ハイブリッド・バックアップ:</span> NASの死活監視を行い、保存先を動的に切り替え。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">自動同期（Robocopy）:</span> NAS復旧時、ローカルに一時保存されたデータを属性を維持したまま自動転送。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">インテリジェント・クリーンアップ:</span> PowerShellを統合し、特定の重要フォルダを除外しながら、1年以上経過したバックアップフォルダのみを自動削除。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">エラー通知:</span> 異常発生時にPowerShell経由でSMTPメールを送信。</li>
+              </ol>
+            </div>
 
-                <div>
-                  <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">開発のポイントと技術的な工夫</h4>
-                  <ul className="list-disc list-outside ml-4 space-y-2">
-                    <li className="pl-1"><span className="font-bold text-slate-800">フェイルセーフ設計:</span> NASが不安定でバックアップが失敗するリスクがあったため、二段構えの自動復旧ロジックを構築しました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">言語の適材適所:</span> バッチファイルでは難しい日付判定や除外リスト処理を、PowerShellを呼び出すことで解決しました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">堅牢なコピー処理:</span> Robocopyのバックアップモード（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">/B</code>）を使用し、アクセス権限に左右されない確実なコピーを実現しました。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">安全への配慮:</span> スクリプト自身を削除しないよう除外設定を施し、運用ミスを防ぐ設計にしました。</li>
-                  </ul>
-                </div>
-              </div>
-            )
-          },
-          { 
-            title: "使用コード（backup.bat / send_mail.ps1）", 
-            content: (
-              <div className="space-y-8 text-sm text-slate-700">
-                <div>
-                  <h4 className="font-bold text-slate-800 mb-2">1. backup.bat (簡易・匿名化版)</h4>
-                  <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
-                    <code>
-    {`@echo off
-    setlocal enabledelayedexpansion
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">開発のポイントと技術的な工夫</h4>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">フェイルセーフ設計:</span> NASが不安定でバックアップが失敗するリスクがあったため、二段構えの自動復旧ロジックを構築しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">言語の適材適所:</span> バッチファイルでは難しい日付判定や除外リスト処理を、PowerShellを呼び出すことで解決しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">堅牢なコピー処理:</span> Robocopyのバックアップモード（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">/B</code>）を使用し、アクセス権限に左右されない確実なコピーを実現しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">安全への配慮:</span> スクリプト自身を削除しないよう除外設定を施し、運用ミスを防ぐ設計にしました。</li>
+              </ul>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "使用コード（backup.bat / send_mail.ps1）", 
+        content: (
+          <div className="space-y-8 text-sm text-slate-700">
+            <div>
+              <h4 className="font-bold text-slate-800 mb-2">1. backup.bat (簡易・匿名化版)</h4>
+              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+                <code>
+{`@echo off
+setlocal enabledelayedexpansion
 
-    REM =================================================================
-    REM ---          0. 管理者権限への自動昇格                       ---
-    REM =================================================================
-    openfiles >nul 2>&1
-    if %errorlevel% neq 0 (
-        powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
-        exit /b
-    )
-
-    REM =================================================================
-    REM ---                  1. 設定項目                              ---
-    REM =================================================================
-    set DB_NAME=my_database
-    set NAS_PATH=\\\\192.168.x.x\\backup
-    set LOCAL_ROOT=C:\\backup_system
-    set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
-
-    REM 保存期間の設定 (日換算)
-    set RETENTION_DAYS=365
-
-    REM =================================================================
-    REM ---                  2. NAS接続確認                           ---
-    REM =================================================================
-    net use %NAS_PATH% /delete /yes >nul 2>&1
-    net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
-
-    if %ERRORLEVEL% NEQ 0 (
-        goto :NAS_FAIL
-    ) else (
-        goto :NAS_SUCCESS
-    )
-
-    REM =================================================================
-    REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
-    REM =================================================================
-    :NAS_FAIL
-    set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
-    if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
-
-    REM バックアップ実行
-    call :EXECUTE_BACKUP "%RUN_DIR%"
-
-    REM 管理者へ通知
-    powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
-    goto :END
-
-    REM =================================================================
-    REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
-    REM =================================================================
-    :NAS_SUCCESS
-    set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
-    if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
-
-    REM バックアップ実行
-    call :EXECUTE_BACKUP "%RUN_DIR%"
-
-    REM ローカルに一時保存されていた過去データをNASへ移動
-    for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
-        robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
-    )
-
-    REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
-    echo Cleaning up old data...
-    powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
-
-    goto :END
-
-    REM =================================================================
-    REM ---                バックアップ実行サブルーチン               ---
-    REM =================================================================
-    :EXECUTE_BACKUP
-    set "DEST=%~1"
-    REM DBダンプやファイルコピーのコマンドをここに記述
-    mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
-    robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
+REM =================================================================
+REM ---          0. 管理者権限への自動昇格                       ---
+REM =================================================================
+openfiles >nul 2>&1
+if %errorlevel% neq 0 (
+    powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
     exit /b
+)
 
-    :END
-    net use %NAS_PATH% /delete /yes >nul 2>&1
-    exit /b 0`}
-                    </code>
-                  </pre>
-                </div>
+REM =================================================================
+REM ---                  1. 設定項目                              ---
+REM =================================================================
+set DB_NAME=my_database
+set NAS_PATH=\\\\192.168.x.x\\backup
+set LOCAL_ROOT=C:\\backup_system
+set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
 
-                <div>
-                  <h4 className="font-bold text-slate-800 mb-2">2. send_mail.ps1 (簡易・匿名化版)</h4>
-                  <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
-                    <code>
-    {`param([string]$Subject, [string]$Body)
+REM 保存期間の設定 (日換算)
+set RETENTION_DAYS=365
 
-    # --- メール送信設定 ---
-    $SmtpServer  = "smtp.example.com"
-    $SmtpPort    = 587
-    $Username    = "system@example.com"
-    $Password    = "secure_password"
-    $To          = "admin@example.com"
+REM =================================================================
+REM ---                  2. NAS接続確認                           ---
+REM =================================================================
+net use %NAS_PATH% /delete /yes >nul 2>&1
+net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
 
-    # --- 送信処理 ---
-    $SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
-    $Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
+if %ERRORLEVEL% NEQ 0 (
+    goto :NAS_FAIL
+) else (
+    goto :NAS_SUCCESS
+)
 
-    try {
-        Send-MailMessage -SmtpServer $SmtpServer \`
-                        -Port $SmtpPort \`
-                        -UseSsl \`
-                        -From $Username \`
-                        -To $To \`
-                        -Subject $Subject \`
-                        -Body $Body \`
-                        -Credential $Cred \`
-                        -Encoding UTF8 \`
-                        -ErrorAction Stop
-    } catch {
-        exit 1
-    }
-    exit 0`}
-                    </code>
-                  </pre>
-                </div>
-              </div>
-            )
-          }
-        ]
+REM =================================================================
+REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
+REM =================================================================
+:NAS_FAIL
+set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
+if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+
+REM バックアップ実行
+call :EXECUTE_BACKUP "%RUN_DIR%"
+
+REM 管理者へ通知
+powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
+goto :END
+
+REM =================================================================
+REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
+REM =================================================================
+:NAS_SUCCESS
+set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
+if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+
+REM バックアップ実行
+call :EXECUTE_BACKUP "%RUN_DIR%"
+
+REM ローカルに一時保存されていた過去データをNASへ移動
+for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
+    robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
+)
+
+REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
+echo Cleaning up old data...
+powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
+
+goto :END
+
+REM =================================================================
+REM ---                バックアップ実行サブルーチン               ---
+REM =================================================================
+:EXECUTE_BACKUP
+set "DEST=%~1"
+REM DBダンプやファイルコピーのコマンドをここに記述
+mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
+robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
+exit /b
+
+:END
+net use %NAS_PATH% /delete /yes >nul 2>&1
+exit /b 0`}
+                </code>
+              </pre>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 mb-2">2. send_mail.ps1 (簡易・匿名化版)</h4>
+              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+                <code>
+{`param([string]$Subject, [string]$Body)
+
+# --- メール送信設定 ---
+$SmtpServer  = "smtp.example.com"
+$SmtpPort    = 587
+$Username    = "system@example.com"
+$Password    = "secure_password"
+$To          = "admin@example.com"
+
+# --- 送信処理 ---
+$SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
+
+try {
+    Send-MailMessage -SmtpServer $SmtpServer \`
+                     -Port $SmtpPort \`
+                     -UseSsl \`
+                     -From $Username \`
+                     -To $To \`
+                     -Subject $Subject \`
+                     -Body $Body \`
+                     -Credential $Cred \`
+                     -Encoding UTF8 \`
+                     -ErrorAction Stop
+} catch {
+    exit 1
+}
+exit 0`}
+                </code>
+              </pre>
+            </div>
+          </div>
+        )
+      }
+    ]
+  },
+  {
+    id: "mail-checker",
+    title: "3. メール事故防止チェックツール",
+    badge: "業務改善事例",
+    badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
+    summary: "メール送信時の宛先ミス、添付漏れ、誤字脱字などのヒューマンエラーを防止するため、Excel VBAを活用したメール事故防止チェックツールを作成しました。人によるダブルチェックだけでは防ぎきれないミスが発生する可能性があるため、送信前に自己チェックを実施できる仕組みを構築しました。また、AIによる文章チェックを安全に利用するため、個人情報を匿名化して送信できる機能も実装しました。",
+    sections: [
+      { 
+        title: "背景・課題", 
+        fullWidth: true,
+        items: [
+          "メール送信時の確認作業が担当者ごとに異なっていた",
+          "ダブルチェック体制が存在しないケースがあった",
+          "ダブルチェックが存在しても人的ミスを完全には防げなかった",
+          "誤字脱字や添付漏れなどのメール事故リスクが存在していた",
+          "AIによる文章チェックを利用したいが、個人情報の取り扱いに課題があった"
+        ] 
+      },
+      { 
+        title: "実施内容", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-5 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              メール送信前の確認作業を標準化するため、Excel VBAによるセルフチェックツールを作成しました。
+            </p>
+            
+            <div className="bg-slate-50 border border-slate-100 rounded-md p-4">
+              <p className="font-bold text-slate-800 mb-2 border-b border-slate-200 pb-1">チェック機能</p>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">宛先チェック:</span> TO、CC、BCCの宛先確認、不要な宛先の確認、宛先順序の確認</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">添付ファイルチェック:</span> 添付漏れ確認、誤添付確認、不要ファイル確認</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">本文チェック:</span> 件名確認、宛名確認、会社名確認、URL・ファイル名確認、署名確認</li>
+              </ul>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-100 rounded-md p-4">
+              <p className="font-bold text-slate-800 mb-2 border-b border-slate-200 pb-1">AI文章チェック機能</p>
+              <p className="leading-relaxed mb-3">AIによる文章チェックを安全に利用するため、以下の仕組みを実装しました。</p>
+              <ol className="list-decimal list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">個人情報匿名化:</span> 氏名、会社名、メールアドレス、電話番号などの情報を管理用タグへ自動置換</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">AIレビュー:</span> 匿名化後の文章をAIへ送信し、誤字脱字、表現改善、ビジネス文書としての自然さを確認</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">自動復元:</span> AIレビュー後に元データへ復元</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">復元漏れ検知:</span> タグ残存チェック機能を実装し、匿名化データの残存を検知</li>
+              </ol>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "成果", 
+        fullWidth: true,
+        items: [
+          "メール送信前の確認手順を標準化",
+          "ヒューマンエラー防止のためのセルフチェック環境を構築",
+          "AIを活用した文章品質向上フローを確立",
+          "個人情報保護を考慮したAI活用手法を実現",
+          "業務品質向上のための仕組み作りを経験"
+        ] 
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        items: [
+          "ヒューマンエラーを前提とした業務設計の重要性",
+          "チェックリスト運用の有効性",
+          "業務フロー全体を考慮した改善の重要性",
+          "AI活用時の情報管理リスクへの配慮",
+          "自動化だけでなく品質向上を目的とした仕組み作り",
+          "品質管理の考え方を業務改善へ応用する重要性"
+        ] 
+      }
+    ],
+    accordions: [
+      { title: "画面イメージ", content: "（チェック画面・AIチェック画面掲載予定。いつでも入力できるように枠のみ用意しています。）" },
+      { title: "フロー図", content: "（メール作成 → チェック → 匿名化 → AIレビュー → 復元 → 最終確認 → 送信 のフロー図を掲載予定。）" },
+            { 
+        title: "詳細を見る（設計思想とVBA実装内容）", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">設計思想</h4>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">プラットフォームにVBAを選定した理由:</span> 全社員が新たなソフトをインストールすることなく、使い慣れたExcel上で即座に利用・展開できるため、現場への導入ハードルを最小化できると判断しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">属人化の排除と横展開（マスタ化）:</span> ツールを自分専用にするのではなく、関係会社、関係者、自身の署名などをExcelの「設定シート」に登録できるように設計。プログラム内に値を直書き（ハードコード）せず、誰でも自身の環境に合わせて汎用的に利用できる利便性を追求しました。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">システムによる強制的な情報保護:</span> パブリックな生成AIを利用する際、「個人情報を入力しないこと」という運用ルール（人間頼み）では必ずインシデントが発生します。そのため、APIへ送信する前にローカル環境（VBA側）で強制的に匿名化を行うフェイルセーフ設計を採用しました。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">匿名化ロジックとタグ管理</h4>
+              <p className="leading-relaxed mb-2">
+                VBAの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">Scripting.Dictionary</code> と正規表現（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">VBScript.RegExp</code>）を組み合わせ、抽出した個人情報と置換タグをペアでメモリ上に保持します。
+              </p>
+              <ul className="list-disc list-outside ml-4 space-y-1.5">
+                <li className="pl-1">設定シートから読み込んだ氏名・会社名リストや、正規表現で抽出したメールアドレスを <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">&lt;NAME_1&gt;</code> や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">&lt;EMAIL_1&gt;</code> といった一意のタグに置換。</li>
+                <li className="pl-1">AIからのレビュー結果受信後、Dictionaryの情報を元にタグを元の文字列へ逆置換（復元）。</li>
+                <li className="pl-1">AIがタグのフォーマットを崩してしまった場合に備え、復元後のテキストにタグ文字列が残存していないかを最終チェックする「復元漏れ検知」を実装。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 mb-2">VBA実装内容（匿名化・復元ロジックの抜粋）</h4>
+              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+                <code>
+{`' =========================================================
+' 個人情報の匿名化処理
+' =========================================================
+Function AnonymizeText(ByVal originalText As String, ByRef dict As Object) As String
+    Dim anonymized As String
+    anonymized = originalText
+    
+    ' ▼ 工夫点：ハードコードせず、設定シート(マスタ)から動的に配列を取得
+    Dim names As Variant
+    names = GetNamesFromSettingSheet() ' 例: Array("蔵満", "佐藤", ...)
+    
+    Dim i As Integer
+    For i = LBound(names) To UBound(names)
+        If InStr(anonymized, names(i)) > 0 Then
+            Dim tag As String
+            tag = "<NAME_" & i & ">"
+            
+            ' 復元用にDictionaryへ保存 (Key: タグ, Item: 元の氏名)
+            dict.Add tag, names(i)
+            
+            ' 本文内の氏名をタグに置換
+            anonymized = Replace(anonymized, names(i), tag)
+        End If
+    Next i
+    
+    ' ※この後、正規表現を用いたメールアドレスや電話番号の置換処理が続く
+    
+    AnonymizeText = anonymized
+End Function
+
+' =========================================================
+' AIレビュー後の復元処理と漏れ検知
+' =========================================================
+Function RestoreText(ByVal aiText As String, ByVal dict As Object) As String
+    Dim restored As String
+    restored = aiText
+    
+    ' Dictionaryに保存したタグを元に逆置換
+    Dim key As Variant
+    For Each key In dict.Keys
+        restored = Replace(restored, key, dict(key))
+    Next key
+    
+    ' 【フェイルセーフ】復元漏れ検知
+    ' AIがタグを "< NAME_1 >" のように改変してしまい復元できなかった場合を検知
+    If InStr(restored, "<NAME_") > 0 Or InStr(restored, "<EMAIL_") > 0 Then
+        MsgBox "【警告】匿名化タグが残存しています。AIの応答によってタグが改変された可能性があります。目視で確認してください。", vbCritical, "復元エラー検知"
+    End If
+    
+    RestoreText = restored
+End Function`}
+                </code>
+              </pre>
+            </div>
+          </div>
+        )
+      }
+    ]
   },
   {
     id: "web-scraper",
-    title: "3. Webサイト情報チェッカー",
+    title: "4. Webサイト情報チェッカー",
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "Pythonで一般的に行われるスクレイピング処理を、あえてNext.jsのAPI RoutesとNode.js環境で再現したシステムです。指定したWebサイトの情報をサーバーサイドで取得し、タイトルや概要を抽出します。",
@@ -622,7 +786,7 @@ WHERE
             </ul>
             <div className="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-blue-800 text-xs font-bold flex items-center gap-2">
               <span>💡</span>
-              <p>※Pythonを用いた実務自動化の実績については「6. Pythonによる業務準備自動化」をご参照ください。</p>
+              <p>※Pythonを用いた実務自動化の実績については「7. Pythonによる業務準備自動化」をご参照ください。</p>
             </div>
           </div>
         )
@@ -682,7 +846,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "microservices",
-    title: "4. マイクロサービス連携デモ",
+    title: "5. マイクロサービス連携デモ",
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "GoとC#による複数サービス間通信を検証するための学習プロジェクト。",
@@ -733,7 +897,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "portfolio-renewal",
-    title: "5. ポートフォリオ刷新プロジェクト",
+    title: "6. ポートフォリオ刷新プロジェクト",
     badge: "学習・技術キャッチアップ事例",
     badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
     summary: "当初はHTML/CSS/JavaScriptでポートフォリオサイトを開発していましたが、開発途中でNext.jsを知り、保守性や拡張性を考慮してNext.jsへ移行しました。技術習得とサイト開発を並行しながら構築を進め、現在も継続的に機能追加・改善を行っています。",
@@ -865,7 +1029,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "python-automation",
-    title: "6. Pythonによる業務準備自動化",
+    title: "7. Pythonによる業務準備自動化",
     badge: "個人生産性向上事例",
     badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
     summary: "日々の業務開始時に行っていた複数システムへのログインや打刻、スケジュール確認などの定型作業を効率化するため、Pythonを用いた業務準備自動化ツールを開発しました。業務開始前に必要な一連の操作をワンクリックで実行できるようにし、毎日の定型作業を削減しました。",
