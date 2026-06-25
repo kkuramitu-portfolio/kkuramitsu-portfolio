@@ -126,6 +126,18 @@ export default function LabSection() {
           {/* Scraping Demo */}
           <div id="lab-scraping" className="scroll-mt-24 bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-xl font-bold text-red-600 mb-4">Scraping Demo: Webサイト情報チェッカー</h3>
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                設計・実装時間: 約2.5時間
+              </span>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-xs font-bold text-purple-700">
+                  新規キャッチアップ
+                </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-orange-50 border border-orange-200 text-xs font-bold text-orange-700">
+                注力学習言語 (Python応用)
+              </span>
+            </div>
             <p className="mb-4 text-slate-600 text-sm leading-relaxed">
               Python（BeautifulSoup等）で培ったデータ抽出の知見を応用し、本デモではNext.jsのサーバーサイド機能（API Routes）を用いて実装しています。<br />
               外部Pythonサーバーと通信し、指定したWebサイトのHTMLをリアルタイムで解析して「タイトル（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono mx-0.5">&lt;title&gt;</code>）」と「概要（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono mx-0.5">&lt;meta name=&quot;description&quot;&gt;</code>）」を抽出・表示します。
@@ -210,10 +222,20 @@ export default function LabSection() {
           {/* PHP Demo */}
           <div id="lab-php" className="scroll-mt-24 bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-xl font-bold text-indigo-600 mb-4">PHP Demo: ひとことBBS</h3>
+            <div className="mb-4 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                設計・実装時間（サーバー契約含む）: 約4時間
+              </span>
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-xs font-bold text-blue-700">
+                実務経験言語
+              </span>
+            </div>
             <div className="mb-4 text-slate-600 text-sm leading-relaxed space-y-1">
               <p>外部PHPサーバーと通信し、テキストファイルにデータを保存・読み込みします。</p>
-              <p>投稿したメッセージは削除も可能です。</p>
-              <p>また、メッセージは投稿日から5日経過時点で自動削除されます。</p>
+              <p>メッセージは投稿日から5日経過時点で自動削除されます。投稿したメッセージは削除も可能です。</p>
+              <p>また、メッセージ投稿直後に手動で削除も可能です。</p>
+              <p>実際に見ていただいたことが分かるだけでも励みになりますので、「test」などの内容でもお気軽にお試しください。</p>
             </div>
 
             <details className="mb-6 border-t border-slate-100 pt-4 group">
@@ -266,6 +288,15 @@ export default function LabSection() {
           {/* Java Demo */}
           <div id="lab-java" className="scroll-mt-24 bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-xl font-bold text-orange-600 mb-4">Java Demo: 簡易マークダウン・プレビューア</h3>
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  設計・実装時間: 約2時間
+                </span>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-xs font-bold text-purple-700">
+                  新規キャッチアップ
+                </span>
+              </div>
             <p className="mb-4 text-slate-600 text-sm leading-relaxed">
               Javaで構築したロジックを、Webブラウザ用にJavaScriptへ最適化して実装しています。
             </p>
@@ -348,6 +379,15 @@ export default function LabSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
                 <h3 className="text-xl font-bold text-cyan-600 mb-4">Go Demo</h3>
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  設計・実装時間: 約3時間
+                </span>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-xs font-bold text-purple-700">
+                  新規キャッチアップ
+                </span>
+              </div>
                 <p className="mb-6 text-slate-600 text-sm leading-relaxed">
                   外部サーバー(Render)で独立して稼働しているGo言語のAPIと通信し、ステータスを取得します。<br/>（マイクロサービス・アーキテクチャの証明）
                 </p>
@@ -356,6 +396,15 @@ export default function LabSection() {
               
               <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
                 <h3 className="text-xl font-bold text-purple-600 mb-4">C# (.NET) Microservice Demo</h3>
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  設計・実装時間: 約5時間
+                </span>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-xs font-bold text-purple-700">
+                  新規キャッチアップ
+                </span>
+              </div>
                 <p className="mb-6 text-slate-600 text-sm leading-relaxed">
                   Dockerコンテナ上で稼働するC# (ASP.NET Core) のAPIと通信します。<br/>堅牢なエンタープライズ技術とモダンフロントエンドの融合を証明します。
                 </p>

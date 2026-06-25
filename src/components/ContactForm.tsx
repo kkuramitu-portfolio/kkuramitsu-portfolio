@@ -90,10 +90,11 @@ export default function ContactForm() {
   return (
     <div className="bg-white p-6 sm:p-8 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
       <h3 className="text-xl font-bold text-emerald-600 mb-4">Contact Form: セキュアなお問い合わせ</h3>
-      <p className="mb-4 text-slate-600 text-sm leading-relaxed">
-        スパム対策、バリデーション、ファイル無害化など、エンタープライズ水準のセキュリティを実装したお問い合わせフォームです。
-      </p>
-
+      <p className="mb-4 text-slate-600 text-sm leading-relaxed">スパム対策、バリデーション、ファイル無害化など、エンタープライズ水準のセキュリティを実装したお問い合わせフォームです。</p>
+      <p>このフォームは実際に稼働しているデモであり、 送信内容はSlackへ通知され、自動返信メールも送信されます。</p>
+      <p>テスト送信やポートフォリオへのフィードバックも歓迎しておりますので、お気軽にご利用ください。</p>
+      <p>※入力いただいた情報は、お問い合わせ対応および自動返信以外の目的では使用しません。</p>
+      <p>※お名前はニックネームでも問題ありません。</p>
       {/* アコーディオン */}
       <details className="mb-6 border-t border-slate-100 pt-4 group">
         <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer w-full text-left font-bold text-slate-700 p-2 hover:bg-slate-50 rounded transition-colors flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
