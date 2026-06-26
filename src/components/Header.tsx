@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 
-// ▼ サブ項目を追加 ▼
 // ▼ サブ項目を追加・番号を更新 ▼
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -13,7 +12,7 @@ const navLinks = [
     subItems: [
       { label: "1. SQLデータ移行", href: "#sql-migration" },
       { label: "2. バックアップ運用改善", href: "#backup-improvement" },
-      { label: "3. メール事故防止チェックツール", href: "#mail-checker" }, // ← 追加
+      { label: "3. メール事故防止チェックツール", href: "#mail-checker" },
       { label: "4. Webサイト情報チェッカー", href: "#web-scraper" },
       { label: "5. マイクロサービス連携", href: "#microservices" },
       { label: "6. ポートフォリオ刷新", href: "#portfolio-renewal" },
@@ -35,22 +34,33 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  // ▼ 追加：最終更新日の変数 ▼
+  const lastUpdated = "2026.06.26";
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link
-          href="#home"
-          className="group flex flex-col leading-tight hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-        >
-          <span className="text-slate-800 font-semibold text-base tracking-tight group-hover:text-blue-600 transition-colors duration-200">
-            Kenji Kuramitsu | Portfolio
+        
+        {/* Logo & 最終更新日 (PC) */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="#home"
+            className="group flex flex-col leading-tight hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+          >
+            <span className="text-slate-800 font-semibold text-base tracking-tight group-hover:text-blue-600 transition-colors duration-200">
+              Kenji Kuramitsu | Portfolio
+            </span>
+            <span className="text-slate-400 text-xs tracking-wide">
+              Tech & Business Process
+            </span>
+          </Link>
+          
+          {/* ▼ 追加：PC用の最終更新日バッジ（スマホでは非表示） ▼ */}
+          <span className="hidden sm:inline-block text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 text-[10px] font-bold tracking-wider">
+            最終更新: {lastUpdated}
           </span>
-          <span className="text-slate-400 text-xs tracking-wide">
-            Tech & Business Process
-          </span>
-        </Link>
+        </div>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-2">
@@ -61,11 +71,9 @@ export default function Header() {
                 className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-1"
               >
                 {link.label}
-                {/* サブ項目がある場合は下矢印を表示 */}
                 {link.subItems && <span className="text-[10px] text-slate-400 group-hover:text-blue-500 transition-colors">▼</span>}
               </Link>
 
-              {/* ▼ ホバー時に表示されるドロップダウン ▼ */}
               {link.subItems && (
                 <div className="absolute left-0 top-full pt-1 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left scale-95 group-hover:scale-100 z-50">
                   <div className="bg-white border border-slate-200 rounded-md shadow-lg py-2">
@@ -107,6 +115,14 @@ export default function Header() {
       {/* Mobile Nav Dropdown */}
       {menuOpen && (
         <div className="md:hidden border-t border-slate-100 bg-white px-4 py-4 flex flex-col gap-3 shadow-md max-h-[80vh] overflow-y-auto">
+          
+          {/* ▼ 追加：スマホ用の最終更新日バッジ ▼ */}
+          <div className="mb-1 pb-3 border-b border-slate-100">
+            <span className="inline-block text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 text-xs font-bold tracking-wider">
+              最終更新: {lastUpdated}
+            </span>
+          </div>
+
           {navLinks.map((link) => (
             <div key={link.href} className="flex flex-col">
               <Link
@@ -116,7 +132,6 @@ export default function Header() {
               >
                 {link.label}
               </Link>
-              {/* スマホ版はインデントして全項目を表示 */}
               {link.subItems && (
                 <div className="flex flex-col pl-4 ml-3 border-l-2 border-slate-100 mt-1 space-y-1">
                   {link.subItems.map((sub) => (
