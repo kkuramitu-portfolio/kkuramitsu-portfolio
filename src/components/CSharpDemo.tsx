@@ -75,7 +75,7 @@ export default function CSharpDemo() {
     <div>
       {/* 修正: アコーディオンをdetailsタグに統一し、アニメーションを追加 */}
       <details className="mb-6 border-t border-slate-100 pt-4 group">
-        <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer w-full text-left font-bold text-slate-700 p-2 hover:bg-slate-50 rounded transition-colors flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
+        <summary data-accordion-name="C# Demo: セキュリティ対策" className="list-none [&::-webkit-details-marker]:hidden cursor-pointer w-full text-left font-bold text-slate-700 p-2 hover:bg-slate-50 rounded transition-colors flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
           <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-2">▶</span>
           この機能のセキュリティ対策について
         </summary>

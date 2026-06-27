@@ -147,7 +147,7 @@ export default function LabSection() {
             </p>
 
             <details className="mb-6 border-t border-slate-100 pt-4 group">
-              <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
+              <summary data-accordion-name="Scraping Demo: セキュリティ対策" className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
                 <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-2">▶</span>
                 この機能のセキュリティ対策について
               </summary>
@@ -171,7 +171,7 @@ export default function LabSection() {
             </div>
             
             <details className="mb-6 group">
-              <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
+              <summary data-accordion-name="Scraping Demo: ホワイトリスト" className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
                 <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-1">▶</span> 
                 ホワイトリスト一覧
               </summary>
@@ -239,7 +239,7 @@ export default function LabSection() {
             </div>
 
             <details className="mb-6 border-t border-slate-100 pt-4 group">
-              <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
+              <summary data-accordion-name="PHP Demo: セキュリティ対策" className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
                 <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-2">▶</span>
                 この機能のセキュリティ対策について
               </summary>
@@ -302,7 +302,7 @@ export default function LabSection() {
             </p>
 
             <details className="mb-6 border-t border-slate-100 pt-4 group">
-              <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
+              <summary data-accordion-name="Java Demo: セキュリティ対策" className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-sm font-bold text-slate-700 hover:text-blue-600 transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
                 <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-2">▶</span>
                 この機能のセキュリティ対策について
               </summary>

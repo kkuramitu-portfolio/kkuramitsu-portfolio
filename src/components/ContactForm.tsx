@@ -97,7 +97,7 @@ export default function ContactForm() {
       <p>※お名前はニックネームでも問題ありません。</p>
       {/* アコーディオン */}
       <details className="mb-6 border-t border-slate-100 pt-4 group">
-        <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer w-full text-left font-bold text-slate-700 p-2 hover:bg-slate-50 rounded transition-colors flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
+        <summary data-accordion-name="Contact: セキュリティ・ガバナンス" className="list-none [&::-webkit-details-marker]:hidden cursor-pointer w-full text-left font-bold text-slate-700 p-2 hover:bg-slate-50 rounded transition-colors flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
           <span className="inline-block transition-transform duration-200 group-open:rotate-90 mr-2">▶</span>
           この機能のセキュリティ対策・ガバナンス・運用設計について
         </summary>
