@@ -1034,7 +1034,7 @@ return NextResponse.json({ title, description });`}
                 <span>💡</span> 導入の目的
               </p>
               <p className="text-blue-700 mt-1 leading-relaxed text-xs">
-                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いた高度なイベントトラッキング（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
+                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いたイベントトラッキング（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
               </p>
             </div>
 
@@ -1068,7 +1068,7 @@ return NextResponse.json({ title, description });`}
                     <tr className="hover:bg-slate-50">
                       <td className="p-3 font-medium text-slate-800 whitespace-nowrap">デッドクリック検知</td>
                       <td className="p-3 text-slate-600">リンク・ボタン以外のクリック</td>
-                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認しているUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認されやすいUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1078,7 +1078,7 @@ return NextResponse.json({ title, description });`}
             <div>
               <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">定性分析とUX改善（Microsoft Clarityの活用）</h4>
               <p className="leading-relaxed mb-2">
-                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4と統合しています。
+                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4 / GTMと統合しています。
               </p>
               <ul className="list-disc list-outside ml-4 space-y-2">
                 <li className="pl-1"><span className="font-bold text-slate-800">ヒートマップ分析:</span> ユーザーのスクロール到達率や、クリックが集中している箇所を視覚的に把握。</li>
@@ -1089,7 +1089,7 @@ return NextResponse.json({ title, description });`}
             <div>
               <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善サイクル</h4>
               <p className="leading-relaxed">
-                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">定量・定性の両面に基づいた高度なPDCAサイクル</span>を回していきます。
+                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">定量・定性の両面に基づいたPDCAサイクル</span>を回していきます。
               </p>
             </div>
           </div>
