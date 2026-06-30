@@ -1025,8 +1025,8 @@ return NextResponse.json({ title, description });`}
           </div>
         )
       },
-      { 
-        title: "データドリブンな改善運用（GA4 / GTMによる行動分析）", 
+{ 
+        title: "データドリブンな改善運用（GA4 / GTM / Clarityによる行動分析）", 
         content: (
           <div className="space-y-6 text-sm text-slate-700">
             <div className="bg-blue-50 border border-blue-100 rounded-md p-4 mb-4">
@@ -1034,7 +1034,7 @@ return NextResponse.json({ title, description });`}
                 <span>💡</span> 導入の目的
               </p>
               <p className="text-blue-700 mt-1 leading-relaxed text-xs">
-                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）であるため、GTMを用いて詳細なイベントトラッキングを実装しました。
+                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いた高度なイベントトラッキング（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
               </p>
             </div>
 
@@ -1044,31 +1044,31 @@ return NextResponse.json({ title, description });`}
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
-                      <th className="p-3 border-b border-slate-200 font-bold">計測イベント</th>
-                      <th className="p-3 border-b border-slate-200 font-bold">トリガー（GTM）</th>
+                      <th className="p-3 border-b border-slate-200 font-bold whitespace-nowrap">計測イベント</th>
+                      <th className="p-3 border-b border-slate-200 font-bold whitespace-nowrap">トリガー（GTM / Next.js）</th>
                       <th className="p-3 border-b border-slate-200 font-bold">分析の目的・仮説</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs">
                     <tr className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800">読了率の測定</td>
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">読了率の測定</td>
                       <td className="p-3 text-slate-600">スクロール深度（50%, 90%）</td>
-                      <td className="p-3 text-slate-600">コンテンツ量が適切か、途中で離脱されていないかの検証。</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">コンテンツ量が適切か、途中で離脱されていないかの検証。</td>
                     </tr>
                     <tr className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800">技術への関心度</td>
-                      <td className="p-3 text-slate-600">GitHubリンクのクリック</td>
-                      <td className="p-3 text-slate-600">ソースコードへの興味関心度合いの測定。</td>
-                    </tr>
-                    <tr className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800">詳細情報の需要</td>
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">詳細情報の需要</td>
                       <td className="p-3 text-slate-600">各アコーディオンの展開</td>
-                      <td className="p-3 text-slate-600">どのプロジェクトの技術詳細が最も読まれているかのヒートマップ的分析。</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">どのプロジェクトの技術詳細が最も読まれているかの分析。<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-[10px]">data-accordion-name</code>属性を付与し、展開された要素を正確に特定。</td>
+                    </tr>
+                    <tr className="border-b border-slate-100 hover:bg-slate-50">
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">複雑なUI操作の計測</td>
+                      <td className="p-3 text-slate-600">カスタムイベント（Next.jsから送信）</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">標準機能では計測が難しい操作を、コード側からGTMへ直接データを送信（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-[10px]">DataLayer</code>）して正確に把握。</td>
                     </tr>
                     <tr className="hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800">デモ機能の利用率</td>
-                      <td className="p-3 text-slate-600">「解析実行」「送信」クリック</td>
-                      <td className="p-3 text-slate-600">インタラクティブな機能が実際に触られているかの検証。</td>
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">デッドクリック検知</td>
+                      <td className="p-3 text-slate-600">リンク・ボタン以外のクリック</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認しているUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1076,9 +1076,20 @@ return NextResponse.json({ title, description });`}
             </div>
 
             <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">定性分析とUX改善（Microsoft Clarityの活用）</h4>
+              <p className="leading-relaxed mb-2">
+                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4と統合しています。
+              </p>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">ヒートマップ分析:</span> ユーザーのスクロール到達率や、クリックが集中している箇所を視覚的に把握。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">セッション録画:</span> デッドクリックやレイジクリック（怒りの連打）が発生したセッションの録画を確認し、UIのボトルネックを特定。</li>
+              </ul>
+            </div>
+
+            <div>
               <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善サイクル</h4>
               <p className="leading-relaxed">
-                例えば「特定のアコーディオンの展開率が著しく低い」というデータが得られた場合、「見出しの文言が魅力的ではない」という仮説を立て、文言を修正して再度計測を行うといった、データに基づいたPDCAサイクルを回していきます。
+                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">定量・定性の両面に基づいた高度なPDCAサイクル</span>を回していきます。
               </p>
             </div>
           </div>

@@ -36,7 +36,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   
   // ▼ 追加：最終更新日の変数 ▼
-  const lastUpdated = "2026.06.26";
+  const lastUpdated = "2026.06.30";
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
