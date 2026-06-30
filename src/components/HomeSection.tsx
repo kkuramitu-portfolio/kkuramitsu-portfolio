@@ -22,25 +22,27 @@ export default function HomeSection() {
           <h1 className="text-3xl sm:text-4xl md:text-4xl font-bold text-slate-800 leading-tight mb-8">
             現場の「不便」を放置せず、さらなる「便利」を探求し、<br className="hidden sm:block" />
             経験 × 技術 × AI を駆使して<br className="hidden sm:block" />
-            「仕組み」を創る社内SEを目指して。
+            「仕組み」を創るビジネスエンジニアを目指して。
           </h1>
           
-          <div className="text-slate-600 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed space-y-6">
+          <div className="text-slate-600 text-base sm:text-lg max-w-4xl mx-auto leading-relaxed space-y-6">
             <p>
               「誰かが解決する」を待つのではなく、自ら課題を発見し、最適な技術を用いて解決まで導く――<br className="hidden sm:block" />
-              それが私の行動原理です。
+              それが今の私の信念であり、行動原理です。
             </p>
             <p>
-              未来予測の難易度が日々上がり続ける現代において、<br className="hidden sm:block" />
-              企業はもちろん、それを支える「ヒト」一人ひとりにも「変化へ柔軟に対応する力」が求められていると認識しています。<br className="hidden sm:block" />
-              一方で、働く人々もまた、企業に対して「変化を後押しし、共に成長できる仕組み」を求めているという声をよく耳にします。<br className="hidden sm:block" />
+              未来予測の難易度が日々上がり続ける現代において、企業はもちろん、<br className="hidden sm:block" />
+              企業を支える「ヒト」一人ひとりにも「変化へ柔軟に対応する力」が求められていると認識しています。<br className="hidden sm:block" />
+              一方で、ヒトもまた企業に対して「変化を後押ししてくれる環境」を求めているという声を耳にします。<br className="hidden sm:block" />
+            </p>
+            <p>
               昨日までの正解が、瞬く間に不正解へと塗り替えられていくこの「VUCA時代」においてこそ、<br className="hidden sm:block" />
-              生成AIを活用して未知の技術を即座に形にする「自走力」が最大の武器になると確信しています。
+              AIを活用して未知の技術を即座に形にする「自走力」が最大の武器になると確信しています。
             </p>
             <p>
               11年間の品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
-              さらにPHPを用いたシステム開発経験を活かし、<br className="hidden sm:block" />
-              技術と現場理解の両面から、事業会社の社内SE・DX推進担当として組織の生産性向上に貢献したいと考えています。
+              さらにPHPを用いたシステム開発経験を活かし、技術と現場理解の両面から、<br className="hidden sm:block" />
+              事業会社の社内SE・DX推進担当として組織の生産性向上に貢献したいと考えています。
             </p>
           </div>
         </div>
