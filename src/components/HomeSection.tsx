@@ -31,14 +31,16 @@ export default function HomeSection() {
               それが私の行動原理です。
             </p>
             <p>
-              私は現在、11年間の品質管理で培った「現場の課題を正確に把握する力」と、<br className="hidden sm:block" />
-              生成AIを活用した「未知の技術を即座に形にする自走力」を掛け合わせ、<br className="hidden sm:block" />
-              事業会社の社内SE・DX推進担当として、組織の生産性向上に貢献することを目指しています。
+              未来予測の難易度が日々上がり続ける現代において、<br className="hidden sm:block" />
+              企業はもちろん、それを支える「ヒト」一人ひとりにも「変化へ柔軟に対応する力」が求められていると認識しています。<br className="hidden sm:block" />
+              一方で、働く人々もまた、企業に対して「変化を後押しし、共に成長できる仕組み」を求めているという声をよく耳にします。<br className="hidden sm:block" />
+              昨日までの正解が、瞬く間に不正解へと塗り替えられていくこの「VUCA時代」においてこそ、<br className="hidden sm:block" />
+              生成AIを活用して未知の技術を即座に形にする「自走力」が最大の武器になると確信しています。
             </p>
             <p>
-              品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
+              11年間の品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
               さらにPHPを用いたシステム開発経験を活かし、<br className="hidden sm:block" />
-              技術と現場理解の両面から組織の生産性向上に貢献したいと考えています。
+              技術と現場理解の両面から、事業会社の社内SE・DX推進担当として組織の生産性向上に貢献したいと考えています。
             </p>
           </div>
         </div>
