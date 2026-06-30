@@ -10,6 +10,7 @@ import {
   contactFormSchema,
   ContactFormData,
 } from "@/lib/schema";
+import { sendGTMEvent } from '@next/third-parties/google';
 
 export default function ContactForm() {
   const { executeRecaptcha } = useReCaptcha();
@@ -35,6 +36,7 @@ export default function ContactForm() {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       setDemoFile(acceptedFiles[0]);
+      sendGTMEvent({ event: 'upload_demo_file', file_name: acceptedFiles[0].name });
     }
   }, []);
 
@@ -196,6 +198,11 @@ export default function ContactForm() {
             <input
               type="checkbox"
               {...register("consent")}
+              onChange={(e) => {
+                register("consent").onChange(e); // 元の処理を維持
+                // ▼ 追加 ▼
+                sendGTMEvent({ event: 'toggle_consent', status: e.target.checked ? 'checked' : 'unchecked' });
+              }}
               className="mt-0.5 mr-3 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
             />
             <span className="text-xs text-slate-700 leading-relaxed">

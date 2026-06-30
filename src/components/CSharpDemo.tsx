@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 // 型定義
 interface StatusData {
@@ -115,7 +116,7 @@ export default function CSharpDemo() {
         <div className="flex flex-wrap gap-4 p-4 bg-slate-50 border border-slate-200 rounded-md mb-6">
           <div>
             <label htmlFor="category-select" className="block text-sm text-slate-700 mb-1">カテゴリ絞り込み:</label>
-            <select id="category-select" value={category} onChange={(e) => setCategory(e.target.value)} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="category-select" value={category} onChange={(e) => {setCategory(e.target.value);sendGTMEvent({ event: 'change_linq_filter', filter_type: 'category', filter_value: e.target.value });}} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="All">すべて</option>
               <option value="書籍">書籍</option>
               <option value="家電">家電</option>
@@ -126,11 +127,11 @@ export default function CSharpDemo() {
           <div>
             <label className="block text-sm text-slate-700 mb-1">並び替え:</label>
             <div className="flex gap-2">
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select value={sortBy} onChange={(e) => {setSortBy(e.target.value);sendGTMEvent({ event: 'change_linq_filter', filter_type: 'sortBy', filter_value: e.target.value });}} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="price">価格</option>
                 <option value="name">商品名</option>
               </select>
-              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select value={sortOrder} onChange={(e) => {setSortOrder(e.target.value);sendGTMEvent({ event: 'change_linq_filter', filter_type: 'sortOrder', filter_value: e.target.value });}} className="p-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="asc">安い順 / 昇順</option>
                 <option value="desc">高い順 / 降順</option>
               </select>

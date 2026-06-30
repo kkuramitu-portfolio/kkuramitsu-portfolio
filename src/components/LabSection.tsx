@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import GoDemo from './GoDemo';
 import CSharpDemo from './CSharpDemo';
 import DOMPurify from 'dompurify';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 interface CheckResult { title: string; description: string; }
 interface BbsMessage { id: string; timestamp: string; message: string; }
@@ -44,11 +45,16 @@ export default function LabSection() {
     
     return html.replace(/\n/g, "<br />");
   };
+  const [mdTracked, setMdTracked] = useState(false);
 
   const updatePreview = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
     setMdInput(newText);
     setMdPreview(DOMPurify.sanitize(parseMarkdown(newText)));
+    if (!mdTracked && newText.length > 0) {
+      sendGTMEvent({ event: 'input_markdown' });
+      setMdTracked(true);
+    }
   };
 
   const fetchBbsMessages = async () => {
