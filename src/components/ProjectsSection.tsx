@@ -1025,7 +1025,7 @@ return NextResponse.json({ title, description });`}
           </div>
         )
       },
-{ 
+      { 
         title: "データドリブンな改善運用（GA4 / GTM / Clarityによる行動分析）", 
         content: (
           <div className="space-y-6 text-sm text-slate-700">
@@ -1034,7 +1034,7 @@ return NextResponse.json({ title, description });`}
                 <span>💡</span> 導入の目的
               </p>
               <p className="text-blue-700 mt-1 leading-relaxed text-xs">
-                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いたイベントトラッキング（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
+                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いた<span className="font-bold">SPAに最適化したイベントトラッキング</span>（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
               </p>
             </div>
 
@@ -1068,17 +1068,30 @@ return NextResponse.json({ title, description });`}
                     <tr className="hover:bg-slate-50">
                       <td className="p-3 font-medium text-slate-800 whitespace-nowrap">デッドクリック検知</td>
                       <td className="p-3 text-slate-600">リンク・ボタン以外のクリック</td>
-                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認されやすいUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認しているUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
 
+            {/* ▼ 追加：保守性・拡張性を考慮した計測設計 ▼ */}
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">保守性・拡張性を考慮した計測設計</h4>
+              <p className="leading-relaxed mb-2">
+                コンテンツの追加や変更のたびにGTMの設定を修正する「運用コスト」を省くため、フロントエンドの実装と連携した汎用的な計測設計を行っています。
+              </p>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">動的なデータ属性の付与:</span> アコーディオン展開時、Reactの配列データから <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">data-accordion-name</code> を自動生成してGTMへ渡す仕組みを構築。プロジェクトを追加してもGTM側の修正は一切不要です。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">汎用トリガーの活用:</span> ページ内リンク（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">#</code>から始まるURL）のクリックを正規表現で一括検知するトリガーを作成し、メニュー追加時の運用コストをゼロに抑えています。</li>
+              </ul>
+            </div>
+            {/* ▲ 追加ここまで ▲ */}
+
             <div>
               <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">定性分析とUX改善（Microsoft Clarityの活用）</h4>
               <p className="leading-relaxed mb-2">
-                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4 / GTMと統合しています。
+                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4と統合しています。
               </p>
               <ul className="list-disc list-outside ml-4 space-y-2">
                 <li className="pl-1"><span className="font-bold text-slate-800">ヒートマップ分析:</span> ユーザーのスクロール到達率や、クリックが集中している箇所を視覚的に把握。</li>
@@ -1089,7 +1102,7 @@ return NextResponse.json({ title, description });`}
             <div>
               <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善サイクル</h4>
               <p className="leading-relaxed">
-                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">定量・定性の両面に基づいたPDCAサイクル</span>を回していきます。
+                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">推測に頼らない、データに裏付けられたPDCAサイクル</span>を回していきます。
               </p>
             </div>
           </div>
@@ -1197,6 +1210,116 @@ return NextResponse.json({ title, description });`}
                 <li className="pl-1"><span className="font-bold text-slate-800">UI変更への追従:</span> 社内システムのアップデートによりHTML構造（DOM）が変更された際も、要素の取得ロジック（XPathやCSSセレクタ）を迅速に修正し、運用を継続させました。</li>
                 <li className="pl-1"><span className="font-bold text-slate-800">実行の簡便化:</span> ターミナルを開かずともワンクリックで処理を開始できるよう、実行用のバッチファイル（.bat）を作成し、日々の利用ハードルを下げる工夫を行いました。</li>
               </ul>
+            </div>
+          </div>
+        )
+      }
+    ]
+  },
+  {
+    id: "tailscale-vpn",
+    title: "8. Tailscaleによる自宅VPN環境の構築とネットワーク検証",
+    badge: "学習・技術キャッチアップ事例",
+    badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+    summary: "外出先から自宅LANへ安全にアクセスできる環境の構築と、ネットワークの仕組み（VPN、ルーティング、プロトコル）を学習するため、Tailscaleを用いたVPN環境を構築しました。単なるツールの導入にとどまらず、Subnet Routerの構成やWiresharkを用いたパケット解析など、原因切り分けと仕組みの理解に重点を置いた検証を実施しました。",
+    sections: [
+      { 
+        title: "背景・目的", 
+        fullWidth: true,
+        items: [
+          "外出先から自宅LANへ安全にアクセスできる環境を構築したかった",
+          "単なるリモート接続ではなく、VPNやネットワークの仕組みそのものを学習する目的があった",
+          "将来的にはDockerやRaspberry Piによる自宅サーバー構築も視野に入れている"
+        ] 
+      },
+      { 
+        title: "環境構成", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-2 text-sm text-slate-700">
+            <p><span className="font-bold text-slate-800">ネットワーク:</span> ONU → NTT貸与ルーター → AirMac Extreme（ブリッジモード） → Windows PC</p>
+            <p><span className="font-bold text-slate-800">クライアント:</span> Windows, iPhone</p>
+            <p><span className="font-bold text-slate-800">VPN:</span> Tailscale</p>
+          </div>
+        )
+      },
+      { 
+        title: "実施内容と検証結果", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-bold text-slate-800 mb-1">1. TailDropによるファイル転送</p>
+              <p className="leading-relaxed">Windows⇔iPhone間の双方向転送を確認。途中で保存場所が分からず調査し、WindowsはDownloadsフォルダ、iPhoneは「このiPhone内→Tailscale」に保存される仕様を把握しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">2. Subnet Routerの構築とLANアクセス</p>
+              <p className="leading-relaxed">Windows PCをSubnet Routerとして構成。iPhoneからTailscaleのIP（100.x.x.x）ではなく、自宅LANのローカルIP（192.168.10.x）で共有フォルダにアクセスできることを確認し、「Tailscaleネットワークではなく、自宅LANへ参加している」というルーティングの概念を体感しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">3. DIGA（ブルーレイレコーダー）の宅外視聴検証</p>
+              <p className="leading-relaxed">宅外（4G回線）からライブ放送・録画番組の再生に成功。Subnet Router経由で同一LAN内として認識されたことを実証しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">4. IoT家電（eRemote mini）の通信解析</p>
+              <p className="leading-relaxed">VPN経由での操作可否を検証。ARP、ping、TCP/UDPポートの疎通確認、Wiresharkによるパケット解析を実施。結果としてVPN経由での操作は不可と判明しましたが、「なぜ使えないのか」をネットワーク層から切り分ける手法を実践しました。</p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        items: [
+          "VPNおよびSubnet Routerの仕組みと「LANへ参加する」という概念",
+          "CIDR表記（/24）やルーティングの基礎",
+          "ARP、ICMP、TCP、UDP、ポート番号など、ネットワークプロトコルの役割",
+          "Wiresharkを用いたパケット解析と、原因を推測・特定するための検証手法"
+        ] 
+      },
+      { 
+        title: "今後の展望", 
+        fullWidth: true,
+        items: [
+          "Raspberry Piの導入とDocker環境の構築",
+          "Subnet RouterをWindowsからRaspberry Piへ移行し、24時間稼働のVPN環境を構築",
+          "自宅サーバーの構築と、ネットワーク設計への理解の深化"
+        ] 
+      }
+    ],
+    accordions: [
+      { 
+        title: "技術的な詳細（Subnet Router構築とルーティング）", 
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              PowerShellを用いてWindows PCをSubnet Routerとして構成しました。単にコマンドを打つだけでなく、ネットワークの状態を確認しながら進めました。
+            </p>
+            <ul className="list-disc list-outside ml-4 space-y-2">
+              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">ipconfig</code> や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale status</code> で現在のネットワーク状態を把握。</li>
+              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale set --advertise-routes=192.168.10.0/24</code> を実行し、自宅LANのサブネットをTailscaleネットワークに広告。この際、<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">192.168.10.0/24</code> というCIDR表記の意味（サブネットマスク）を理解した上で設定。</li>
+              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale debug prefs</code> で Advertise Routes の状態が正しく反映されているかを確認。</li>
+            </ul>
+          </div>
+        )
+      },
+      { 
+        title: "技術的な詳細（eRemote miniの通信解析プロセス）", 
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              IoT家電（eRemote mini）をVPN経由で操作できるか検証するため、以下の手順で通信の切り分けを行いました。「使えなかった」という結果で終わらせず、原因を特定するプロセスを重視しました。
+            </p>
+            <ol className="list-decimal list-outside ml-4 space-y-2">
+              <li className="pl-1"><span className="font-bold text-slate-800">存在確認:</span> MACアドレスを特定し、ARPテーブルと <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">ping</code> でLAN上に存在することを確認。</li>
+              <li className="pl-1"><span className="font-bold text-slate-800">TCPポートの疎通確認:</span> PowerShellの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">Test-NetConnection</code> を使用し、HTTP/HTTPS（80/443）や特定ポート（7680等）へのアクセスを検証。HTTP/HTTPSでは応答がなく（Web UIを持たない可能性）、TCP 7680ではRST（リセット）応答が返ることを確認。</li>
+              <li className="pl-1"><span className="font-bold text-slate-800">パケット解析:</span> Wiresharkを導入し、スマホアプリから操作した際のUDP通信をキャプチャして解析。</li>
+            </ol>
+            <div className="bg-slate-50 border border-slate-200 rounded-md p-4 mt-2">
+              <p className="font-bold text-slate-800 mb-1">結論</p>
+              <p className="leading-relaxed text-slate-600">
+                通信方式（ブロードキャストやマルチキャストの利用）やクラウド側の仕様により、単純なL3 VPN（ルーティング）経由での直接操作は困難であると判断しました。
+              </p>
             </div>
           </div>
         )

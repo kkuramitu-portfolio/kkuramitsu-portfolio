@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 // ▼ サブ項目を追加・番号を更新 ▼
+// ▼ サブ項目を追加・番号を更新 ▼
 const navLinks = [
   { label: "Home", href: "#home" },
   { 
@@ -17,6 +18,7 @@ const navLinks = [
       { label: "5. マイクロサービス連携", href: "#microservices" },
       { label: "6. ポートフォリオ刷新", href: "#portfolio-renewal" },
       { label: "7. Python業務準備自動化", href: "#python-automation" },
+      { label: "8. TailscaleによるVPN構築", href: "#tailscale-vpn" }, // ← 追加
     ]
   },
   { label: "Skills", href: "#skills" },
