@@ -69,7 +69,7 @@ export default function HomeSection() {
 
                   <div>
                     <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-blue-500 pl-2">使用しているAIと「プロンプト」へのこだわり</h4>
-                    <p className="mb-2">本ポートフォリオは、主に以下の無料版AIサービスを活用して作成しました。</p>
+                    <p className="mb-2">本ポートフォリオは、以下の無料版AIサービスのみを活用して作成しました。</p>
                     <ul className="list-disc list-outside ml-5 mb-2 space-y-1">
                       <li className="pl-1">ChatGPT（無料版）</li>
                       <li className="pl-1">Gemini（無料版）</li>
