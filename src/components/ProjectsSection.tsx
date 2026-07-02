@@ -23,6 +23,15 @@ type Project = {
   accordions: Accordion[];
 };
 
+const CodeBlock = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <pre 
+    data-clarity-unmask="true" 
+    className={`bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner ${className}`}
+  >
+    <code>{children}</code>
+  </pre>
+);
+
 const projects: Project[] = [
   {
     id: "sql-migration",
@@ -118,165 +127,165 @@ const projects: Project[] = [
             <div>
               <h4 className="font-bold text-slate-800 mb-1">1. 生データ受入層（Staging）の作成</h4>
               <p className="text-sm text-slate-600 mb-3">インポート時の型エラーを防ぐため、Excel(CSV)の全列を文字列型として受け入れる仮テーブルを作成。</p>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`CREATE TABLE raw_csv_import (
-    \`asset_code\` VARCHAR(255),
-    \`asset_name\` VARCHAR(255),
-    \`model_number\` VARCHAR(255),
-    \`purchase_price\` VARCHAR(255),  /* 記号入り文字列も許容 */
-    \`registration_date\` VARCHAR(255),
-    \`vendor_name_raw\` VARCHAR(255),
-    \`department_raw\` VARCHAR(255),
-    \`status_raw\` VARCHAR(255),
-    \`remarks\` TEXT
-    /* 他数十カラム... */
-);`}
+              {`CREATE TABLE raw_csv_import (
+                  \`asset_code\` VARCHAR(255),
+                  \`asset_name\` VARCHAR(255),
+                  \`model_number\` VARCHAR(255),
+                  \`purchase_price\` VARCHAR(255),  /* 記号入り文字列も許容 */
+                  \`registration_date\` VARCHAR(255),
+                  \`vendor_name_raw\` VARCHAR(255),
+                  \`department_raw\` VARCHAR(255),
+                  \`status_raw\` VARCHAR(255),
+                  \`remarks\` TEXT
+                  /* 他数十カラム... */
+              );`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-1">2. マッピング辞書の作成と「名寄せ」登録</h4>
               <p className="text-sm text-slate-600 mb-3">生データの表記ゆれ（スペースの有無など）を吸収するため、既存マスタからTRIM処理をかけて重複を排除（名寄せ）し、辞書テーブルへ登録。</p>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`/* 辞書テーブルの定義 */
-CREATE TABLE mapping_dictionary (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    map_type VARCHAR(50),
-    raw_value VARCHAR(255),
-    mapped_id INT,
-    UNIQUE KEY uniq_mapping (map_type, raw_value)
-);
+                {`/* 辞書テーブルの定義 */
+                CREATE TABLE mapping_dictionary (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    map_type VARCHAR(50),
+                    raw_value VARCHAR(255),
+                    mapped_id INT,
+                    UNIQUE KEY uniq_mapping (map_type, raw_value)
+                );
 
-/* 既存マスタからの名寄せ登録（ベンダーの例） */
-INSERT INTO mapping_dictionary (map_type, raw_value, mapped_id)
-SELECT
-    'vendor',
-    TRIM(v1.old_name) AS clean_raw_value,
-    MIN(v2.id) AS mapped_id
-FROM m_vendors AS v1
-JOIN (
-    /* 正式名称でグループ化し、生かすべき最小IDを特定 */
-    SELECT name, MIN(id) AS id FROM m_vendors GROUP BY name
-) AS v2 ON v1.name = v2.name
-WHERE v1.old_name IS NOT NULL AND v1.old_name != ''
-GROUP BY TRIM(v1.old_name); /* TRIM後の文字列で重複をまとめる */`}
+                /* 既存マスタからの名寄せ登録（ベンダーの例） */
+                INSERT INTO mapping_dictionary (map_type, raw_value, mapped_id)
+                SELECT
+                    'vendor',
+                    TRIM(v1.old_name) AS clean_raw_value,
+                    MIN(v2.id) AS mapped_id
+                FROM m_vendors AS v1
+                JOIN (
+                    /* 正式名称でグループ化し、生かすべき最小IDを特定 */
+                    SELECT name, MIN(id) AS id FROM m_vendors GROUP BY name
+                ) AS v2 ON v1.name = v2.name
+                WHERE v1.old_name IS NOT NULL AND v1.old_name != ''
+                GROUP BY TRIM(v1.old_name); /* TRIM後の文字列で重複をまとめる */`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-1">3. データ変換（Transform）とクレンジング</h4>
               <p className="text-sm text-slate-600 mb-3">生データと辞書を結合し、本番環境向けの変換テーブルを作成。複数カラムに依存する例外ルールや、ノイズ除去の正規表現を適用。</p>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`CREATE TABLE transformed_data AS
-SELECT
-    TRIM(e.\`asset_code\`) AS code,
-    TRIM(e.\`asset_name\`) AS name,
-    
-    /* ▼ 金額クレンジング（￥, カンマ, バックスラッシュ等を除去し、数値のみ抽出） */
-    (CASE 
-        WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
-        THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
-        ELSE NULL 
-    END) AS purchase_price,
+              {`CREATE TABLE transformed_data AS
+              SELECT
+                  TRIM(e.\`asset_code\`) AS code,
+                  TRIM(e.\`asset_name\`) AS name,
+                  
+                  /* ▼ 金額クレンジング（￥, カンマ, バックスラッシュ等を除去し、数値のみ抽出） */
+                  (CASE 
+                      WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
+                      THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
+                      ELSE NULL 
+                  END) AS purchase_price,
 
-    /* ▼ 複数カラムに依存する例外業務ロジックの適用 */
-    (CASE
-        WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門A%' THEN 1
-        WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門B%' THEN 2
-        ELSE dm_vendor.mapped_id 
-    END) AS vendor_id,
+                  /* ▼ 複数カラムに依存する例外業務ロジックの適用 */
+                  (CASE
+                      WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門A%' THEN 1
+                      WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門B%' THEN 2
+                      ELSE dm_vendor.mapped_id 
+                  END) AS vendor_id,
 
-    /* ▼ 重複排除（最新の有効データのみフラグを立てる） */
-    (CASE WHEN e.rn = 1 THEN 1 ELSE 0 END) AS valid_flg,
-    (CASE WHEN e.rn = 1 THEN 0 ELSE 1 END) AS delete_flg
+                  /* ▼ 重複排除（最新の有効データのみフラグを立てる） */
+                  (CASE WHEN e.rn = 1 THEN 1 ELSE 0 END) AS valid_flg,
+                  (CASE WHEN e.rn = 1 THEN 0 ELSE 1 END) AS delete_flg
 
-FROM (
-    /* 同一管理番号における最新履歴の特定 */
-    SELECT *, ROW_NUMBER() OVER(PARTITION BY \`asset_code\` ORDER BY \`document_id\` DESC) as rn
-    FROM raw_csv_import
-) AS e
-LEFT JOIN mapping_dictionary dm_vendor 
-       ON dm_vendor.map_type = 'vendor' AND dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`);`}
+              FROM (
+                  /* 同一管理番号における最新履歴の特定 */
+                  SELECT *, ROW_NUMBER() OVER(PARTITION BY \`asset_code\` ORDER BY \`document_id\` DESC) as rn
+                  FROM raw_csv_import
+              ) AS e
+              LEFT JOIN mapping_dictionary dm_vendor 
+                    ON dm_vendor.map_type = 'vendor' AND dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`);`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-1">4. 本番テーブルへの投入（Load）</h4>
               <p className="text-sm text-slate-600 mb-3">クレンジング済みのデータを本番テーブルのスキーマに合わせて投入。作成日時・更新日時を同期させる。</p>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`INSERT INTO m_assets (
-    code, name, purchase_price, vendor_id, valid_flg, delete_flg,
-    created, creator, modified, modifier
-)
-SELECT
-    code, name, purchase_price, vendor_id, valid_flg, delete_flg,
-    NOW(), 'migration_sys', NOW(), 'migration_sys'
-FROM transformed_data;`}
+              {`INSERT INTO m_assets (
+                  code, name, purchase_price, vendor_id, valid_flg, delete_flg,
+                  created, creator, modified, modifier
+              )
+              SELECT
+                  code, name, purchase_price, vendor_id, valid_flg, delete_flg,
+                  NOW(), 'migration_sys', NOW(), 'migration_sys'
+              FROM transformed_data;`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-1">5. 自動差分検知SQL（整合性テスト）</h4>
               <p className="text-sm text-slate-600 mb-3">目視確認を排除するため、「元の生データ」と「投入後の本番データ」を結合し、不一致項目を自動抽出するテストSQL。</p>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`SELECT
-    test.id AS test_table_id,
-    e.\`asset_code\` AS code,
-    CASE 
-        WHEN test.id IS NULL THEN 'CRITICAL: レコード欠落'
-        ELSE CONCAT_WS(', ',
-            /* 変換ロジックを再適用し、<=> 演算子でNULL含め完全一致か検証 */
-            IF(NOT (TRIM(e.\`asset_name\`) <=> test.name), 'name', NULL),
-            IF(NOT (dm_vendor.mapped_id <=> test.vendor_id), 'vendor_id', NULL),
-            IF(NOT (
-                (CASE 
-                    WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
-                    THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
-                    ELSE NULL 
-                END) <=> test.purchase_price
-            ), 'purchase_price', NULL)
-        )
-    END AS mismatched_columns
-FROM raw_csv_import AS e
-LEFT JOIN mapping_dictionary dm_vendor ON dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`)
-LEFT JOIN m_assets AS test ON TRIM(e.\`asset_code\`) = test.code AND test.delete_flg = 0
-WHERE e.rn = 1 
-HAVING mismatched_columns != ''; /* 不一致が空（完全一致）以外のものを抽出 */`}
+                {`SELECT
+                    test.id AS test_table_id,
+                    e.\`asset_code\` AS code,
+                    CASE 
+                        WHEN test.id IS NULL THEN 'CRITICAL: レコード欠落'
+                        ELSE CONCAT_WS(', ',
+                            /* 変換ロジックを再適用し、<=> 演算子でNULL含め完全一致か検証 */
+                            IF(NOT (TRIM(e.\`asset_name\`) <=> test.name), 'name', NULL),
+                            IF(NOT (dm_vendor.mapped_id <=> test.vendor_id), 'vendor_id', NULL),
+                            IF(NOT (
+                                (CASE 
+                                    WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
+                                    THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
+                                    ELSE NULL 
+                                END) <=> test.purchase_price
+                            ), 'purchase_price', NULL)
+                        )
+                    END AS mismatched_columns
+                FROM raw_csv_import AS e
+                LEFT JOIN mapping_dictionary dm_vendor ON dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`)
+                LEFT JOIN m_assets AS test ON TRIM(e.\`asset_code\`) = test.code AND test.delete_flg = 0
+                WHERE e.rn = 1 
+                HAVING mismatched_columns != ''; /* 不一致が空（完全一致）以外のものを抽出 */`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-1">6. マスタデータの重複整理（論理削除処理）</h4>
               <p className="text-sm text-slate-600 mb-3">移行完了後、アプリケーションUIのプルダウン等に重複した選択肢が表示されるのを防ぐため、名寄せで選ばれなかった旧マスタレコードを論理削除。</p>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`UPDATE m_vendors AS v1
-JOIN (
-    /* 生かすべき「最小ID」を特定 */
-    SELECT name, MIN(id) AS min_id
-    FROM m_vendors
-    WHERE delete_flg = 0
-    GROUP BY name
-) AS keeper ON v1.name = keeper.name
-SET
-    v1.delete_flg = 1,
-    v1.modified = NOW(),
-    v1.modifier = 'migration_cleanup'
-WHERE
-    v1.id > keeper.min_id /* 最小IDより大きい（＝重複）レコードのみ無効化 */
-    AND v1.delete_flg = 0;`}
+              {`UPDATE m_vendors AS v1
+              JOIN (
+                  /* 生かすべき「最小ID」を特定 */
+                  SELECT name, MIN(id) AS min_id
+                  FROM m_vendors
+                  WHERE delete_flg = 0
+                  GROUP BY name
+              ) AS keeper ON v1.name = keeper.name
+              SET
+                  v1.delete_flg = 1,
+                  v1.modified = NOW(),
+                  v1.modifier = 'migration_cleanup'
+              WHERE
+                  v1.id > keeper.min_id /* 最小IDより大きい（＝重複）レコードのみ無効化 */
+                  AND v1.delete_flg = 0;`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
           </div>
         )
@@ -475,129 +484,129 @@ WHERE
           <div className="space-y-8 text-sm text-slate-700">
             <div>
               <h4 className="font-bold text-slate-800 mb-2">1. backup.bat (簡易・匿名化版)</h4>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`@echo off
-setlocal enabledelayedexpansion
+                {`@echo off
+                setlocal enabledelayedexpansion
 
-REM =================================================================
-REM ---          0. 管理者権限への自動昇格                       ---
-REM =================================================================
-openfiles >nul 2>&1
-if %errorlevel% neq 0 (
-    powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
-    exit /b
-)
+                REM =================================================================
+                REM ---          0. 管理者権限への自動昇格                       ---
+                REM =================================================================
+                openfiles >nul 2>&1
+                if %errorlevel% neq 0 (
+                    powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
+                    exit /b
+                )
 
-REM =================================================================
-REM ---                  1. 設定項目                              ---
-REM =================================================================
-set DB_NAME=my_database
-set NAS_PATH=\\\\192.168.x.x\\backup
-set LOCAL_ROOT=C:\\backup_system
-set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
+                REM =================================================================
+                REM ---                  1. 設定項目                              ---
+                REM =================================================================
+                set DB_NAME=my_database
+                set NAS_PATH=\\\\192.168.x.x\\backup
+                set LOCAL_ROOT=C:\\backup_system
+                set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
 
-REM 保存期間の設定 (日換算)
-set RETENTION_DAYS=365
+                REM 保存期間の設定 (日換算)
+                set RETENTION_DAYS=365
 
-REM =================================================================
-REM ---                  2. NAS接続確認                           ---
-REM =================================================================
-net use %NAS_PATH% /delete /yes >nul 2>&1
-net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
+                REM =================================================================
+                REM ---                  2. NAS接続確認                           ---
+                REM =================================================================
+                net use %NAS_PATH% /delete /yes >nul 2>&1
+                net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
 
-if %ERRORLEVEL% NEQ 0 (
-    goto :NAS_FAIL
-) else (
-    goto :NAS_SUCCESS
-)
+                if %ERRORLEVEL% NEQ 0 (
+                    goto :NAS_FAIL
+                ) else (
+                    goto :NAS_SUCCESS
+                )
 
-REM =================================================================
-REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
-REM =================================================================
-:NAS_FAIL
-set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
-if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+                REM =================================================================
+                REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
+                REM =================================================================
+                :NAS_FAIL
+                set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
+                if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
 
-REM バックアップ実行
-call :EXECUTE_BACKUP "%RUN_DIR%"
+                REM バックアップ実行
+                call :EXECUTE_BACKUP "%RUN_DIR%"
 
-REM 管理者へ通知
-powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
-goto :END
+                REM 管理者へ通知
+                powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
+                goto :END
 
-REM =================================================================
-REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
-REM =================================================================
-:NAS_SUCCESS
-set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
-if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+                REM =================================================================
+                REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
+                REM =================================================================
+                :NAS_SUCCESS
+                set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
+                if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
 
-REM バックアップ実行
-call :EXECUTE_BACKUP "%RUN_DIR%"
+                REM バックアップ実行
+                call :EXECUTE_BACKUP "%RUN_DIR%"
 
-REM ローカルに一時保存されていた過去データをNASへ移動
-for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
-    robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
-)
+                REM ローカルに一時保存されていた過去データをNASへ移動
+                for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
+                    robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
+                )
 
-REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
-echo Cleaning up old data...
-powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
+                REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
+                echo Cleaning up old data...
+                powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
 
-goto :END
+                goto :END
 
-REM =================================================================
-REM ---                バックアップ実行サブルーチン               ---
-REM =================================================================
-:EXECUTE_BACKUP
-set "DEST=%~1"
-REM DBダンプやファイルコピーのコマンドをここに記述
-mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
-robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
-exit /b
+                REM =================================================================
+                REM ---                バックアップ実行サブルーチン               ---
+                REM =================================================================
+                :EXECUTE_BACKUP
+                set "DEST=%~1"
+                REM DBダンプやファイルコピーのコマンドをここに記述
+                mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
+                robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
+                exit /b
 
-:END
-net use %NAS_PATH% /delete /yes >nul 2>&1
-exit /b 0`}
+                :END
+                net use %NAS_PATH% /delete /yes >nul 2>&1
+                exit /b 0`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-2">2. send_mail.ps1 (簡易・匿名化版)</h4>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`param([string]$Subject, [string]$Body)
+                {`param([string]$Subject, [string]$Body)
 
-# --- メール送信設定 ---
-$SmtpServer  = "smtp.example.com"
-$SmtpPort    = 587
-$Username    = "system@example.com"
-$Password    = "secure_password"
-$To          = "admin@example.com"
+                # --- メール送信設定 ---
+                $SmtpServer  = "smtp.example.com"
+                $SmtpPort    = 587
+                $Username    = "system@example.com"
+                $Password    = "secure_password"
+                $To          = "admin@example.com"
 
-# --- 送信処理 ---
-$SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
+                # --- 送信処理 ---
+                $SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
+                $Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
 
-try {
-    Send-MailMessage -SmtpServer $SmtpServer \`
-                     -Port $SmtpPort \`
-                     -UseSsl \`
-                     -From $Username \`
-                     -To $To \`
-                     -Subject $Subject \`
-                     -Body $Body \`
-                     -Credential $Cred \`
-                     -Encoding UTF8 \`
-                     -ErrorAction Stop
-} catch {
-    exit 1
-}
-exit 0`}
+                try {
+                    Send-MailMessage -SmtpServer $SmtpServer \`
+                                    -Port $SmtpPort \`
+                                    -UseSsl \`
+                                    -From $Username \`
+                                    -To $To \`
+                                    -Subject $Subject \`
+                                    -Body $Body \`
+                                    -Credential $Cred \`
+                                    -Encoding UTF8 \`
+                                    -ErrorAction Stop
+                } catch {
+                    exit 1
+                }
+                exit 0`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
           </div>
         )
@@ -707,61 +716,61 @@ exit 0`}
 
             <div>
               <h4 className="font-bold text-slate-800 mb-2">VBA実装内容（匿名化・復元ロジックの抜粋）</h4>
-              <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner">
+              <CodeBlock>
                 <code>
-{`' =========================================================
-' 個人情報の匿名化処理
-' =========================================================
-Function AnonymizeText(ByVal originalText As String, ByRef dict As Object) As String
-    Dim anonymized As String
-    anonymized = originalText
-    
-    ' ▼ 工夫点：ハードコードせず、設定シート(マスタ)から動的に配列を取得
-    Dim names As Variant
-    names = GetNamesFromSettingSheet() ' 例: Array("蔵満", "佐藤", ...)
-    
-    Dim i As Integer
-    For i = LBound(names) To UBound(names)
-        If InStr(anonymized, names(i)) > 0 Then
-            Dim tag As String
-            tag = "<NAME_" & i & ">"
-            
-            ' 復元用にDictionaryへ保存 (Key: タグ, Item: 元の氏名)
-            dict.Add tag, names(i)
-            
-            ' 本文内の氏名をタグに置換
-            anonymized = Replace(anonymized, names(i), tag)
-        End If
-    Next i
-    
-    ' ※この後、正規表現を用いたメールアドレスや電話番号の置換処理が続く
-    
-    AnonymizeText = anonymized
-End Function
+                {`' =========================================================
+                ' 個人情報の匿名化処理
+                ' =========================================================
+                Function AnonymizeText(ByVal originalText As String, ByRef dict As Object) As String
+                    Dim anonymized As String
+                    anonymized = originalText
+                    
+                    ' ▼ 工夫点：ハードコードせず、設定シート(マスタ)から動的に配列を取得
+                    Dim names As Variant
+                    names = GetNamesFromSettingSheet() ' 例: Array("蔵満", "佐藤", ...)
+                    
+                    Dim i As Integer
+                    For i = LBound(names) To UBound(names)
+                        If InStr(anonymized, names(i)) > 0 Then
+                            Dim tag As String
+                            tag = "<NAME_" & i & ">"
+                            
+                            ' 復元用にDictionaryへ保存 (Key: タグ, Item: 元の氏名)
+                            dict.Add tag, names(i)
+                            
+                            ' 本文内の氏名をタグに置換
+                            anonymized = Replace(anonymized, names(i), tag)
+                        End If
+                    Next i
+                    
+                    ' ※この後、正規表現を用いたメールアドレスや電話番号の置換処理が続く
+                    
+                    AnonymizeText = anonymized
+                End Function
 
-' =========================================================
-' AIレビュー後の復元処理と漏れ検知
-' =========================================================
-Function RestoreText(ByVal aiText As String, ByVal dict As Object) As String
-    Dim restored As String
-    restored = aiText
-    
-    ' Dictionaryに保存したタグを元に逆置換
-    Dim key As Variant
-    For Each key In dict.Keys
-        restored = Replace(restored, key, dict(key))
-    Next key
-    
-    ' 【フェイルセーフ】復元漏れ検知
-    ' AIがタグを "< NAME_1 >" のように改変してしまい復元できなかった場合を検知
-    If InStr(restored, "<NAME_") > 0 Or InStr(restored, "<EMAIL_") > 0 Then
-        MsgBox "【警告】匿名化タグが残存しています。AIの応答によってタグが改変された可能性があります。目視で確認してください。", vbCritical, "復元エラー検知"
-    End If
-    
-    RestoreText = restored
-End Function`}
+                ' =========================================================
+                ' AIレビュー後の復元処理と漏れ検知
+                ' =========================================================
+                Function RestoreText(ByVal aiText As String, ByVal dict As Object) As String
+                    Dim restored As String
+                    restored = aiText
+                    
+                    ' Dictionaryに保存したタグを元に逆置換
+                    Dim key As Variant
+                    For Each key In dict.Keys
+                        restored = Replace(restored, key, dict(key))
+                    Next key
+                    
+                    ' 【フェイルセーフ】復元漏れ検知
+                    ' AIがタグを "< NAME_1 >" のように改変してしまい復元できなかった場合を検知
+                    If InStr(restored, "<NAME_") > 0 Or InStr(restored, "<EMAIL_") > 0 Then
+                        MsgBox "【警告】匿名化タグが残存しています。AIの応答によってタグが改変された可能性があります。目視で確認してください。", vbCritical, "復元エラー検知"
+                    End If
+                    
+                    RestoreText = restored
+                End Function`}
                 </code>
-              </pre>
+              </CodeBlock>
             </div>
           </div>
         )
@@ -809,36 +818,36 @@ End Function`}
               <li className="pl-1"><span className="font-bold text-slate-800">User-Agentの偽装:</span> プログラムからの機械的なアクセスを拒否するサイトに対応するため、一般的なブラウザのUser-Agentヘッダを付与してFetchリクエストを送信しています。</li>
               <li className="pl-1"><span className="font-bold text-slate-800">CheerioによるDOM解析:</span> 取得したHTML文字列を軽量な解析ライブラリ（Cheerio）に渡し、jQueryライクな構文で効率的に目的のタグを抽出しています。</li>
             </ul>
-            <pre className="bg-slate-800 text-slate-300 p-4 rounded-md overflow-x-auto text-xs font-mono leading-relaxed shadow-inner mt-4">
+            <CodeBlock>
               <code>
-{`// src/app/api/check/route.ts (一部抜粋)
+              {`// src/app/api/check/route.ts (一部抜粋)
 
-// 外部サイトへリクエストを送信
-const response = await fetch(targetUrl, {
-  headers: {
-    // ボット弾きを回避するためのUser-Agent偽装
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-  },
-});
+              // 外部サイトへリクエストを送信
+              const response = await fetch(targetUrl, {
+                headers: {
+                  // ボット弾きを回避するためのUser-Agent偽装
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                },
+              });
 
-if (!response.ok) {
-  throw new Error(\`外部サイトへのアクセスに失敗しました: \${response.statusText}\`);
-}
+              if (!response.ok) {
+                throw new Error(\`外部サイトへのアクセスに失敗しました: \${response.statusText}\`);
+              }
 
-// レスポンスのHTMLをテキストとして取得
-const htmlText = await response.text();
+              // レスポンスのHTMLをテキストとして取得
+              const htmlText = await response.text();
 
-// CheerioでHTMLを解析できるようにロード
-const $ = cheerio.load(htmlText);
+              // CheerioでHTMLを解析できるようにロード
+              const $ = cheerio.load(htmlText);
 
-// titleタグとmeta descriptionタグを抽出
-const title = $('title').text();
-const description = $('meta[name="description"]').attr('content') || '概要が見つかりませんでした。';
+              // titleタグとmeta descriptionタグを抽出
+              const title = $('title').text();
+              const description = $('meta[name="description"]').attr('content') || '概要が見つかりませんでした。';
 
-// クライアントへJSON形式で返却
-return NextResponse.json({ title, description });`}
+              // クライアントへJSON形式で返却
+              return NextResponse.json({ title, description });`}
               </code>
-            </pre>
+            </CodeBlock>
           </div>
         )
       }
