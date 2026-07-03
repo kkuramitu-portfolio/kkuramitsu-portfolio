@@ -48,7 +48,7 @@ export default function HomeSection() {
             <p>
               11年間の品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
               さらにPHPを用いたシステム開発経験を活かし、技術と現場理解の両面から、<br className="hidden sm:block" />
-              事業会社の社内SE・DX推進担当として組織の生産性向上に貢献したいと考えています。
+              事業会社のビジネスエンジニアとして組織の生産性向上に貢献したいと考えています。
             </p>
           </div>
 
