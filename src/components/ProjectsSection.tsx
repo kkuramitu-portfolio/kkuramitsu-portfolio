@@ -4,13 +4,13 @@ import React from "react";
 type Section = {
   title: string;
   items?: string[];
-  content?: React.ReactNode;   // ← React. を付けました
+  content?: React.ReactNode;
   fullWidth?: boolean;
 };
 
 type Accordion = {
   title: string;
-  content: React.ReactNode;    // ← React. を付けました
+  content: React.ReactNode;
 };
 
 type Project = {
@@ -128,20 +128,18 @@ const projects: Project[] = [
               <h4 className="font-bold text-slate-800 mb-1">1. 生データ受入層（Staging）の作成</h4>
               <p className="text-sm text-slate-600 mb-3">インポート時の型エラーを防ぐため、Excel(CSV)の全列を文字列型として受け入れる仮テーブルを作成。</p>
               <CodeBlock>
-                <code>
-              {`CREATE TABLE raw_csv_import (
-                  \`asset_code\` VARCHAR(255),
-                  \`asset_name\` VARCHAR(255),
-                  \`model_number\` VARCHAR(255),
-                  \`purchase_price\` VARCHAR(255),  /* 記号入り文字列も許容 */
-                  \`registration_date\` VARCHAR(255),
-                  \`vendor_name_raw\` VARCHAR(255),
-                  \`department_raw\` VARCHAR(255),
-                  \`status_raw\` VARCHAR(255),
-                  \`remarks\` TEXT
-                  /* 他数十カラム... */
-              );`}
-                </code>
+{`CREATE TABLE raw_csv_import (
+    \`asset_code\` VARCHAR(255),
+    \`asset_name\` VARCHAR(255),
+    \`model_number\` VARCHAR(255),
+    \`purchase_price\` VARCHAR(255),  /* 記号入り文字列も許容 */
+    \`registration_date\` VARCHAR(255),
+    \`vendor_name_raw\` VARCHAR(255),
+    \`department_raw\` VARCHAR(255),
+    \`status_raw\` VARCHAR(255),
+    \`remarks\` TEXT
+    /* 他数十カラム... */
+);`}
               </CodeBlock>
             </div>
 
@@ -149,30 +147,28 @@ const projects: Project[] = [
               <h4 className="font-bold text-slate-800 mb-1">2. マッピング辞書の作成と「名寄せ」登録</h4>
               <p className="text-sm text-slate-600 mb-3">生データの表記ゆれ（スペースの有無など）を吸収するため、既存マスタからTRIM処理をかけて重複を排除（名寄せ）し、辞書テーブルへ登録。</p>
               <CodeBlock>
-                <code>
-                {`/* 辞書テーブルの定義 */
-                CREATE TABLE mapping_dictionary (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    map_type VARCHAR(50),
-                    raw_value VARCHAR(255),
-                    mapped_id INT,
-                    UNIQUE KEY uniq_mapping (map_type, raw_value)
-                );
+{`/* 辞書テーブルの定義 */
+CREATE TABLE mapping_dictionary (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    map_type VARCHAR(50),
+    raw_value VARCHAR(255),
+    mapped_id INT,
+    UNIQUE KEY uniq_mapping (map_type, raw_value)
+);
 
-                /* 既存マスタからの名寄せ登録（ベンダーの例） */
-                INSERT INTO mapping_dictionary (map_type, raw_value, mapped_id)
-                SELECT
-                    'vendor',
-                    TRIM(v1.old_name) AS clean_raw_value,
-                    MIN(v2.id) AS mapped_id
-                FROM m_vendors AS v1
-                JOIN (
-                    /* 正式名称でグループ化し、生かすべき最小IDを特定 */
-                    SELECT name, MIN(id) AS id FROM m_vendors GROUP BY name
-                ) AS v2 ON v1.name = v2.name
-                WHERE v1.old_name IS NOT NULL AND v1.old_name != ''
-                GROUP BY TRIM(v1.old_name); /* TRIM後の文字列で重複をまとめる */`}
-                </code>
+/* 既存マスタからの名寄せ登録（ベンダーの例） */
+INSERT INTO mapping_dictionary (map_type, raw_value, mapped_id)
+SELECT
+    'vendor',
+    TRIM(v1.old_name) AS clean_raw_value,
+    MIN(v2.id) AS mapped_id
+FROM m_vendors AS v1
+JOIN (
+    /* 正式名称でグループ化し、生かすべき最小IDを特定 */
+    SELECT name, MIN(id) AS id FROM m_vendors GROUP BY name
+) AS v2 ON v1.name = v2.name
+WHERE v1.old_name IS NOT NULL AND v1.old_name != ''
+GROUP BY TRIM(v1.old_name); /* TRIM後の文字列で重複をまとめる */`}
               </CodeBlock>
             </div>
 
@@ -180,38 +176,36 @@ const projects: Project[] = [
               <h4 className="font-bold text-slate-800 mb-1">3. データ変換（Transform）とクレンジング</h4>
               <p className="text-sm text-slate-600 mb-3">生データと辞書を結合し、本番環境向けの変換テーブルを作成。複数カラムに依存する例外ルールや、ノイズ除去の正規表現を適用。</p>
               <CodeBlock>
-                <code>
-              {`CREATE TABLE transformed_data AS
-              SELECT
-                  TRIM(e.\`asset_code\`) AS code,
-                  TRIM(e.\`asset_name\`) AS name,
-                  
-                  /* ▼ 金額クレンジング（￥, カンマ, バックスラッシュ等を除去し、数値のみ抽出） */
-                  (CASE 
-                      WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
-                      THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
-                      ELSE NULL 
-                  END) AS purchase_price,
+{`CREATE TABLE transformed_data AS
+SELECT
+    TRIM(e.\`asset_code\`) AS code,
+    TRIM(e.\`asset_name\`) AS name,
+    
+    /* ▼ 金額クレンジング（￥, カンマ, バックスラッシュ等を除去し、数値のみ抽出） */
+    (CASE 
+        WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
+        THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
+        ELSE NULL 
+    END) AS purchase_price,
 
-                  /* ▼ 複数カラムに依存する例外業務ロジックの適用 */
-                  (CASE
-                      WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門A%' THEN 1
-                      WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門B%' THEN 2
-                      ELSE dm_vendor.mapped_id 
-                  END) AS vendor_id,
+    /* ▼ 複数カラムに依存する例外業務ロジックの適用 */
+    (CASE
+        WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門A%' THEN 1
+        WHEN TRIM(e.\`vendor_name_raw\`) = '特定複合ベンダー名' AND TRIM(e.\`department_raw\`) LIKE '%部門B%' THEN 2
+        ELSE dm_vendor.mapped_id 
+    END) AS vendor_id,
 
-                  /* ▼ 重複排除（最新の有効データのみフラグを立てる） */
-                  (CASE WHEN e.rn = 1 THEN 1 ELSE 0 END) AS valid_flg,
-                  (CASE WHEN e.rn = 1 THEN 0 ELSE 1 END) AS delete_flg
+    /* ▼ 重複排除（最新の有効データのみフラグを立てる） */
+    (CASE WHEN e.rn = 1 THEN 1 ELSE 0 END) AS valid_flg,
+    (CASE WHEN e.rn = 1 THEN 0 ELSE 1 END) AS delete_flg
 
-              FROM (
-                  /* 同一管理番号における最新履歴の特定 */
-                  SELECT *, ROW_NUMBER() OVER(PARTITION BY \`asset_code\` ORDER BY \`document_id\` DESC) as rn
-                  FROM raw_csv_import
-              ) AS e
-              LEFT JOIN mapping_dictionary dm_vendor 
-                    ON dm_vendor.map_type = 'vendor' AND dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`);`}
-                </code>
+FROM (
+    /* 同一管理番号における最新履歴の特定 */
+    SELECT *, ROW_NUMBER() OVER(PARTITION BY \`asset_code\` ORDER BY \`document_id\` DESC) as rn
+    FROM raw_csv_import
+) AS e
+LEFT JOIN mapping_dictionary dm_vendor 
+       ON dm_vendor.map_type = 'vendor' AND dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`);`}
               </CodeBlock>
             </div>
 
@@ -219,16 +213,14 @@ const projects: Project[] = [
               <h4 className="font-bold text-slate-800 mb-1">4. 本番テーブルへの投入（Load）</h4>
               <p className="text-sm text-slate-600 mb-3">クレンジング済みのデータを本番テーブルのスキーマに合わせて投入。作成日時・更新日時を同期させる。</p>
               <CodeBlock>
-                <code>
-              {`INSERT INTO m_assets (
-                  code, name, purchase_price, vendor_id, valid_flg, delete_flg,
-                  created, creator, modified, modifier
-              )
-              SELECT
-                  code, name, purchase_price, vendor_id, valid_flg, delete_flg,
-                  NOW(), 'migration_sys', NOW(), 'migration_sys'
-              FROM transformed_data;`}
-                </code>
+{`INSERT INTO m_assets (
+    code, name, purchase_price, vendor_id, valid_flg, delete_flg,
+    created, creator, modified, modifier
+)
+SELECT
+    code, name, purchase_price, vendor_id, valid_flg, delete_flg,
+    NOW(), 'migration_sys', NOW(), 'migration_sys'
+FROM transformed_data;`}
               </CodeBlock>
             </div>
 
@@ -236,31 +228,29 @@ const projects: Project[] = [
               <h4 className="font-bold text-slate-800 mb-1">5. 自動差分検知SQL（整合性テスト）</h4>
               <p className="text-sm text-slate-600 mb-3">目視確認を排除するため、「元の生データ」と「投入後の本番データ」を結合し、不一致項目を自動抽出するテストSQL。</p>
               <CodeBlock>
-                <code>
-                {`SELECT
-                    test.id AS test_table_id,
-                    e.\`asset_code\` AS code,
-                    CASE 
-                        WHEN test.id IS NULL THEN 'CRITICAL: レコード欠落'
-                        ELSE CONCAT_WS(', ',
-                            /* 変換ロジックを再適用し、<=> 演算子でNULL含め完全一致か検証 */
-                            IF(NOT (TRIM(e.\`asset_name\`) <=> test.name), 'name', NULL),
-                            IF(NOT (dm_vendor.mapped_id <=> test.vendor_id), 'vendor_id', NULL),
-                            IF(NOT (
-                                (CASE 
-                                    WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
-                                    THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
-                                    ELSE NULL 
-                                END) <=> test.purchase_price
-                            ), 'purchase_price', NULL)
-                        )
-                    END AS mismatched_columns
-                FROM raw_csv_import AS e
-                LEFT JOIN mapping_dictionary dm_vendor ON dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`)
-                LEFT JOIN m_assets AS test ON TRIM(e.\`asset_code\`) = test.code AND test.delete_flg = 0
-                WHERE e.rn = 1 
-                HAVING mismatched_columns != ''; /* 不一致が空（完全一致）以外のものを抽出 */`}
-                </code>
+{`SELECT
+    test.id AS test_table_id,
+    e.\`asset_code\` AS code,
+    CASE 
+        WHEN test.id IS NULL THEN 'CRITICAL: レコード欠落'
+        ELSE CONCAT_WS(', ',
+            /* 変換ロジックを再適用し、<=> 演算子でNULL含め完全一致か検証 */
+            IF(NOT (TRIM(e.\`asset_name\`) <=> test.name), 'name', NULL),
+            IF(NOT (dm_vendor.mapped_id <=> test.vendor_id), 'vendor_id', NULL),
+            IF(NOT (
+                (CASE 
+                    WHEN TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) REGEXP '^[0-9\\\\.]+$' 
+                    THEN CAST(TRIM(REPLACE(REPLACE(REPLACE(e.\`purchase_price\`, '\\\\', ''), '¥', ''), ',', '')) AS DECIMAL(12,2)) 
+                    ELSE NULL 
+                END) <=> test.purchase_price
+            ), 'purchase_price', NULL)
+        )
+    END AS mismatched_columns
+FROM raw_csv_import AS e
+LEFT JOIN mapping_dictionary dm_vendor ON dm_vendor.raw_value = TRIM(e.\`vendor_name_raw\`)
+LEFT JOIN m_assets AS test ON TRIM(e.\`asset_code\`) = test.code AND test.delete_flg = 0
+WHERE e.rn = 1 
+HAVING mismatched_columns != ''; /* 不一致が空（完全一致）以外のものを抽出 */`}
               </CodeBlock>
             </div>
 
@@ -268,23 +258,21 @@ const projects: Project[] = [
               <h4 className="font-bold text-slate-800 mb-1">6. マスタデータの重複整理（論理削除処理）</h4>
               <p className="text-sm text-slate-600 mb-3">移行完了後、アプリケーションUIのプルダウン等に重複した選択肢が表示されるのを防ぐため、名寄せで選ばれなかった旧マスタレコードを論理削除。</p>
               <CodeBlock>
-                <code>
-              {`UPDATE m_vendors AS v1
-              JOIN (
-                  /* 生かすべき「最小ID」を特定 */
-                  SELECT name, MIN(id) AS min_id
-                  FROM m_vendors
-                  WHERE delete_flg = 0
-                  GROUP BY name
-              ) AS keeper ON v1.name = keeper.name
-              SET
-                  v1.delete_flg = 1,
-                  v1.modified = NOW(),
-                  v1.modifier = 'migration_cleanup'
-              WHERE
-                  v1.id > keeper.min_id /* 最小IDより大きい（＝重複）レコードのみ無効化 */
-                  AND v1.delete_flg = 0;`}
-                </code>
+{`UPDATE m_vendors AS v1
+JOIN (
+    /* 生かすべき「最小ID」を特定 */
+    SELECT name, MIN(id) AS min_id
+    FROM m_vendors
+    WHERE delete_flg = 0
+    GROUP BY name
+) AS keeper ON v1.name = keeper.name
+SET
+    v1.delete_flg = 1,
+    v1.modified = NOW(),
+    v1.modifier = 'migration_cleanup'
+WHERE
+    v1.id > keeper.min_id /* 最小IDより大きい（＝重複）レコードのみ無効化 */
+    AND v1.delete_flg = 0;`}
               </CodeBlock>
             </div>
           </div>
@@ -485,127 +473,123 @@ const projects: Project[] = [
             <div>
               <h4 className="font-bold text-slate-800 mb-2">1. backup.bat (簡易・匿名化版)</h4>
               <CodeBlock>
-                <code>
-                {`@echo off
-                setlocal enabledelayedexpansion
+{`@echo off
+setlocal enabledelayedexpansion
 
-                REM =================================================================
-                REM ---          0. 管理者権限への自動昇格                       ---
-                REM =================================================================
-                openfiles >nul 2>&1
-                if %errorlevel% neq 0 (
-                    powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
-                    exit /b
-                )
+REM =================================================================
+REM ---          0. 管理者権限への自動昇格                       ---
+REM =================================================================
+openfiles >nul 2>&1
+if %errorlevel% neq 0 (
+    powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
+    exit /b
+)
 
-                REM =================================================================
-                REM ---                  1. 設定項目                              ---
-                REM =================================================================
-                set DB_NAME=my_database
-                set NAS_PATH=\\\\192.168.x.x\\backup
-                set LOCAL_ROOT=C:\\backup_system
-                set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
+REM =================================================================
+REM ---                  1. 設定項目                              ---
+REM =================================================================
+set DB_NAME=my_database
+set NAS_PATH=\\\\192.168.x.x\\backup
+set LOCAL_ROOT=C:\\backup_system
+set LOG_FILE="%LOCAL_ROOT%\\logs\\backup_log.txt"
 
-                REM 保存期間の設定 (日換算)
-                set RETENTION_DAYS=365
+REM 保存期間の設定 (日換算)
+set RETENTION_DAYS=365
 
-                REM =================================================================
-                REM ---                  2. NAS接続確認                           ---
-                REM =================================================================
-                net use %NAS_PATH% /delete /yes >nul 2>&1
-                net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
+REM =================================================================
+REM ---                  2. NAS接続確認                           ---
+REM =================================================================
+net use %NAS_PATH% /delete /yes >nul 2>&1
+net use %NAS_PATH% "password" /user:"admin" /persistent:no >nul 2>&1
 
-                if %ERRORLEVEL% NEQ 0 (
-                    goto :NAS_FAIL
-                ) else (
-                    goto :NAS_SUCCESS
-                )
+if %ERRORLEVEL% NEQ 0 (
+    goto :NAS_FAIL
+) else (
+    goto :NAS_SUCCESS
+)
 
-                REM =================================================================
-                REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
-                REM =================================================================
-                :NAS_FAIL
-                set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
-                if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+REM =================================================================
+REM ---                  ① NAS失敗時の処理 (ローカル退避)        ---
+REM =================================================================
+:NAS_FAIL
+set RUN_DIR=%LOCAL_ROOT%\\temp_backup\\%date:~0,4%%date:~5,2%%date:~8,2%
+if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
 
-                REM バックアップ実行
-                call :EXECUTE_BACKUP "%RUN_DIR%"
+REM バックアップ実行
+call :EXECUTE_BACKUP "%RUN_DIR%"
 
-                REM 管理者へ通知
-                powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
-                goto :END
+REM 管理者へ通知
+powershell -ExecutionPolicy Bypass -File "%~dp0send_mail.ps1" -Subject "Backup Warning" -Body "NAS connection failed. Saved to Local."
+goto :END
 
-                REM =================================================================
-                REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
-                REM =================================================================
-                :NAS_SUCCESS
-                set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
-                if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
+REM =================================================================
+REM ---                  ② NAS成功時の処理 (同期＆掃除)          ---
+REM =================================================================
+:NAS_SUCCESS
+set RUN_DIR=%NAS_PATH%\\%date:~0,4%%date:~5,2%%date:~8,2%
+if not exist "%RUN_DIR%" mkdir "%RUN_DIR%"
 
-                REM バックアップ実行
-                call :EXECUTE_BACKUP "%RUN_DIR%"
+REM バックアップ実行
+call :EXECUTE_BACKUP "%RUN_DIR%"
 
-                REM ローカルに一時保存されていた過去データをNASへ移動
-                for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
-                    robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
-                )
+REM ローカルに一時保存されていた過去データをNASへ移動
+for /d %%Y in ("%LOCAL_ROOT%\\temp_backup\\*") do (
+    robocopy "%%Y" "%NAS_PATH%\\%%~nxY" /E /MOVE /B /XF *.bat *.ps1 /R:1 /W:2
+)
 
-                REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
-                echo Cleaning up old data...
-                powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
+REM NAS上の古いバックアップフォルダ(backup_*)を削除 (除外設定付き)
+echo Cleaning up old data...
+powershell -Command "$exclude = @('logs', 'important_data'); $limit = (Get-Date).AddDays(-%RETENTION_DAYS%); Get-ChildItem '%NAS_PATH%' -Recurse -Directory | Where-Object { $_.Name -like 'backup_*' -or $exclude -contains $_.Name } | ForEach-Object { if (-not ($exclude -contains $_.Name) -and ($_.LastWriteTime -lt $limit)) { Remove-Item $_.FullName -Recurse -Force } }"
 
-                goto :END
+goto :END
 
-                REM =================================================================
-                REM ---                バックアップ実行サブルーチン               ---
-                REM =================================================================
-                :EXECUTE_BACKUP
-                set "DEST=%~1"
-                REM DBダンプやファイルコピーのコマンドをここに記述
-                mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
-                robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
-                exit /b
+REM =================================================================
+REM ---                バックアップ実行サブルーチン               ---
+REM =================================================================
+:EXECUTE_BACKUP
+set "DEST=%~1"
+REM DBダンプやファイルコピーのコマンドをここに記述
+mysqldump -u root -p"password" %DB_NAME% > "%DEST%\\db_dump.sql"
+robocopy "C:\\data\\files" "%DEST%\\files" /E /B /R:1 /W:2
+exit /b
 
-                :END
-                net use %NAS_PATH% /delete /yes >nul 2>&1
-                exit /b 0`}
-                </code>
+:END
+net use %NAS_PATH% /delete /yes >nul 2>&1
+exit /b 0`}
               </CodeBlock>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-800 mb-2">2. send_mail.ps1 (簡易・匿名化版)</h4>
               <CodeBlock>
-                <code>
-                {`param([string]$Subject, [string]$Body)
+{`param([string]$Subject, [string]$Body)
 
-                # --- メール送信設定 ---
-                $SmtpServer  = "smtp.example.com"
-                $SmtpPort    = 587
-                $Username    = "system@example.com"
-                $Password    = "secure_password"
-                $To          = "admin@example.com"
+# --- メール送信設定 ---
+$SmtpServer  = "smtp.example.com"
+$SmtpPort    = 587
+$Username    = "system@example.com"
+$Password    = "secure_password"
+$To          = "admin@example.com"
 
-                # --- 送信処理 ---
-                $SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
-                $Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
+# --- 送信処理 ---
+$SecPassword = ConvertTo-SecureString $Password -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential ($Username, $SecPassword)
 
-                try {
-                    Send-MailMessage -SmtpServer $SmtpServer \`
-                                    -Port $SmtpPort \`
-                                    -UseSsl \`
-                                    -From $Username \`
-                                    -To $To \`
-                                    -Subject $Subject \`
-                                    -Body $Body \`
-                                    -Credential $Cred \`
-                                    -Encoding UTF8 \`
-                                    -ErrorAction Stop
-                } catch {
-                    exit 1
-                }
-                exit 0`}
-                </code>
+try {
+    Send-MailMessage -SmtpServer $SmtpServer \`
+                    -Port $SmtpPort \`
+                    -UseSsl \`
+                    -From $Username \`
+                    -To $To \`
+                    -Subject $Subject \`
+                    -Body $Body \`
+                    -Credential $Cred \`
+                    -Encoding UTF8 \`
+                    -ErrorAction Stop
+} catch {
+    exit 1
+}
+exit 0`}
               </CodeBlock>
             </div>
           </div>
@@ -689,7 +673,7 @@ const projects: Project[] = [
     accordions: [
       { title: "画面イメージ", content: "（チェック画面・AIチェック画面掲載予定。いつでも入力できるように枠のみ用意しています。）" },
       { title: "フロー図", content: "（メール作成 → チェック → 匿名化 → AIレビュー → 復元 → 最終確認 → 送信 のフロー図を掲載予定。）" },
-            { 
+      { 
         title: "詳細を見る（設計思想とVBA実装内容）", 
         content: (
           <div className="space-y-6 text-sm text-slate-700">
@@ -717,59 +701,57 @@ const projects: Project[] = [
             <div>
               <h4 className="font-bold text-slate-800 mb-2">VBA実装内容（匿名化・復元ロジックの抜粋）</h4>
               <CodeBlock>
-                <code>
-                {`' =========================================================
-                ' 個人情報の匿名化処理
-                ' =========================================================
-                Function AnonymizeText(ByVal originalText As String, ByRef dict As Object) As String
-                    Dim anonymized As String
-                    anonymized = originalText
-                    
-                    ' ▼ 工夫点：ハードコードせず、設定シート(マスタ)から動的に配列を取得
-                    Dim names As Variant
-                    names = GetNamesFromSettingSheet() ' 例: Array("蔵満", "佐藤", ...)
-                    
-                    Dim i As Integer
-                    For i = LBound(names) To UBound(names)
-                        If InStr(anonymized, names(i)) > 0 Then
-                            Dim tag As String
-                            tag = "<NAME_" & i & ">"
-                            
-                            ' 復元用にDictionaryへ保存 (Key: タグ, Item: 元の氏名)
-                            dict.Add tag, names(i)
-                            
-                            ' 本文内の氏名をタグに置換
-                            anonymized = Replace(anonymized, names(i), tag)
-                        End If
-                    Next i
-                    
-                    ' ※この後、正規表現を用いたメールアドレスや電話番号の置換処理が続く
-                    
-                    AnonymizeText = anonymized
-                End Function
+{`' =========================================================
+' 個人情報の匿名化処理
+' =========================================================
+Function AnonymizeText(ByVal originalText As String, ByRef dict As Object) As String
+    Dim anonymized As String
+    anonymized = originalText
+    
+    ' ▼ 工夫点：ハードコードせず、設定シート(マスタ)から動的に配列を取得
+    Dim names As Variant
+    names = GetNamesFromSettingSheet() ' 例: Array("蔵満", "佐藤", ...)
+    
+    Dim i As Integer
+    For i = LBound(names) To UBound(names)
+        If InStr(anonymized, names(i)) > 0 Then
+            Dim tag As String
+            tag = "<NAME_" & i & ">"
+            
+            ' 復元用にDictionaryへ保存 (Key: タグ, Item: 元の氏名)
+            dict.Add tag, names(i)
+            
+            ' 本文内の氏名をタグに置換
+            anonymized = Replace(anonymized, names(i), tag)
+        End If
+    Next i
+    
+    ' ※この後、正規表現を用いたメールアドレスや電話番号の置換処理が続く
+    
+    AnonymizeText = anonymized
+End Function
 
-                ' =========================================================
-                ' AIレビュー後の復元処理と漏れ検知
-                ' =========================================================
-                Function RestoreText(ByVal aiText As String, ByVal dict As Object) As String
-                    Dim restored As String
-                    restored = aiText
-                    
-                    ' Dictionaryに保存したタグを元に逆置換
-                    Dim key As Variant
-                    For Each key In dict.Keys
-                        restored = Replace(restored, key, dict(key))
-                    Next key
-                    
-                    ' 【フェイルセーフ】復元漏れ検知
-                    ' AIがタグを "< NAME_1 >" のように改変してしまい復元できなかった場合を検知
-                    If InStr(restored, "<NAME_") > 0 Or InStr(restored, "<EMAIL_") > 0 Then
-                        MsgBox "【警告】匿名化タグが残存しています。AIの応答によってタグが改変された可能性があります。目視で確認してください。", vbCritical, "復元エラー検知"
-                    End If
-                    
-                    RestoreText = restored
-                End Function`}
-                </code>
+' =========================================================
+' AIレビュー後の復元処理と漏れ検知
+' =========================================================
+Function RestoreText(ByVal aiText As String, ByVal dict As Object) As String
+    Dim restored As String
+    restored = aiText
+    
+    ' Dictionaryに保存したタグを元に逆置換
+    Dim key As Variant
+    For Each key In dict.Keys
+        restored = Replace(restored, key, dict(key))
+    Next key
+    
+    ' 【フェイルセーフ】復元漏れ検知
+    ' AIがタグを "< NAME_1 >" のように改変してしまい復元できなかった場合を検知
+    If InStr(restored, "<NAME_") > 0 Or InStr(restored, "<EMAIL_") > 0 Then
+        MsgBox "【警告】匿名化タグが残存しています。AIの応答によってタグが改変された可能性があります。目視で確認してください。", vbCritical, "復元エラー検知"
+    End If
+    
+    RestoreText = restored
+End Function`}
               </CodeBlock>
             </div>
           </div>
@@ -818,35 +800,33 @@ const projects: Project[] = [
               <li className="pl-1"><span className="font-bold text-slate-800">User-Agentの偽装:</span> プログラムからの機械的なアクセスを拒否するサイトに対応するため、一般的なブラウザのUser-Agentヘッダを付与してFetchリクエストを送信しています。</li>
               <li className="pl-1"><span className="font-bold text-slate-800">CheerioによるDOM解析:</span> 取得したHTML文字列を軽量な解析ライブラリ（Cheerio）に渡し、jQueryライクな構文で効率的に目的のタグを抽出しています。</li>
             </ul>
-            <CodeBlock>
-              <code>
-              {`// src/app/api/check/route.ts (一部抜粋)
+            <CodeBlock className="mt-4">
+{`// src/app/api/check/route.ts (一部抜粋)
 
-              // 外部サイトへリクエストを送信
-              const response = await fetch(targetUrl, {
-                headers: {
-                  // ボット弾きを回避するためのUser-Agent偽装
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                },
-              });
+// 外部サイトへリクエストを送信
+const response = await fetch(targetUrl, {
+  headers: {
+    // ボット弾きを回避するためのUser-Agent偽装
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+  },
+});
 
-              if (!response.ok) {
-                throw new Error(\`外部サイトへのアクセスに失敗しました: \${response.statusText}\`);
-              }
+if (!response.ok) {
+  throw new Error(\`外部サイトへのアクセスに失敗しました: \${response.statusText}\`);
+}
 
-              // レスポンスのHTMLをテキストとして取得
-              const htmlText = await response.text();
+// レスポンスのHTMLをテキストとして取得
+const htmlText = await response.text();
 
-              // CheerioでHTMLを解析できるようにロード
-              const $ = cheerio.load(htmlText);
+// CheerioでHTMLを解析できるようにロード
+const $ = cheerio.load(htmlText);
 
-              // titleタグとmeta descriptionタグを抽出
-              const title = $('title').text();
-              const description = $('meta[name="description"]').attr('content') || '概要が見つかりませんでした。';
+// titleタグとmeta descriptionタグを抽出
+const title = $('title').text();
+const description = $('meta[name="description"]').attr('content') || '概要が見つかりませんでした。';
 
-              // クライアントへJSON形式で返却
-              return NextResponse.json({ title, description });`}
-              </code>
+// クライアントへJSON形式で返却
+return NextResponse.json({ title, description });`}
             </CodeBlock>
           </div>
         )
@@ -1033,89 +1013,6 @@ const projects: Project[] = [
             </div>
           </div>
         )
-      },
-      { 
-        title: "データドリブンな改善運用（GA4 / GTM / Clarityによる行動分析）", 
-        content: (
-          <div className="space-y-6 text-sm text-slate-700">
-            <div className="bg-blue-50 border border-blue-100 rounded-md p-4 mb-4">
-              <p className="text-blue-800 text-xs font-bold flex items-center gap-1.5">
-                <span>💡</span> 導入の目的
-              </p>
-              <p className="text-blue-700 mt-1 leading-relaxed text-xs">
-                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いた<span className="font-bold">SPAに最適化したイベントトラッキング</span>（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-3">トラッキングプラン（計測設計の一部）</h4>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
-                      <th className="p-3 border-b border-slate-200 font-bold whitespace-nowrap">計測イベント</th>
-                      <th className="p-3 border-b border-slate-200 font-bold whitespace-nowrap">トリガー（GTM / Next.js）</th>
-                      <th className="p-3 border-b border-slate-200 font-bold">分析の目的・仮説</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-xs">
-                    <tr className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">読了率の測定</td>
-                      <td className="p-3 text-slate-600">スクロール深度（50%, 90%）</td>
-                      <td className="p-3 text-slate-600 leading-relaxed">コンテンツ量が適切か、途中で離脱されていないかの検証。</td>
-                    </tr>
-                    <tr className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">詳細情報の需要</td>
-                      <td className="p-3 text-slate-600">各アコーディオンの展開</td>
-                      <td className="p-3 text-slate-600 leading-relaxed">どのプロジェクトの技術詳細が最も読まれているかの分析。<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-[10px]">data-accordion-name</code>属性を付与し、展開された要素を正確に特定。</td>
-                    </tr>
-                    <tr className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">複雑なUI操作の計測</td>
-                      <td className="p-3 text-slate-600">カスタムイベント（Next.jsから送信）</td>
-                      <td className="p-3 text-slate-600 leading-relaxed">標準機能では計測が難しい操作を、コード側からGTMへ直接データを送信（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-[10px]">DataLayer</code>）して正確に把握。</td>
-                    </tr>
-                    <tr className="hover:bg-slate-50">
-                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">デッドクリック検知</td>
-                      <td className="p-3 text-slate-600">リンク・ボタン以外のクリック</td>
-                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認しているUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* ▼ 追加：保守性・拡張性を考慮した計測設計 ▼ */}
-            <div>
-              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">保守性・拡張性を考慮した計測設計</h4>
-              <p className="leading-relaxed mb-2">
-                コンテンツの追加や変更のたびにGTMの設定を修正する「運用コスト」を省くため、フロントエンドの実装と連携した汎用的な計測設計を行っています。
-              </p>
-              <ul className="list-disc list-outside ml-4 space-y-2">
-                <li className="pl-1"><span className="font-bold text-slate-800">動的なデータ属性の付与:</span> アコーディオン展開時、Reactの配列データから <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">data-accordion-name</code> を自動生成してGTMへ渡す仕組みを構築。プロジェクトを追加してもGTM側の修正は一切不要です。</li>
-                <li className="pl-1"><span className="font-bold text-slate-800">汎用トリガーの活用:</span> ページ内リンク（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">#</code>から始まるURL）のクリックを正規表現で一括検知するトリガーを作成し、メニュー追加時の運用コストをゼロに抑えています。</li>
-              </ul>
-            </div>
-            {/* ▲ 追加ここまで ▲ */}
-
-            <div>
-              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">定性分析とUX改善（Microsoft Clarityの活用）</h4>
-              <p className="leading-relaxed mb-2">
-                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4と統合しています。
-              </p>
-              <ul className="list-disc list-outside ml-4 space-y-2">
-                <li className="pl-1"><span className="font-bold text-slate-800">ヒートマップ分析:</span> ユーザーのスクロール到達率や、クリックが集中している箇所を視覚的に把握。</li>
-                <li className="pl-1"><span className="font-bold text-slate-800">セッション録画:</span> デッドクリックやレイジクリック（怒りの連打）が発生したセッションの録画を確認し、UIのボトルネックを特定。</li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善サイクル</h4>
-              <p className="leading-relaxed">
-                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">推測に頼らない、データに裏付けられたPDCAサイクル</span>を回していきます。
-              </p>
-            </div>
-          </div>
-        )
       }
     ]
   },
@@ -1224,120 +1121,95 @@ const projects: Project[] = [
         )
       }
     ]
-  },
-  {
-    id: "tailscale-vpn",
-    title: "8. Tailscaleによる自宅VPN環境の構築とネットワーク検証",
-    badge: "学習・技術キャッチアップ事例",
-    badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
-    summary: "外出先から自宅LANへ安全にアクセスできる環境の構築と、ネットワークの仕組み（VPN、ルーティング、プロトコル）を学習するため、Tailscaleを用いたVPN環境を構築しました。単なるツールの導入にとどまらず、Subnet Routerの構成やWiresharkを用いたパケット解析など、原因切り分けと仕組みの理解に重点を置いた検証を実施しました。",
-    sections: [
-      { 
-        title: "背景・目的", 
-        fullWidth: true,
-        items: [
-          "外出先から自宅LANへ安全にアクセスできる環境を構築したかった",
-          "単なるリモート接続ではなく、VPNやネットワークの仕組みそのものを学習する目的があった",
-          "将来的にはDockerやRaspberry Piによる自宅サーバー構築も視野に入れている"
-        ] 
-      },
-      { 
-        title: "環境構成", 
-        fullWidth: true,
-        content: (
-          <div className="space-y-2 text-sm text-slate-700">
-            <p><span className="font-bold text-slate-800">ネットワーク:</span> ONU → NTT貸与ルーター → AirMac Extreme（ブリッジモード） → Windows PC</p>
-            <p><span className="font-bold text-slate-800">クライアント:</span> Windows, iPhone</p>
-            <p><span className="font-bold text-slate-800">VPN:</span> Tailscale</p>
-          </div>
-        )
-      },
-      { 
-        title: "実施内容と検証結果", 
-        fullWidth: true,
-        content: (
-          <div className="space-y-4 text-sm text-slate-700">
-            <div>
-              <p className="font-bold text-slate-800 mb-1">1. TailDropによるファイル転送</p>
-              <p className="leading-relaxed">Windows⇔iPhone間の双方向転送を確認。途中で保存場所が分からず調査し、WindowsはDownloadsフォルダ、iPhoneは「このiPhone内→Tailscale」に保存される仕様を把握しました。</p>
-            </div>
-            <div>
-              <p className="font-bold text-slate-800 mb-1">2. Subnet Routerの構築とLANアクセス</p>
-              <p className="leading-relaxed">Windows PCをSubnet Routerとして構成。iPhoneからTailscaleのIP（100.x.x.x）ではなく、自宅LANのローカルIP（192.168.10.x）で共有フォルダにアクセスできることを確認し、「Tailscaleネットワークではなく、自宅LANへ参加している」というルーティングの概念を体感しました。</p>
-            </div>
-            <div>
-              <p className="font-bold text-slate-800 mb-1">3. DIGA（ブルーレイレコーダー）の宅外視聴検証</p>
-              <p className="leading-relaxed">宅外（4G回線）からライブ放送・録画番組の再生に成功。Subnet Router経由で同一LAN内として認識されたことを実証しました。</p>
-            </div>
-            <div>
-              <p className="font-bold text-slate-800 mb-1">4. IoT家電（eRemote mini）の通信解析</p>
-              <p className="leading-relaxed">VPN経由での操作可否を検証。ARP、ping、TCP/UDPポートの疎通確認、Wiresharkによるパケット解析を実施。結果としてVPN経由での操作は不可と判明しましたが、「なぜ使えないのか」をネットワーク層から切り分ける手法を実践しました。</p>
-            </div>
-          </div>
-        )
-      },
-      { 
-        title: "学んだこと", 
-        fullWidth: true,
-        items: [
-          "VPNおよびSubnet Routerの仕組みと「LANへ参加する」という概念",
-          "CIDR表記（/24）やルーティングの基礎",
-          "ARP、ICMP、TCP、UDP、ポート番号など、ネットワークプロトコルの役割",
-          "Wiresharkを用いたパケット解析と、原因を推測・特定するための検証手法"
-        ] 
-      },
-      { 
-        title: "今後の展望", 
-        fullWidth: true,
-        items: [
-          "Raspberry Piの導入とDocker環境の構築",
-          "Subnet RouterをWindowsからRaspberry Piへ移行し、24時間稼働のVPN環境を構築",
-          "自宅サーバーの構築と、ネットワーク設計への理解の深化"
-        ] 
-      }
-    ],
-    accordions: [
-      { 
-        title: "技術的な詳細（Subnet Router構築とルーティング）", 
-        content: (
-          <div className="space-y-4 text-sm text-slate-700">
-            <p className="leading-relaxed">
-              PowerShellを用いてWindows PCをSubnet Routerとして構成しました。単にコマンドを打つだけでなく、ネットワークの状態を確認しながら進めました。
-            </p>
-            <ul className="list-disc list-outside ml-4 space-y-2">
-              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">ipconfig</code> や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale status</code> で現在のネットワーク状態を把握。</li>
-              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale set --advertise-routes=192.168.10.0/24</code> を実行し、自宅LANのサブネットをTailscaleネットワークに広告。この際、<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">192.168.10.0/24</code> というCIDR表記の意味（サブネットマスク）を理解した上で設定。</li>
-              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale debug prefs</code> で Advertise Routes の状態が正しく反映されているかを確認。</li>
-            </ul>
-          </div>
-        )
-      },
-      { 
-        title: "技術的な詳細（eRemote miniの通信解析プロセス）", 
-        content: (
-          <div className="space-y-4 text-sm text-slate-700">
-            <p className="leading-relaxed">
-              IoT家電（eRemote mini）をVPN経由で操作できるか検証するため、以下の手順で通信の切り分けを行いました。「使えなかった」という結果で終わらせず、原因を特定するプロセスを重視しました。
-            </p>
-            <ol className="list-decimal list-outside ml-4 space-y-2">
-              <li className="pl-1"><span className="font-bold text-slate-800">存在確認:</span> MACアドレスを特定し、ARPテーブルと <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">ping</code> でLAN上に存在することを確認。</li>
-              <li className="pl-1"><span className="font-bold text-slate-800">TCPポートの疎通確認:</span> PowerShellの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">Test-NetConnection</code> を使用し、HTTP/HTTPS（80/443）や特定ポート（7680等）へのアクセスを検証。HTTP/HTTPSでは応答がなく（Web UIを持たない可能性）、TCP 7680ではRST（リセット）応答が返ることを確認。</li>
-              <li className="pl-1"><span className="font-bold text-slate-800">パケット解析:</span> Wiresharkを導入し、スマホアプリから操作した際のUDP通信をキャプチャして解析。</li>
-            </ol>
-            <div className="bg-slate-50 border border-slate-200 rounded-md p-4 mt-2">
-              <p className="font-bold text-slate-800 mb-1">結論</p>
-              <p className="leading-relaxed text-slate-600">
-                通信方式（ブロードキャストやマルチキャストの利用）やクラウド側の仕様により、単純なL3 VPN（ルーティング）経由での直接操作は困難であると判断しました。
-              </p>
-            </div>
-          </div>
-        )
-      }
-    ]
   }
 ];
 
+// ▼▼▼ プロジェクトカードを描画する共通コンポーネント ▼▼▼
+const ProjectCard = ({ p, isPickup = false }: { p: Project; isPickup?: boolean }) => {
+  return (
+    <div id={p.id} className="scroll-mt-24 bg-white rounded-lg shadow-sm border border-slate-200 flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
+      <div className="p-6 sm:p-8 flex flex-col flex-1">
+        
+        <div className="mb-4">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            {isPickup && (
+              <span className="inline-block rounded-full px-3 py-1 text-xs font-bold border bg-yellow-100 text-yellow-800 border-yellow-200">
+                🌟 PICKUP
+              </span>
+            )}
+            <span className={`inline-block rounded-full px-3 py-1 text-xs font-bold border ${p.badgeColor}`}>
+              {p.badge}
+            </span>
+          </div>
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-800 leading-snug">{p.title}</h3>
+        </div>
+
+        <p className="text-sm text-slate-600 mb-6 leading-relaxed pb-6 border-b border-slate-100">
+          {p.summary}
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          {p.sections.map((sec: Section) => (
+            <div 
+              key={sec.title} 
+              className={`bg-slate-50 border border-slate-100 rounded-md p-4 sm:p-5 ${sec.fullWidth ? 'sm:col-span-2' : ''}`}
+            >
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">{sec.title}</p>
+              
+              {sec.content ? (
+                sec.content
+              ) : (
+                <ul className="list-disc list-outside ml-4 text-sm text-slate-700 space-y-2">
+                  {sec.items?.map((item, idx) => (
+                    <li key={idx} className="leading-relaxed pl-1">{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {p.accordions.length > 0 && (
+          <div className="space-y-3 mt-2">
+            {p.accordions.map((acc: Accordion) => (
+              <details key={acc.title} className="text-sm group">
+                <summary data-accordion-name={`Project: ${p.title} - ${acc.title}`} className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
+                  <span className="inline-block transition-transform group-open:rotate-90 mr-1">▶</span> {acc.title}
+                </summary>
+                <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-slate-50 rounded p-4 border border-slate-100">
+                  {acc.content}
+                  <div className="mt-6 pt-4 border-t border-slate-200 text-right">
+                    <button
+                      onClick={(e) => {
+                        const details = e.currentTarget.closest('details');
+                        if (details) {
+                          details.removeAttribute('open');
+                          const y = details.getBoundingClientRect().top + window.scrollY - 80;
+                          window.scrollTo({ top: y, behavior: 'smooth' });
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-800 font-bold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-3 py-1.5 bg-white border border-slate-200 shadow-sm hover:shadow"
+                    >
+                      ▲ 閉じる
+                    </button>
+                  </div>
+                </div>
+              </details>
+            ))}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+// ▲▲▲ コンポーネント定義ここまで ▲▲▲
+
 export default function ProjectsSection() {
+  // ▼ プロジェクトを「常時表示(上位3件)」と「アコーディオン格納(残り)」に分割 ▼
+  const pickupProjects = projects.slice(0, 3);
+  const otherProjects = projects.slice(3);
+
   return (
     <section id="projects" className="bg-slate-50 py-24 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
@@ -1349,79 +1221,60 @@ export default function ProjectsSection() {
           </p>
         </div>
 
+        {/* ▼▼▼ 追加：冒頭の宣言文（期待値コントロール） ▼▼▼ */}
+        <div className="mb-10 bg-blue-50 border border-blue-200 rounded-lg p-6 sm:p-8 shadow-sm">
+          <h3 className="text-blue-800 font-bold text-base sm:text-lg mb-4 flex items-center gap-2">
+            <span>💡</span> 本セクションをご覧いただくにあたって（私の開発スタンス）
+          </h3>
+          <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+            <p>
+              以下のプロジェクト群は、「ゼロから私がタイピングして構築したコード」ではありません。コーディング（記述）の約9割は、生成AIを活用して出力しています。
+            </p>
+            <p>私が注力し、コントロールしているのは以下の領域です。</p>
+            <ul className="list-disc list-outside ml-5 space-y-1.5">
+              <li className="pl-1">「現場の課題」をAIとの壁打ちを通じてシャープな要件へと落とし込み、最終決定を下すこと（要件定義）</li>
+              <li className="pl-1">AIが出力したコードが「セキュリティ要件やビジネスロジックを満たしているか」の検証・テスト</li>
+              <li className="pl-1">複数の技術を組み合わせ、実運用に耐えうる形に組み上げるディレクション</li>
+            </ul>
+            <p>
+              ツール（AI）を正しく指揮すれば、未経験の技術領域であっても短期間でここまで形にし、課題解決に直結させることができる。<br />
+              本セクションは、その「自走力と適応力の検証結果」としてご覧いただけますと幸いです。
+            </p>
+          </div>
+        </div>
+        {/* ▲▲▲ 追加ここまで ▲▲▲ */}
+
         <div className="flex flex-col gap-10 max-w-3xl mx-auto">
-          {projects.map((p) => (
-            <div key={p.id} id={p.id} className="scroll-mt-24 bg-white rounded-lg shadow-sm border border-slate-200 flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
-              <div className="p-6 sm:p-8 flex flex-col flex-1">
-                
-                <div className="mb-4">
-                  <span className={`inline-block rounded-full px-3 py-1 text-xs font-bold border mb-3 ${p.badgeColor}`}>
-                    {p.badge}
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-slate-800 leading-snug">{p.title}</h3>
+          
+          {/* 常時表示（上位3件）のレンダリング */}
+          {pickupProjects.map((p) => (
+            <ProjectCard key={p.id} p={p} isPickup={true} />
+          ))}
+
+          {/* ▼▼▼ 追加：残り4件を格納するアコーディオン ▼▼▼ */}
+          <div className="pt-4">
+            <details className="group bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+              <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-6 sm:p-8 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-50 transition-colors duration-200">
+                <div className="flex items-center gap-2 text-lg sm:text-xl font-bold text-blue-700">
+                  <span className="inline-block transition-transform group-open:rotate-90">▶</span>
+                  ＋ さらに実績を見る（個人開発・技術キャッチアップ事例：4件）
                 </div>
-
-                <p className="text-sm text-slate-600 mb-6 leading-relaxed pb-6 border-b border-slate-100">
-                  {p.summary}
+                <p className="mt-2 ml-6 text-sm text-slate-500 font-normal">
+                  収録内容：④ Webサイト情報チェッカー / ⑤ マイクロサービス連携デモ / ⑥ ポートフォリオ刷新 / ⑦ Pythonによる業務準備自動化
                 </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  {/* ▼ (sec) を (sec: Section) に変更 ▼ */}
-                  {p.sections.map((sec: Section) => (
-                    <div 
-                      key={sec.title} 
-                      className={`bg-slate-50 border border-slate-100 rounded-md p-4 sm:p-5 ${sec.fullWidth ? 'sm:col-span-2' : ''}`}
-                    >
-                      <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">{sec.title}</p>
-                      
-                      {sec.content ? (
-                        sec.content
-                      ) : (
-                        <ul className="list-disc list-outside ml-4 text-sm text-slate-700 space-y-2">
-                          {sec.items?.map((item, idx) => (
-                            <li key={idx} className="leading-relaxed pl-1">{item}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
+              </summary>
+              <div className="p-6 sm:p-8 border-t border-slate-200 bg-slate-50/50">
+                <div className="flex flex-col gap-10">
+                  {/* アコーディオン内のプロジェクトレンダリング */}
+                  {otherProjects.map((p) => (
+                    <ProjectCard key={p.id} p={p} />
                   ))}
                 </div>
-
-                {p.accordions.length > 0 && (
-                  <div className="space-y-3 mt-2">
-                    {/* ▼ (acc) を (acc: Accordion) に変更 ▼ */}
-                    {p.accordions.map((acc: Accordion) => (
-                      <details key={acc.title} className="text-sm group">
-                        <summary data-accordion-name={`Project: ${p.title} - ${acc.title}`} className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-blue-600 hover:text-blue-700 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 rounded p-1 inline-flex items-center">
-                          <span className="inline-block transition-transform group-open:rotate-90 mr-1">▶</span> {acc.title}
-                        </summary>
-                        <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-slate-50 rounded p-4 border border-slate-100">
-                          {acc.content}
-                          <div className="mt-6 pt-4 border-t border-slate-200 text-right">
-                            <button
-                              onClick={(e) => {
-                                const details = e.currentTarget.closest('details');
-                                if (details) {
-                                  details.removeAttribute('open');
-                                  // ヘッダーの高さ(約80px)を考慮して、タイトルの位置へスムーズにスクロールして戻る
-                                  const y = details.getBoundingClientRect().top + window.scrollY - 80;
-                                  window.scrollTo({ top: y, behavior: 'smooth' });
-                                }
-                              }}
-                              className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-800 font-bold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-3 py-1.5 bg-white border border-slate-200 shadow-sm hover:shadow"
-                            >
-                              ▲ 閉じる
-                            </button>
-                          </div>
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                )}
-
               </div>
-            </div>
-          ))}
+            </details>
+          </div>
+          {/* ▲▲▲ 追加ここまで ▲▲▲ */}
+
         </div>
       </div>
     </section>

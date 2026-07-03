@@ -34,11 +34,16 @@ export default function HomeSection() {
             <p>
               未来予測の難易度が日々上がり続ける現代において、企業はもちろん、<br className="hidden sm:block" />
               <span className="font-bold text-slate-800">それを支える「ヒト」一人ひとりにも「変化へ柔軟に対応する力」が求められている</span>と認識しています。<br className="hidden sm:block" />
-              一方で、<span className="font-bold text-slate-800">ヒトもまた企業に対して「変化を後押ししてくれる環境」を求めているという声を耳にします。</span>
+              一方で、<span className="font-bold text-slate-800">ヒトもまた企業に対して「変化を後押ししてくれる環境」を求めている</span>という声を耳にします。
             </p>
             <p>
               昨日までの正解が、瞬く間に不正解へと塗り替えられていくこの「VUCA時代」においてこそ、<br className="hidden sm:block" />
-              <span className="font-bold text-slate-800">AIを活用して</span>未知の技術を即座に形にする「自走力」が最大の武器になると確信しています。
+              AIを活用して未知の技術を即座に形にする「自走力」が最大の武器になると確信しています。
+            </p>
+            <p>
+              私にとってAIは、答えを出すための道具ではなく、<span className="font-bold text-slate-800">状況に応じた最善の判断へ近づくためのパートナー</span>です。<br className="hidden sm:block" />
+              そして、私にとっての<span className="font-bold text-slate-800">「自走力」</span>とは、AIとの対話を通じて理解・検証・改善を繰り返し、<br className="hidden sm:block" />
+              <span className="font-bold text-slate-800">AIに判断を委ねず、自ら責任を持って課題を解決する力のこと</span>です。<br className="hidden sm:block" />
             </p>
             <p>
               11年間の品質管理で培った現場理解と、Pythonによる業務自動化・改善の経験、<br className="hidden sm:block" />
@@ -50,7 +55,7 @@ export default function HomeSection() {
           {/* ▼▼▼ 追加：開発スタンスとAI活用方針 ▼▼▼ */}
           <div className="mt-16 max-w-3xl mx-auto text-left">
             <h2 className="text-xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-3">
-              ■ 私の開発スタンスとAI活用方針 <span className="text-sm text-slate-500 font-normal ml-1">(My Policy & AI Approach)</span>
+              ■ 私の開発スタンスとAI活用方針｜My Policy & AI Approach
             </h2>
             
             <div className="space-y-4">
@@ -63,8 +68,18 @@ export default function HomeSection() {
                 <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-slate-50 rounded-md p-5 sm:p-6 border border-slate-200 space-y-6 shadow-sm">
                   
                   <div>
-                    <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-blue-500 pl-2">AIは「答えを出す存在」ではなく、「考えるための相棒」</h4>
-                    <p>世間では「AIが仕事を奪う」「AIを使えば誰でもシステムが作れる」といった極端な評価を目にしますが、私はAIを「答えを出してくれる魔法の杖」ではなく、「より深く考えるための相棒」だと捉えています。<br />現場のフワッとした課題をAIと壁打ちして要件を整理し、AIが出力したコードに対して「なぜこの実装になるのか」「よりモダンな方法はないか」を問い直す。AI任せにするのではなく、自分自身が理解し、納得した上で採用することを徹底しています。</p>
+                    <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-blue-500 pl-2">AIは「答えを出す魔法の杖」ではなく、「考えるためのパートナー」</h4>
+                    <p>
+                    世間では「AIが仕事を奪う」「AIを使えば誰でもシステムが作れる」といった極端な評価を目にしますが、私はAIを「答えを出してくれる魔法の杖」ではなく、「より深く考えるためのパートナー」だと捉えています。<br />
+                    現場の言語化されていない課題をAIと壁打ちして要件を整理し、AIが出力したコードに対して「なぜこの実装になるのか」「よりモダンな方法はないか」を問い直し、AI任せにするのではなく、自分自身が理解し、納得した上で採用することを徹底しています。<br /><br />
+                    本ポートフォリオの冒頭で打ち出している「経験 × 技術 × AI」にはさらに「思考」を加えることが重要だと考えています。<br />
+                    前職での開発業務や業務改善、そしてこのポートフォリオの制作を通して、AIを活かすためには、自ら考え続けることが最も重要だと実感しました。<br />
+                    AIが提案した答えをそのまま採用するのではなく、<br /><br />
+                    「本当にこの方法が最適なのか」<br />
+                    「もっと良い方法はないか」<br /><br />
+                    を考え続け、理解・検証・改善を繰り返すことが、最終的な成果につながると考えています。<br />
+                    私は、「AIを使える人」ではなく、「AIとともに考え続けられる人」であり続けます。<br />
+                    </p>
                   </div>
 
                   <div>
@@ -74,7 +89,7 @@ export default function HomeSection() {
                       <li className="pl-1">ChatGPT（無料版）</li>
                       <li className="pl-1">Gemini（無料版）</li>
                     </ul>
-                    <p>私は、AIの性能（課金の有無）だけで成果物の品質が決まるとは考えていません。<br />期待した結果が得られない時、AIの性能のせいにするのではなく「どう伝えれば意図が正確に伝わるか」を考え、プロンプト（指示）の改善と試行錯誤を繰り返しました。目的を整理し、適切な指示を行い、出力結果を検証する。このプロセスこそが最も重要であると確信しています。</p>
+                    <p>私は、AIの性能（課金の有無）だけで成果物の品質が決まるとは考えていません。<br />期待した結果が得られない時、AIの性能の限界とするのではなく「どう伝えれば意図が正確に伝わるか」を考え、プロンプト（指示）の改善と試行錯誤を繰り返しました。<br /><br />「目的を整理し、適切な指示を行い、出力結果を検証する」<br /><br />このプロセスこそが最も重要であると確信しています。</p>
                   </div>
 
                   <div>
@@ -116,7 +131,7 @@ export default function HomeSection() {
                 <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-slate-50 rounded-md p-5 sm:p-6 border border-slate-200 space-y-6 shadow-sm">
                   
                   <div>
-                    <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-blue-500 pl-2">フワッとした課題を、実装可能な要件へ落とし込む</h4>
+                    <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-blue-500 pl-2">言語化されていない課題を、実装可能な要件へ落とし込む</h4>
                     <p>私は、現場の課題や自分のアイデアをいきなりコードにするのではなく、AIを「壁打ち相手」として活用し、以下のプロセスで要件と設計を固めています。</p>
                   </div>
 
