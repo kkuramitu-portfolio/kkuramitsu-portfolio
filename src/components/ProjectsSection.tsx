@@ -1211,7 +1211,8 @@ export default function ProjectsSection() {
   const otherProjects = projects.slice(3);
 
   return (
-    <section id="projects" className="bg-slate-50 py-24 px-4 sm:px-6">
+
+    <section id="projects" className="bg-slate-50 py-8 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <div className="mb-12 text-center sm:text-left">
           <p className="text-sm font-bold text-blue-600 tracking-widest uppercase mb-2">Projects & Case Studies</p>
@@ -1277,6 +1278,58 @@ export default function ProjectsSection() {
 
         </div>
       </div>
+    {/* ロードマップ・セクション */}
+        <section className="mt-12 p-6 bg-gray-50 border-l-4 border-yellow-500 rounded shadow-sm mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
+            <h3 className="text-xl font-bold flex items-center gap-2 text-slate-800">
+              <span>🚧</span> Project Roadmap (継続的インテグレーションの軌跡)
+            </h3>
+            <span className="inline-block w-fit px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">
+              Work in Progress
+            </span>
+          </div>
+          
+          <ul className="space-y-3 text-gray-700 mb-6">
+            <li className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✓</span>
+              <span className="line-through text-gray-400">Phase 1: Next.js (App Router) への完全移行</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✓</span>
+              <span className="line-through text-gray-400">Phase 2: Go & C# (Docker) によるマルチAPI連携</span>
+            </li>
+            {/* ▼ 追加: Phase 3 コンタクトフォーム */}
+            <li className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✓</span>
+              <span className="line-through text-gray-400">Phase 3: セキュアなコンタクトフォーム（Zod / reCAPTCHA v3）の実装</span>
+            </li>
+            {/* ▼ 繰り下げ & 強調: Phase 4 (現在進行中) */}
+            <li className="flex items-center gap-2 font-bold text-blue-700 bg-blue-100 p-3 rounded shadow-inner border border-blue-200">
+              <span className="animate-pulse">▶</span>
+              Phase 4: ポートフォリオ専用 AIナビゲーター（体験デモ版）
+            </li>
+            {/* ▼ 繰り下げ: Phase 5 (予定) */}
+            <li className="flex items-center gap-2 text-gray-500 opacity-70">
+              <span>⏳</span>
+              Phase 5: AWS RDS (PostgreSQL) データベース構築と連携 (現在検証中)
+            </li>
+            {/* ▼ 繰り下げ: Phase 6 (予定) */}
+            <li className="flex items-center gap-2 text-gray-500 opacity-70">
+              <span>⏳</span>
+              Phase 6: AWS DynamoDB (NoSQL) の導入とポリグロット永続化の実現
+            </li>
+          </ul>
+
+          {/* ▼ 追加: 面接官へのメッセージ（ディスカッションのフック） */}
+          <div className="text-sm text-slate-600 bg-white p-4 rounded border border-gray-200">
+            <p className="font-bold text-slate-700 mb-1">💡 面接官・採用担当者様へ</p>
+            <p className="leading-relaxed">
+              私は、システムやポートフォリオは「完成して終わり」ではなく、継続的に進化させるものだと考えています。
+              現在はAWS環境の構築（Phase 4）において、AIと壁打ちをしながらインフラ設計の検証を進めています。
+              面接の機会をいただけましたら、現在直面している技術的課題や、その解決アプローチについてもぜひディスカッションさせてください。
+            </p>
+          </div>
+        </section>
     </section>
   );
 }
