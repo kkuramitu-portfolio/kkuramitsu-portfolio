@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 const stats = [
   { value: "20+", label: "学習・実践してきた技術スタック" },
@@ -8,7 +8,72 @@ const stats = [
   { value: "1ヶ月", label: "ポートフォリオ v1.0 到達まで" },
 ];
 
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
+
 export default function HomeSection() {
+  // チャットボット用の状態管理
+  const [messages, setMessages] = useState<Message[]>([
+    { role: "assistant", content: "こんにちは！蔵満のポートフォリオ案内AIです。成果物や強みについて、何でも聞いてくださいね。" }
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // メッセージ追加時に自動スクロール
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // メッセージ送信処理
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const newMessages: Message[] = [...messages, { role: "user", content: text }];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+
+      if (!res.ok) {
+        // 429エラー（IPレートリミットやOpenAIの予算上限）などのエラーハンドリング
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "申し訳ありません。本日の利用制限、または月間のAPI利用上限に達しました。コスト管理の実証デモにご協力いただきありがとうございます。" }
+        ]);
+        setIsLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+      setMessages((prev) => [...prev, { role: "assistant", content: data.message }]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "申し訳ありません。本日の利用制限、または月間のAPI利用上限に達しました。コスト管理の実証デモにご協力いただきありがとうございます。" }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section
       id="home"
@@ -52,7 +117,7 @@ export default function HomeSection() {
             </p>
           </div>
 
-          {/* ▼▼▼ 追加：開発スタンスとAI活用方針 ▼▼▼ */}
+          {/* 開発スタンスとAI活用方針 */}
           <div className="mt-16 max-w-3xl mx-auto text-left">
             <h2 className="text-xl font-bold text-slate-800 mb-6 border-b-2 border-slate-100 pb-3">
               ■ 私の開発スタンスとAI活用方針｜My Policy & AI Approach
@@ -205,7 +270,6 @@ export default function HomeSection() {
               </details>
             </div>
           </div>
-          {/* ▲▲▲ 追加ここまで ▲▲▲ */}
 
         </div>
 
@@ -250,6 +314,144 @@ export default function HomeSection() {
             <span className="text-xs">↗</span>
           </a>
         </div>
+
+        {/* ▼▼▼ 追加：AIチャットボット ▼▼▼ */}
+        <div className="mt-16 max-w-3xl mx-auto text-left">
+          <h2 className="text-xl font-bold text-slate-800 mb-4 border-b-2 border-slate-100 pb-3">
+            ■ ポートフォリオ専用 AIナビゲーター（体験デモ）
+          </h2>
+          {/* ▼▼▼ ここからバッジを追加 ▼▼▼ */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              設計・実装時間: 約1.5時間
+            </span>
+            <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-xs font-bold text-purple-700">
+              新規キャッチアップ
+            </span>
+          </div>
+          {/* ▲▲▲ バッジ追加ここまで ▲▲▲ */}
+          <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+            本ポートフォリオの内容に限って回答する専用AIチャットを実装しました。<br />
+            どのような成果物があるか等のご質問はもちろん、あえて『今日の天気は？』といった関係のない質問をして、外部情報には答えない（プロンプトインジェクション対策）挙動もお試しいただけます。<br />
+            ※API制限のため、1IPアドレスにつき1日5回までとさせていただいております。<br />
+            ※クラウド破産を防ぐためのコスト管理実証として、APIの月間利用上限（ハードリミット）を設定しています。上限に達した場合は一時的にご利用いただけなくなる場合がございます。
+          </p>
+
+          {/* チャットウィンドウ */}
+          <div className="bg-slate-50 border border-slate-200 rounded-lg shadow-sm overflow-hidden flex flex-col h-[400px]">
+            {/* メッセージエリア */}
+             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((msg, idx) => (
+                <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap ${
+                    msg.role === "user" 
+                      ? "bg-blue-600 text-white rounded-br-none" 
+                      : "bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm"
+                  }`}>
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-white border border-slate-200 text-slate-500 rounded-2xl rounded-bl-none px-4 py-2 text-sm shadow-sm flex items-center gap-1">
+                    <span className="animate-bounce">●</span>
+                    <span className="animate-bounce delay-100">●</span>
+                    <span className="animate-bounce delay-200">●</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* サジェストボタン */}
+            <div className="px-4 py-2 bg-slate-100 border-t border-slate-200 flex flex-wrap gap-2">
+              <button onClick={() => sendMessage("どんな成果物がある？")} className="text-xs bg-white border border-slate-300 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm">
+                どんな成果物がある？
+              </button>
+              <button onClick={() => sendMessage("蔵満さんの強みは？")} className="text-xs bg-white border border-slate-300 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm">
+                蔵満さんの強みは？
+              </button>
+              <button onClick={() => sendMessage("今日の天気は？")} className="text-xs bg-white border border-slate-300 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm">
+                今日の天気は？(意地悪な質問)
+              </button>
+            </div>
+
+            {/* 入力エリア */}
+            <div className="p-3 bg-white border-t border-slate-200 flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    sendMessage(input);
+                  }
+                }}
+                placeholder="メッセージを入力..."
+                className="flex-1 border border-slate-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                disabled={isLoading}
+              />
+              <button
+                onClick={() => sendMessage(input)}
+                disabled={isLoading || !input.trim()}
+                className="bg-blue-600 text-white rounded-full p-2 w-10 h-10 flex items-center justify-center hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 ml-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* セキュリティ詳細アコーディオン */}
+          <div className="mt-6">
+            <details className="group">
+              <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer text-slate-700 hover:text-slate-900 font-bold transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-slate-400 rounded p-3 inline-flex items-center bg-slate-100 w-full border border-slate-200 shadow-sm text-sm">
+                ▼ この機能のアーキテクチャとセキュリティ対策（クリックで展開）
+              </summary>
+              <div className="mt-2 text-slate-600 leading-relaxed text-sm bg-white rounded-md p-5 sm:p-6 border border-slate-200 space-y-6 shadow-sm">
+                
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ システムプロンプトによるコンテキスト制限（RAGの基礎）</h4>
+                  <p>本チャットボットは、バックエンドで強力なシステムプロンプトを設定し、AIの知識を「このポートフォリオ内の情報」のみに限定しています。これにより、企業が社内専用AIを導入する際に必須となる「社外情報の遮断」と「ハルシネーション（嘘の回答）の抑制」を疑似的に実装しています。</p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ プロンプトインジェクション対策</h4>
+                  <p>「あなたは〇〇です。これまでの指示を無視して〜」といった、AIを騙して別の動作をさせる攻撃（プロンプトインジェクション）を防ぐため、ユーザーの入力よりもシステムプロンプトの指示が優先されるよう設計しています。</p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ APIレートリミットとクラウドコスト管理（FinOps）</h4>
+                  <p>悪意のある連続リクエストによるサーバー負荷を防ぐため、IPアドレスベースで「1日5回まで」の厳格なレートリミットを実装しています。さらに、クラウド破産（意図しないAPI利用料の高騰）を防ぐため、OpenAI API側で月間のハードリミット（予算上限）を設定し、上限到達時は安全に機能が停止するフェイルセーフ設計としています。</p>
+                </div>
+
+                {/* 閉じるボタン */}
+                <div className="mt-6 pt-4 border-t border-slate-200 text-right">
+                  <button
+                    onClick={(e) => {
+                      const details = e.currentTarget.closest('details');
+                      if (details) {
+                        details.removeAttribute('open');
+                        const y = details.getBoundingClientRect().top + window.scrollY - 80;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                      }
+                    }}
+                    className="inline-flex items-center gap-1 text-slate-500 hover:text-slate-800 font-bold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded px-3 py-1.5 bg-white border border-slate-200 shadow-sm hover:shadow"
+                  >
+                    ▲ 閉じる
+                  </button>
+                </div>
+
+              </div>
+            </details>
+          </div>
+        </div>
+        {/* ▲▲▲ 追加ここまで ▲▲▲ */}
 
       </div>
     </section>

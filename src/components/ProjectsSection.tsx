@@ -1303,14 +1303,14 @@ export default function ProjectsSection() {
               <span className="text-green-600 font-bold">✓</span>
               <span className="line-through text-gray-400">Phase 3: セキュアなコンタクトフォーム（Zod / reCAPTCHA v3）の実装</span>
             </li>
-            {/* ▼ 繰り下げ & 強調: Phase 4 (現在進行中) */}
+            {/* ▼ 追加: Phase 4 ポートフォリオ専用 AIナビゲーター */}
+            <li className="flex items-center gap-2">
+              <span className="text-green-600 font-bold">✓</span>
+              <span className="line-through text-gray-400">Phase 4: ポートフォリオ専用 AIナビゲーター（体験デモ版）</span>
+            </li>
+            {/* ▼ 繰り下げ & 強調: Phase 5 (現在進行中) */}
             <li className="flex items-center gap-2 font-bold text-blue-700 bg-blue-100 p-3 rounded shadow-inner border border-blue-200">
               <span className="animate-pulse">▶</span>
-              Phase 4: ポートフォリオ専用 AIナビゲーター（体験デモ版）
-            </li>
-            {/* ▼ 繰り下げ: Phase 5 (予定) */}
-            <li className="flex items-center gap-2 text-gray-500 opacity-70">
-              <span>⏳</span>
               Phase 5: AWS RDS (PostgreSQL) データベース構築と連携 (現在検証中)
             </li>
             {/* ▼ 繰り下げ: Phase 6 (予定) */}
@@ -1325,7 +1325,7 @@ export default function ProjectsSection() {
             <p className="font-bold text-slate-700 mb-1">💡 面接官・採用担当者様へ</p>
             <p className="leading-relaxed">
               私は、システムやポートフォリオは「完成して終わり」ではなく、継続的に進化させるものだと考えています。<br />
-              現在はポートフォリオ専用 AIナビゲーター（体験デモ版）（Phase 4）において、AIと壁打ちをしながらインフラ設計の検証を進めています。<br />
+              現在はAWS RDS (PostgreSQL) データベース構築と連携（体験デモ版）（Phase 5）において、AIと壁打ちをしながらインフラ設計の検証を進めています。<br />
               面接の機会をいただけましたら、現在直面している技術的課題や、その解決アプローチについてもぜひディスカッションさせてください。
             </p>
           </div>
