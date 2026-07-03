@@ -1257,7 +1257,7 @@ export default function ProjectsSection() {
               <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-6 sm:p-8 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-50 transition-colors duration-200">
                 <div className="flex items-center gap-2 text-lg sm:text-xl font-bold text-blue-700">
                   <span className="inline-block transition-transform group-open:rotate-90">▶</span>
-                  ＋ さらに実績を見る（個人開発・技術キャッチアップ事例：4件）
+                  ＋ さらに4件の実績を見る（個人開発・技術キャッチアップ事例）
                 </div>
                 <p className="mt-2 ml-6 text-sm text-slate-500 font-normal">
                   収録内容：④ Webサイト情報チェッカー / ⑤ マイクロサービス連携デモ / ⑥ ポートフォリオ刷新 / ⑦ Pythonによる業務準備自動化
