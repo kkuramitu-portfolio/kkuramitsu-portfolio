@@ -1324,8 +1324,8 @@ export default function ProjectsSection() {
           <div className="text-sm text-slate-600 bg-white p-4 rounded border border-gray-200">
             <p className="font-bold text-slate-700 mb-1">💡 面接官・採用担当者様へ</p>
             <p className="leading-relaxed">
-              私は、システムやポートフォリオは「完成して終わり」ではなく、継続的に進化させるものだと考えています。
-              現在はAWS環境の構築（Phase 4）において、AIと壁打ちをしながらインフラ設計の検証を進めています。
+              私は、システムやポートフォリオは「完成して終わり」ではなく、継続的に進化させるものだと考えています。<br />
+              現在はポートフォリオ専用 AIナビゲーター（体験デモ版）（Phase 4）において、AIと壁打ちをしながらインフラ設計の検証を進めています。<br />
               面接の機会をいただけましたら、現在直面している技術的課題や、その解決アプローチについてもぜひディスカッションさせてください。
             </p>
           </div>
