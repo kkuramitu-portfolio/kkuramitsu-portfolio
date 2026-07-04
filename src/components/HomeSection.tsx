@@ -429,7 +429,10 @@ export default function HomeSection() {
                   <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ APIレートリミットとクラウドコスト管理（FinOps）</h4>
                   <p>悪意のある連続リクエストによるサーバー負荷を防ぐため、IPアドレスベースで「1日5回まで」の厳格なレートリミットを実装しています。さらに、クラウド破産（意図しないAPI利用料の高騰）を防ぐため、OpenAI API側で月間のハードリミット（予算上限）を設定し、上限到達時は安全に機能が停止するフェイルセーフ設計としています。</p>
                 </div>
-
+                <div>
+                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ LLMOps（継続的プロンプト改善）とデュアル監視体制</h4>
+                  <p>AIは「作って終わり」ではなく、運用しながら精度を高めることが重要です。本チャットボットでは、LLM可観測性ツール（Helicone）を導入してコストやレイテンシを定量分析すると同時に、Slackへのリアルタイム通知を連携させた「デュアル監視体制」を構築しています。<br />ユーザーの入力とAIの出力ログを監視（※個人を特定する情報は取得していません）し、「意図しない回答（ハルシネーション）」や「制限のすり抜け」が発生していないかを分析し、継続的にシステムプロンプトのチューニング（LLMOps）を行っています。</p>
+                </div>
                 {/* 閉じるボタン */}
                 <div className="mt-6 pt-4 border-t border-slate-200 text-right">
                   <button
