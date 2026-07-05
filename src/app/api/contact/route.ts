@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     // 4. Slack Webhook通知
-    const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
+    const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL_CONTACT;
     if (slackWebhookUrl) {
       await notifySlack(data, slackWebhookUrl).catch(console.error);
     }
