@@ -1271,6 +1271,22 @@ export default function ProjectsSection() {
                     <ProjectCard key={p.id} p={p} />
                   ))}
                 </div>
+                <div className="mt-10 pt-6 border-t border-slate-200 text-center">
+                  <button
+                    onClick={(e) => {
+                      const details = e.currentTarget.closest('details');
+                      if (details) {
+                        details.removeAttribute('open');
+                        // ヘッダーの高さ(約80px)を考慮して、タイトルの位置へスムーズにスクロールして戻る
+                        const y = details.getBoundingClientRect().top + window.scrollY - 80;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                      }
+                    }}
+                    className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-400 rounded-md px-6 py-3 bg-white border border-slate-300 shadow-sm hover:shadow-md"
+                  >
+                    ▲ 実績一覧を閉じる
+                  </button>
+                </div>
               </div>
             </details>
           </div>
