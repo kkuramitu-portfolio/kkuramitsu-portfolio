@@ -26,6 +26,23 @@ export default function HomeSection() {
   // ▼ 修正: チャットの「枠（コンテナ）」自体を参照するように変更
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+    const storedData = localStorage.getItem('ai_chat_usage');
+    if (storedData) {
+      try {
+        const { count, date } = JSON.parse(storedData);
+        const today = new Date().toDateString();
+        // 保存された日付が今日なら回数を復元、違うならリセット
+        if (date === today) {
+          setUsageCount(count);
+        } else {
+          localStorage.removeItem('ai_chat_usage');
+        }
+      } catch (e) {
+        console.error("localStorage parse error", e);
+      }
+    }
+  }, []);
   // ▼ 修正: ページ全体ではなく、枠の中だけをスクロールさせる
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
