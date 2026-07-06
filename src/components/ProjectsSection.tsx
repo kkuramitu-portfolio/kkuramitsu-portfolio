@@ -1125,12 +1125,31 @@ return NextResponse.json({ title, description });`}
 ];
 
 // ▼▼▼ プロジェクトカードを描画する共通コンポーネント ▼▼▼
-const ProjectCard = ({ p, isPickup = false }: { p: Project; isPickup?: boolean }) => {
+const ProjectCard = ({ p, isPickup = false, indexId }: { p: Project; isPickup?: boolean; indexId: string }) => {
   return (
     <div id={p.id} className="scroll-mt-24 bg-white rounded-lg shadow-sm border border-slate-200 flex flex-col hover:shadow-md transition-shadow duration-300 overflow-hidden">
-      <div className="p-6 sm:p-8 flex flex-col flex-1">
+      <div className="p-6 sm:p-8 flex flex-col flex-1 relative">
         
-        <div className="mb-4">
+        {/* ▼ 追加：右上の「目次に戻る」リンク ▼ */}
+        <div className="absolute top-6 right-6 sm:top-8 sm:right-8">
+          <a 
+            href={`#${indexId}`}
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById(indexId);
+              if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
+            }}
+            className="text-xs font-bold text-slate-400 hover:text-blue-600 transition-colors flex items-center gap-1 bg-slate-50 hover:bg-blue-50 px-2 py-1 rounded border border-slate-100"
+          >
+            ↑ 目次に戻る
+          </a>
+        </div>
+        {/* ▲ 追加ここまで ▲ */}
+
+        <div className="mb-4 pr-24"> {/* 右上のボタンと被らないように pr-24 を追加 */}
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {isPickup && (
               <span className="inline-block rounded-full px-3 py-1 text-xs font-bold border bg-yellow-100 text-yellow-800 border-yellow-200">
@@ -1209,20 +1228,17 @@ export default function ProjectsSection() {
   const pickupProjects = projects.slice(0, 3);
   const otherProjects = projects.slice(3);
 
-  // ▼ 追加：アコーディオンを操作するための参照（Ref） ▼
   const detailsRef = useRef<HTMLDetailsElement>(null);
 
-  // ▼ 追加：目次からアコーディオンを開いてスクロールする関数 ▼
   const handleOpenAccordion = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     if (detailsRef.current) {
-      detailsRef.current.open = true; // アコーディオンを強制的に開く
-      const y = detailsRef.current.getBoundingClientRect().top + window.scrollY - 80; // ヘッダーの高さ(80px)を考慮
+      detailsRef.current.open = true;
+      const y = detailsRef.current.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
 
-  // ▼ 追加：目次から通常のプロジェクトへスクロールする関数 ▼
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -1264,34 +1280,21 @@ export default function ProjectsSection() {
           </div>
         </div>
 
-        {/* ▼▼▼ 追加：目次（インデックス） ▼▼▼ */}
-        {/* ※セクション全体の背景が bg-slate-50 なので、目次は bg-white にして浮き立たせています */}
-        <div className="mb-10 bg-white border border-slate-200 rounded-lg p-5 sm:p-6 shadow-sm max-w-3xl mx-auto">
+        {/* ▼▼▼ メインの目次（id="projects-index" を追加） ▼▼▼ */}
+        <div id="projects-index" className="scroll-mt-24 mb-10 bg-white border border-slate-200 rounded-lg p-5 sm:p-6 shadow-sm max-w-3xl mx-auto">
           <h3 className="text-slate-800 font-bold text-base mb-4 flex items-center gap-2 border-b border-slate-100 pb-2">
             <span>📋</span> 掲載プロジェクト一覧
           </h3>
           <ul className="space-y-3 text-sm text-slate-700">
-            <li>
-              <a href="#sql-migration" onClick={(e) => handleScrollTo(e, 'sql-migration')} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
-                <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
-                <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
-                <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">SQLデータ移行プロジェクト（実務）</span>
-              </a>
-            </li>
-            <li>
-              <a href="#backup-improvement" onClick={(e) => handleScrollTo(e, 'backup-improvement')} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
-                <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
-                <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
-                <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">バックアップ運用改善プロジェクト（実務）</span>
-              </a>
-            </li>
-            <li>
-              <a href="#mail-checker" onClick={(e) => handleScrollTo(e, 'mail-checker')} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
-                <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
-                <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
-                <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">メール事故防止チェックツール（業務改善）</span>
-              </a>
-            </li>
+            {pickupProjects.map((p) => (
+              <li key={p.id}>
+                <a href={`#${p.id}`} onClick={(e) => handleScrollTo(e, p.id)} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
+                  <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
+                  <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
+                  <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">{p.title.replace(/^[0-9]+\.\s*/, '')}</span>
+                </a>
+              </li>
+            ))}
             <li className="pt-2">
               <a href="#more-projects-accordion" onClick={handleOpenAccordion} className="inline-flex items-center gap-1.5 text-blue-700 hover:text-blue-800 font-bold transition-colors bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-2 rounded-md shadow-sm">
                 <span className="text-blue-600">＋</span> さらに4件の個人開発・技術キャッチアップ事例（クリックで展開して表示）
@@ -1299,21 +1302,20 @@ export default function ProjectsSection() {
             </li>
           </ul>
         </div>
-        {/* ▲▲▲ 追加ここまで ▲▲▲ */}
 
         <div className="flex flex-col gap-10 max-w-3xl mx-auto">
           
           {/* 常時表示（上位3件）のレンダリング */}
           {pickupProjects.map((p) => (
-            <ProjectCard key={p.id} p={p} isPickup={true} />
+            <ProjectCard key={p.id} p={p} isPickup={true} indexId="projects-index" />
           ))}
 
           {/* 残り4件を格納するアコーディオン */}
           <div className="pt-4">
             <details 
               id="more-projects-accordion" 
-              ref={detailsRef} // ← 追加：Reactの参照を紐付け
-              className="group bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden scroll-mt-24" // ← scroll-mt-24 を追加
+              ref={detailsRef}
+              className="group bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden scroll-mt-24"
             >
               <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-6 sm:p-8 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-50 transition-colors duration-200">
                 <div className="flex items-center gap-2 text-lg sm:text-xl font-bold text-blue-700">
@@ -1325,10 +1327,29 @@ export default function ProjectsSection() {
                 </p>
               </summary>
               <div className="p-6 sm:p-8 border-t border-slate-200 bg-slate-50/50">
+                
+                {/* ▼▼▼ 追加：アコーディオン内のミニ目次 ▼▼▼ */}
+                <div id="accordion-index" className="scroll-mt-24 mb-8 bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                  <h4 className="text-slate-800 font-bold text-sm mb-3 border-b border-slate-100 pb-2 flex items-center gap-2">
+                    <span>📂</span> 個人開発・技術キャッチアップ事例 一覧
+                  </h4>
+                  <ul className="space-y-2 text-sm text-slate-600">
+                    {otherProjects.map(p => (
+                      <li key={p.id}>
+                        <a href={`#${p.id}`} onClick={(e) => handleScrollTo(e, p.id)} className="hover:text-blue-600 transition-colors flex items-start gap-1.5">
+                          <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
+                          <span className="underline decoration-slate-200 underline-offset-4 hover:decoration-blue-400">{p.title}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* ▲▲▲ 追加ここまで ▲▲▲ */}
+
                 <div className="flex flex-col gap-10">
                   {/* アコーディオン内のプロジェクトレンダリング */}
                   {otherProjects.map((p) => (
-                    <ProjectCard key={p.id} p={p} />
+                    <ProjectCard key={p.id} p={p} indexId="accordion-index" />
                   ))}
                 </div>
                 
@@ -1348,65 +1369,13 @@ export default function ProjectsSection() {
                     ▲ 実績一覧を閉じる
                   </button>
                 </div>
+                
               </div>
             </details>
           </div>
-          {/* ▲▲▲ 追加ここまで ▲▲▲ */}
 
         </div>
       </div>
-    {/* ロードマップ・セクション */}
-        <section className="mt-12 p-6 bg-gray-50 border-l-4 border-yellow-500 rounded shadow-sm mb-2">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
-            <h3 className="text-xl font-bold flex items-center gap-2 text-slate-800">
-              <span>🚧</span> Project Roadmap (継続的インテグレーションの軌跡)
-            </h3>
-            <span className="inline-block w-fit px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">
-              Work in Progress
-            </span>
-          </div>
-          
-          <ul className="space-y-3 text-gray-700 mb-6">
-            <li className="flex items-center gap-2">
-              <span className="text-green-600 font-bold">✓</span>
-              <span className="line-through text-gray-400">Phase 1: Next.js (App Router) への完全移行</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="text-green-600 font-bold">✓</span>
-              <span className="line-through text-gray-400">Phase 2: Go & C# (Docker) によるマルチAPI連携</span>
-            </li>
-            {/* ▼ 追加: Phase 3 コンタクトフォーム */}
-            <li className="flex items-center gap-2">
-              <span className="text-green-600 font-bold">✓</span>
-              <span className="line-through text-gray-400">Phase 3: セキュアなコンタクトフォーム（Zod / reCAPTCHA v3）の実装</span>
-            </li>
-            {/* ▼ 追加: Phase 4 ポートフォリオ専用 AIナビゲーター */}
-            <li className="flex items-center gap-2">
-              <span className="text-green-600 font-bold">✓</span>
-              <span className="line-through text-gray-400">Phase 4: ポートフォリオ専用 AIナビゲーター（体験デモ版）</span>
-            </li>
-            {/* ▼ 繰り下げ & 強調: Phase 5 (現在進行中) */}
-            <li className="flex items-center gap-2 font-bold text-blue-700 bg-blue-100 p-3 rounded shadow-inner border border-blue-200">
-              <span className="animate-pulse">▶</span>
-              Phase 5: AWS RDS (PostgreSQL) データベース構築と連携 (現在検証中)
-            </li>
-            {/* ▼ 繰り下げ: Phase 6 (予定) */}
-            <li className="flex items-center gap-2 text-gray-500 opacity-70">
-              <span>⏳</span>
-              Phase 6: AWS DynamoDB (NoSQL) の導入とポリグロット永続化の実現
-            </li>
-          </ul>
-
-          {/* ▼ 追加: 面接官へのメッセージ（ディスカッションのフック） */}
-          <div className="text-sm text-slate-600 bg-white p-4 rounded border border-gray-200">
-            <p className="font-bold text-slate-700 mb-1">💡 面接官・採用担当者様へ</p>
-            <p className="leading-relaxed">
-              私は、システムやポートフォリオは「完成して終わり」ではなく、継続的に進化させるものだと考えています。<br />
-              現在はAWS RDS (PostgreSQL) データベース構築と連携（体験デモ版）（Phase 5）において、AIと壁打ちをしながらインフラ設計の検証を進めています。<br />
-              面接の機会をいただけましたら、現在直面している技術的課題や、その解決アプローチについてもぜひディスカッションさせてください。
-            </p>
-          </div>
-        </section>
     </section>
   );
 }
