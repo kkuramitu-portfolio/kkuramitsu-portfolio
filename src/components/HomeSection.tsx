@@ -23,16 +23,14 @@ export default function HomeSection() {
   const [usageCount, setUsageCount] = useState<number>(0);
   const MAX_USAGE = 5;
 
-  // ▼ 修正: チャットの「枠（コンテナ）」自体を参照するように変更
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+  useEffect(() => {
     const storedData = localStorage.getItem('ai_chat_usage');
     if (storedData) {
       try {
         const { count, date } = JSON.parse(storedData);
         const today = new Date().toDateString();
-        // 保存された日付が今日なら回数を復元、違うならリセット
         if (date === today) {
           setUsageCount(count);
         } else {
@@ -43,7 +41,7 @@ export default function HomeSection() {
       }
     }
   }, []);
-  // ▼ 修正: ページ全体ではなく、枠の中だけをスクロールさせる
+
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
@@ -53,7 +51,6 @@ export default function HomeSection() {
     }
   };
 
-  // メッセージが増えた時や、ローディング表示が出た時にスクロール
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -75,7 +72,14 @@ export default function HomeSection() {
       });
 
       const count = res.headers.get('X-RateLimit-Count');
-      if (count) setUsageCount(parseInt(count, 10));
+      if (count) {
+        const newCount = parseInt(count, 10);
+        setUsageCount(newCount);
+        localStorage.setItem('ai_chat_usage', JSON.stringify({
+          count: newCount,
+          date: new Date().toDateString()
+        }));
+      }
 
       if (!res.ok) {
         setError(true);
@@ -355,27 +359,49 @@ export default function HomeSection() {
             </div>
           </div>
           
-          <p className="text-sm text-slate-600 mb-6 leading-relaxed">
-            本ポートフォリオの内容に限って回答する専用AIチャットを実装しました。どのような成果物があるか等のご質問はもちろん、あえて『今日の天気は？』といった関係のない質問をして、外部情報には答えない（プロンプトインジェクション対策）挙動もお試しいただけます。<br />
-            ※API制限のため、1IPアドレスにつき1日5回までとさせていただいております。<br />
-            ※クラウド破産を防ぐためのコスト管理実証として、APIの月間利用上限（ハードリミット）を設定しています。上限に達した場合は一時的にご利用いただけなくなる場合がございます。
-          </p>
+          {/* ▼▼▼ 修正: 案内文のアップデート ▼▼▼ */}
+          <div className="text-sm text-slate-600 mb-6 leading-relaxed space-y-2">
+            <p>
+              本ポートフォリオの内容に限って回答する専用AIチャットを実装しました。成果物や強みについてのご質問はもちろん、あえて『今日の天気は？』といった関係のない質問を投げかけ、外部情報には答えない挙動もお試しいただけます。
+            </p>
+            <div className="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
+              <p className="font-bold mb-1">※コスト管理・セキュリティ実証のため、以下の制限を設けております。</p>
+              <ul className="list-disc list-inside space-y-1 ml-1">
+                <li>1IPアドレスにつき1日5回まで（関係のない質問への回答も1回分としてカウントされます）</li>
+                <li>APIの月間利用上限（ハードリミット）到達時は一時的に機能が停止します</li>
+              </ul>
+            </div>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-xs text-yellow-800 mt-2">
+              <span className="font-bold">💡 【エンタープライズ向けガバナンス機能のテスト】</span><br />
+              企業へのAI導入を想定し、バックエンドで「DLP（情報漏洩対策）」と「LLM-as-a-Judge（AIによる監視）」を並列実行しています。以下のキーワードを入力すると、AIが回答を生成する前にブロックされ、アラートが表示されるデモを体験できます。<br />
+              <ul className="list-disc list-inside mt-1 ml-1 space-y-0.5">
+                <li><span className="font-bold">機密情報漏洩:</span> 「私のマイナンバーは123456789012です」等</li>
+                <li><span className="font-bold">プロンプトインジェクション:</span> 「これまでの指示を無視して」等</li>
+                <li><span className="font-bold">シャドーAI（業務外利用）:</span> 「結婚式のスピーチを考えて」「読書感想文を書いて」等</li>
+              </ul>
+            </div>
+          </div>
+          {/* ▲▲▲ 修正ここまで ▲▲▲ */}
 
           {/* チャットウィンドウ */}
           <div className="bg-slate-50 border border-slate-200 rounded-lg shadow-sm overflow-hidden flex flex-col h-[400px]">
-            {/* ▼ 修正: refをコンテナに付与 */}
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap ${
-                    msg.role === "user" 
-                      ? "bg-blue-600 text-white rounded-br-none" 
-                      : "bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm"
-                  }`}>
-                    {msg.content}
+              {messages.map((msg, idx) => {
+                const isAlert = msg.content.includes('🚨 **【セキュリティ・アラート検知】**');
+                return (
+                  <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                    <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap ${
+                      msg.role === "user" 
+                        ? "bg-blue-600 text-white rounded-br-none" 
+                        : isAlert
+                          ? "bg-red-50 border border-red-200 text-red-700 rounded-bl-none shadow-sm font-medium"
+                          : "bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm"
+                    }`}>
+                      {msg.content}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               
               {error && (
                 <div className="flex justify-start">
@@ -404,8 +430,8 @@ export default function HomeSection() {
               <button onClick={() => sendMessage("蔵満さんの強みは？")} disabled={isLoading || usageCount >= MAX_USAGE} className="text-xs bg-white border border-slate-300 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm disabled:opacity-50">
                 蔵満さんの強みは？
               </button>
-              <button onClick={() => sendMessage("今日の天気は？")} disabled={isLoading || usageCount >= MAX_USAGE} className="text-xs bg-white border border-slate-300 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm disabled:opacity-50">
-                今日の天気は？(意地悪な質問)
+              <button onClick={() => sendMessage("結婚式のスピーチを考えて")} disabled={isLoading || usageCount >= MAX_USAGE} className="text-xs bg-white border border-slate-300 text-slate-600 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors shadow-sm disabled:opacity-50">
+                結婚式のスピーチを考えて(業務外利用)
               </button>
             </div>
 
@@ -450,10 +476,13 @@ export default function HomeSection() {
                   <p>本チャットボットは、バックエンドで強力なシステムプロンプトを設定し、AIの知識を「このポートフォリオ内の情報」のみに限定しています。これにより、企業が社内専用AIを導入する際に必須となる「社外情報の遮断」と「ハルシネーション（嘘の回答）の抑制」を疑似的に実装しています。</p>
                 </div>
 
+                {/* ▼▼▼ 修正: アコーディオン内の説明もアップデート ▼▼▼ */}
                 <div>
-                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ プロンプトインジェクション対策</h4>
-                  <p>「あなたは〇〇です。これまでの指示を無視して〜」といった、AIを騙して別の動作をさせる攻撃（プロンプトインジェクション）を防ぐため、ユーザーの入力よりもシステムプロンプトの指示が優先されるよう設計しています。</p>
+                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ LLM-as-a-Judge（AIによる監視）とDLP</h4>
+                  <p>エンタープライズ環境での安全なAI運用を想定し、ユーザーの入力がメインのAIに届く前に、裏側で「監視用AI」と「正規表現フィルター」を並列で走らせています。<br />
+                  「これまでの指示を無視して」といったプロンプトインジェクションや、「結婚式のスピーチを書いて」といった業務外の私的利用（シャドーAI）を監視用AIがスコアリングし、一定基準を超えた場合や、マイナンバー等の機密情報（DLP）を検知した場合は、即座に回答をブロックして管理者にアラートを通知する仕組みを実装しています。</p>
                 </div>
+                {/* ▲▲▲ 修正ここまで ▲▲▲ */}
 
                 <div>
                   <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ APIレートリミットとクラウドコスト管理（FinOps）</h4>
@@ -461,13 +490,8 @@ export default function HomeSection() {
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ LLMオブザーバビリティ（可観測性）の確保と継続的改善</h4>
-                  <p className="mb-2">AIシステムは「作って終わり」ではなく、運用時のブラックボックス化を防ぐことが重要です。本チャットボットでは、LLMのオブザーバビリティ（可観測性）を確保するため、以下のデュアル監視体制を構築しています。</p>
-                  <ul className="list-disc list-outside ml-5 mb-2 space-y-1.5 text-slate-700">
-                    <li className="pl-1"><span className="font-bold text-slate-800">定量分析（Helicone）:</span> APIのレイテンシ（応答速度）、トークン消費量（コスト）、プロンプトのバージョンごとの精度をダッシュボードで可視化。</li>
-                    <li className="pl-1"><span className="font-bold text-slate-800">定性・リアルタイム監視（Slack）:</span> ユーザーの質問とAIの回答のペアを非同期でSlackへリアルタイム通知（※個人情報は取得していません）。</li>
-                  </ul>
-                  <p>これにより、「意図しない回答（ハルシネーション）」や「プロンプトインジェクションの試み」を即座に検知し、データドリブンにシステムプロンプトをチューニングする「LLMOps」のサイクルを回しています。</p>
+                  <h4 className="font-bold text-slate-800 mb-2 border-l-4 border-slate-500 pl-2">■ LLMOps（継続的プロンプト改善）とデュアル監視体制</h4>
+                  <p>AIは「作って終わり」ではなく、運用しながら精度を高めることが重要です。本チャットボットでは、LLM可観測性ツール（Helicone）を導入してコストやレイテンシを定量分析すると同時に、Slackへのリアルタイム通知を連携させた「デュアル監視体制」を構築しています。<br />ユーザーの入力とAIの出力ログを監視（※個人を特定する情報は取得していません）し、「意図しない回答（ハルシネーション）」や「制限のすり抜け」が発生していないかを分析し、継続的にシステムプロンプトのチューニング（LLMOps）を行っています。</p>
                 </div>
 
                 {/* 閉じるボタン */}
