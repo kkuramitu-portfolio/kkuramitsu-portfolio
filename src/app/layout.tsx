@@ -11,8 +11,8 @@ import ClarityScript from "../components/ClarityScript";
 
 declare global {
   interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
+    dataLayer?: Object[];
+    gtag?: (...args: any[]) => void;
   }
 }
 
