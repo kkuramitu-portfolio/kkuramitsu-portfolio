@@ -6,6 +6,15 @@ import Footer from "../components/Footer";
 import { ReCaptchaProvider } from "next-recaptcha-v3";
 import { Analytics } from "@vercel/analytics/react";
 import { GoogleTagManager } from '@next/third-parties/google';
+import CookieBanner from "../components/CookieBanner";
+import ClarityScript from "../components/ClarityScript";
+
+declare global {
+  interface Window {
+    dataLayer: any[];
+    gtag: (...args: any[]) => void;
+  }
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +41,22 @@ export default function RootLayout({
       lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        {/* ▼ 追加：GTM Consent Mode v2 のデフォルト設定（最初はすべて拒否） ▼ */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('consent', 'default', {
+                'analytics_storage': 'denied',
+                'ad_storage': 'denied',
+                'wait_for_update': 500
+              });
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-white text-slate-800 font-sans leading-relaxed">
         <ReCaptchaProvider reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}>
           <Header />
@@ -42,6 +67,8 @@ export default function RootLayout({
         </ReCaptchaProvider>
         <Analytics />
         <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ""} />
+        <CookieBanner />
+        <ClarityScript />
       </body>
     </html>
   );
