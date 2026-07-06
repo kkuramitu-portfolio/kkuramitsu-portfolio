@@ -6,20 +6,7 @@ import Link from "next/link";
 // ▼ サブ項目を追加・番号を更新 ▼
 const navLinks = [
   { label: "Home", href: "#home" },
-  { 
-    label: "Projects", 
-    href: "#projects",
-    subItems: [
-      { label: "1. SQLデータ移行", href: "#sql-migration" },
-      { label: "2. バックアップ運用改善", href: "#backup-improvement" },
-      { label: "3. メール事故防止チェックツール", href: "#mail-checker" },
-      { label: "4. Webサイト情報チェッカー", href: "#web-scraper" },
-      { label: "5. マイクロサービス連携", href: "#microservices" },
-      { label: "6. ポートフォリオ刷新", href: "#portfolio-renewal" },
-      { label: "7. Python業務準備自動化", href: "#python-automation" },
-      { label: "8. TailscaleによるVPN構築", href: "#tailscale-vpn" }, // ← 追加
-    ]
-  },
+  { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { 
     label: "Lab", 

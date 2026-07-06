@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 
 type Section = {
   title: string;
@@ -1206,13 +1206,34 @@ const ProjectCard = ({ p, isPickup = false }: { p: Project; isPickup?: boolean }
 // ▲▲▲ コンポーネント定義ここまで ▲▲▲
 
 export default function ProjectsSection() {
-  // ▼ プロジェクトを「常時表示(上位3件)」と「アコーディオン格納(残り)」に分割 ▼
   const pickupProjects = projects.slice(0, 3);
   const otherProjects = projects.slice(3);
 
-  return (
+  // ▼ 追加：アコーディオンを操作するための参照（Ref） ▼
+  const detailsRef = useRef<HTMLDetailsElement>(null);
 
-    <section id="projects" className="bg-slate-50 py-8 px-4 sm:px-6">
+  // ▼ 追加：目次からアコーディオンを開いてスクロールする関数 ▼
+  const handleOpenAccordion = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (detailsRef.current) {
+      detailsRef.current.open = true; // アコーディオンを強制的に開く
+      const y = detailsRef.current.getBoundingClientRect().top + window.scrollY - 80; // ヘッダーの高さ(80px)を考慮
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  // ▼ 追加：目次から通常のプロジェクトへスクロールする関数 ▼
+  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      const y = element.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section id="projects" className="bg-slate-50 py-24 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <div className="mb-12 text-center sm:text-left">
           <p className="text-sm font-bold text-blue-600 tracking-widest uppercase mb-2">Projects & Case Studies</p>
@@ -1222,7 +1243,7 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        {/* ▼▼▼ 追加：冒頭の宣言文（期待値コントロール） ▼▼▼ */}
+        {/* 冒頭の宣言文（期待値コントロール） */}
         <div className="mb-10 bg-blue-50 border border-blue-200 rounded-lg p-6 sm:p-8 shadow-sm">
           <h3 className="text-blue-800 font-bold text-base sm:text-lg mb-4 flex items-center gap-2">
             <span>💡</span> 本セクションをご覧いただくにあたって（私の開発スタンス）
@@ -1238,10 +1259,45 @@ export default function ProjectsSection() {
               <li className="pl-1">複数の技術を組み合わせ、実運用に耐えうる形に組み上げるディレクション</li>
             </ul>
             <p>
-              ツール（AI）を正しく指揮すれば、未経験の技術領域であっても短期間でここまで形にし、課題解決に直結させることができる。<br />
-              本セクションは、その「自走力と適応力の検証結果」としてご覧いただけますと幸いです。
+              ツール（AI）を正しく指揮すれば、未経験の技術領域であっても短期間でここまで形にし、課題解決に直結させることができる。本セクションは、その「圧倒的な自走力と適応力の検証結果」としてご覧いただけますと幸いです。
             </p>
           </div>
+        </div>
+
+        {/* ▼▼▼ 追加：目次（インデックス） ▼▼▼ */}
+        {/* ※セクション全体の背景が bg-slate-50 なので、目次は bg-white にして浮き立たせています */}
+        <div className="mb-10 bg-white border border-slate-200 rounded-lg p-5 sm:p-6 shadow-sm max-w-3xl mx-auto">
+          <h3 className="text-slate-800 font-bold text-base mb-4 flex items-center gap-2 border-b border-slate-100 pb-2">
+            <span>📋</span> 掲載プロジェクト一覧
+          </h3>
+          <ul className="space-y-3 text-sm text-slate-700">
+            <li>
+              <a href="#sql-migration" onClick={(e) => handleScrollTo(e, 'sql-migration')} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
+                <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
+                <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
+                <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">SQLデータ移行プロジェクト（実務）</span>
+              </a>
+            </li>
+            <li>
+              <a href="#backup-improvement" onClick={(e) => handleScrollTo(e, 'backup-improvement')} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
+                <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
+                <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
+                <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">バックアップ運用改善プロジェクト（実務）</span>
+              </a>
+            </li>
+            <li>
+              <a href="#mail-checker" onClick={(e) => handleScrollTo(e, 'mail-checker')} className="hover:text-blue-600 transition-colors flex items-start gap-1.5 group">
+                <span className="shrink-0 text-slate-400 mt-0.5">▪</span>
+                <span className="font-bold text-yellow-600 shrink-0">🌟 PICKUP:</span> 
+                <span className="underline decoration-slate-200 underline-offset-4 group-hover:decoration-blue-400">メール事故防止チェックツール（業務改善）</span>
+              </a>
+            </li>
+            <li className="pt-2">
+              <a href="#more-projects-accordion" onClick={handleOpenAccordion} className="inline-flex items-center gap-1.5 text-blue-700 hover:text-blue-800 font-bold transition-colors bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-2 rounded-md shadow-sm">
+                <span className="text-blue-600">＋</span> さらに4件の個人開発・技術キャッチアップ事例（クリックで展開して表示）
+              </a>
+            </li>
+          </ul>
         </div>
         {/* ▲▲▲ 追加ここまで ▲▲▲ */}
 
@@ -1252,13 +1308,17 @@ export default function ProjectsSection() {
             <ProjectCard key={p.id} p={p} isPickup={true} />
           ))}
 
-          {/* ▼▼▼ 追加：残り4件を格納するアコーディオン ▼▼▼ */}
+          {/* 残り4件を格納するアコーディオン */}
           <div className="pt-4">
-            <details className="group bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+            <details 
+              id="more-projects-accordion" 
+              ref={detailsRef} // ← 追加：Reactの参照を紐付け
+              className="group bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden scroll-mt-24" // ← scroll-mt-24 を追加
+            >
               <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-6 sm:p-8 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-50 transition-colors duration-200">
                 <div className="flex items-center gap-2 text-lg sm:text-xl font-bold text-blue-700">
                   <span className="inline-block transition-transform group-open:rotate-90">▶</span>
-                  ＋ さらに4件の実績を見る（個人開発・技術キャッチアップ事例）
+                  ＋ さらに実績を見る（個人開発・技術キャッチアップ事例：4件）
                 </div>
                 <p className="mt-2 ml-6 text-sm text-slate-500 font-normal">
                   収録内容：④ Webサイト情報チェッカー / ⑤ マイクロサービス連携デモ / ⑥ ポートフォリオ刷新 / ⑦ Pythonによる業務準備自動化
@@ -1271,13 +1331,14 @@ export default function ProjectsSection() {
                     <ProjectCard key={p.id} p={p} />
                   ))}
                 </div>
+                
+                {/* 全体を閉じるボタン */}
                 <div className="mt-10 pt-6 border-t border-slate-200 text-center">
                   <button
                     onClick={(e) => {
                       const details = e.currentTarget.closest('details');
                       if (details) {
                         details.removeAttribute('open');
-                        // ヘッダーの高さ(約80px)を考慮して、タイトルの位置へスムーズにスクロールして戻る
                         const y = details.getBoundingClientRect().top + window.scrollY - 80;
                         window.scrollTo({ top: y, behavior: 'smooth' });
                       }
