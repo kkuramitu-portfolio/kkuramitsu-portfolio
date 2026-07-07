@@ -17,12 +17,25 @@ const skillCategories = [
     label: "インフラ / DevOps", 
     skills: ["Docker", "Vercel", "Render", "AWS（EC2 / S3）", "Git / GitHub", "Linux"] 
   },
+  // ▼▼▼ 新設：第5のカテゴリ ▼▼▼
   { 
-    label: "その他（DX・自動化）", // ラベルを少し魅力的に変更
+    label: "AI / データ分析", 
+    skills: [
+      "OpenAI API", 
+      "プロンプトエンジニアリング", 
+      "LLMOps（Helicone）", 
+      "GA4 / GTM（行動分析）", 
+      "Microsoft Clarity（UX分析）"
+    ] 
+  },
+  // ▼▼▼ 名称変更：第6のカテゴリ ▼▼▼
+  { 
+    label: "DX / 自動化 / その他",
     skills: [
       "業務フロー改善 / DX推進",
       "ブラウザ自動化（Selenium）",
       "スクレイピング（Cheerio）",
+      "Slack API連携（通知自動化）", // ← AIナビゲーター等で使ったSlack連携を追加
       "セキュリティ設計（CSRF / XSS / SSRF対策）", 
       "マイクロサービス設計"
     ] 

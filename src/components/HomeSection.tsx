@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 
 const stats = [
-  { value: "20+", label: "学習・実践してきた技術スタック" },
+  { value: "30+", label: "学習・実践してきた技術スタック" },
   { value: "5言語", label: "実務・個人開発で実践した言語" },
   { value: "1ヶ月", label: "ポートフォリオ v1.0 到達まで" },
 ];
