@@ -16,7 +16,8 @@ export default function RoadmapSection() {
           
           {/* Phase 1 (完了) */}
           <div className="relative pl-6 sm:pl-8">
-            <span className="absolute -left-[13px] top-1 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
+            {/* ▼ -left-3 に修正 ▼ */}
+            <span className="absolute -left-3 top-1 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
               ✓
             </span>
             <div className="opacity-60">
@@ -27,7 +28,8 @@ export default function RoadmapSection() {
 
           {/* Phase 2 (完了) */}
           <div className="relative pl-6 sm:pl-8">
-            <span className="absolute -left-[13px] top-1 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
+            {/* ▼ -left-3 に修正 ▼ */}
+            <span className="absolute -left-3 top-1 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
               ✓
             </span>
             <div className="opacity-60">
@@ -35,9 +37,11 @@ export default function RoadmapSection() {
               <h3 className="text-base font-bold text-slate-700 line-through decoration-slate-400">Go & C# (Docker) によるマルチAPI連携</h3>
             </div>
           </div>
+
           {/* Phase 3 (完了) */}
           <div className="relative pl-6 sm:pl-8">
-            <span className="absolute -left-[13px] top-1 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
+            {/* ▼ -left-3 に修正 ▼ */}
+            <span className="absolute -left-3 top-1 bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
               ✓
             </span>
             <div className="opacity-60">
@@ -48,7 +52,8 @@ export default function RoadmapSection() {
 
           {/* Phase 4 (現在進行中) */}
           <div className="relative pl-6 sm:pl-8">
-            <span className="absolute -left-[13px] top-1 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
+            {/* ▼ -left-3 に修正 ▼ */}
+            <span className="absolute -left-3 top-1 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
             </span>
@@ -62,9 +67,10 @@ export default function RoadmapSection() {
             </div>
           </div>
 
-          {/* Phase 4 (予定) */}
+          {/* Phase 5 (予定) */}
           <div className="relative pl-6 sm:pl-8">
-            <span className="absolute -left-[13px] top-1 bg-slate-200 text-slate-500 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
+            {/* ▼ -left-3 に修正 ▼ */}
+            <span className="absolute -left-3 top-1 bg-slate-200 text-slate-500 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-slate-50">
               ⏳
             </span>
             <div>

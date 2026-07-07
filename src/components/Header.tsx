@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation"; // ← 追加：現在のURLを取得するフック
 
-// ▼ サブ項目を追加・番号を更新 ▼
 const navLinks = [
   { label: "Home", href: "#home" },
   { label: "Projects", href: "#projects" },
@@ -22,9 +22,17 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  
-  // ▼ 追加：最終更新日の変数 ▼
-  const lastUpdated = "2026.07.05";
+  const lastUpdated = "2026.07.07";
+
+  // ▼ 追加：現在のページがトップページ（"/"）かどうかを判定 ▼
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // ▼ 追加：リンク先を動的に生成する関数 ▼
+  // トップページなら "#hash"、別ページなら "/#hash" を返す
+  const getHref = (hash: string) => {
+    return isHome ? hash : `/${hash}`;
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
@@ -33,7 +41,7 @@ export default function Header() {
         {/* Logo & 最終更新日 (PC) */}
         <div className="flex items-center gap-4">
           <Link
-            href="#home"
+            href={getHref("#home")} // ← 関数を通す
             className="group flex flex-col leading-tight hover:text-blue-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
           >
             <span className="text-slate-800 font-semibold text-base tracking-tight group-hover:text-blue-600 transition-colors duration-200">
@@ -44,7 +52,6 @@ export default function Header() {
             </span>
           </Link>
           
-          {/* ▼ 追加：PC用の最終更新日バッジ（スマホでは非表示） ▼ */}
           <span className="hidden sm:inline-block text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 text-[10px] font-bold tracking-wider">
             最終更新: {lastUpdated}
           </span>
@@ -55,7 +62,7 @@ export default function Header() {
           {navLinks.map((link) => (
             <div key={link.href} className="relative group">
               <Link
-                href={link.href}
+                href={getHref(link.href)} // ← 関数を通す
                 className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-1"
               >
                 {link.label}
@@ -68,7 +75,7 @@ export default function Header() {
                     {link.subItems.map((sub) => (
                       <Link
                         key={sub.href}
-                        href={sub.href}
+                        href={getHref(sub.href)} // ← 関数を通す
                         className="block px-4 py-2 text-xs font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-colors"
                       >
                         {sub.label}
@@ -80,7 +87,7 @@ export default function Header() {
             </div>
           ))}
           <Link
-            href="#contact"
+            href={getHref("#contact")} // ← 関数を通す
             className="ml-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Contact
@@ -104,7 +111,6 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden border-t border-slate-100 bg-white px-4 py-4 flex flex-col gap-3 shadow-md max-h-[80vh] overflow-y-auto">
           
-          {/* ▼ 追加：スマホ用の最終更新日バッジ ▼ */}
           <div className="mb-1 pb-3 border-b border-slate-100">
             <span className="inline-block text-slate-500 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 text-xs font-bold tracking-wider">
               最終更新: {lastUpdated}
@@ -114,7 +120,7 @@ export default function Header() {
           {navLinks.map((link) => (
             <div key={link.href} className="flex flex-col">
               <Link
-                href={link.href}
+                href={getHref(link.href)} // ← 関数を通す
                 onClick={() => setMenuOpen(false)}
                 className="px-3 py-2 text-sm font-bold text-slate-800 hover:bg-slate-50 rounded-md transition-colors duration-200"
               >
@@ -125,7 +131,7 @@ export default function Header() {
                   {link.subItems.map((sub) => (
                     <Link
                       key={sub.href}
-                      href={sub.href}
+                      href={getHref(sub.href)} // ← 関数を通す
                       onClick={() => setMenuOpen(false)}
                       className="py-1.5 px-2 text-xs font-medium text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                     >
@@ -137,7 +143,7 @@ export default function Header() {
             </div>
           ))}
           <Link
-            href="#contact"
+            href={getHref("#contact")} // ← 関数を通す
             onClick={() => setMenuOpen(false)}
             className="mt-2 px-3 py-3 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-md text-center transition-colors duration-200"
           >
