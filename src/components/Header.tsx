@@ -22,7 +22,7 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const lastUpdated = "2026.07.06";
+  const lastUpdated = "2026.07.07";
 
   // ▼ 追加：現在のページがトップページ（"/"）かどうかを判定 ▼
   const pathname = usePathname();
