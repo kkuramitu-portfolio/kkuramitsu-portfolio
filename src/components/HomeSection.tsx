@@ -116,7 +116,7 @@ export default function HomeSection() {
           
           <div className="text-slate-600 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed space-y-6">
             <p>
-              「誰かが解決する」を待つのではなく、自ら課題を発見し、最適な技術を用いて解決まで導く――<br className="hidden sm:block" />
+              ―「誰かが解決する」を待つのではなく、自ら課題を発見し、最適な技術を用いて解決まで導く―<br className="hidden sm:block" />
               それが今の私の信念であり、行動原理です。
             </p>
             <p>
