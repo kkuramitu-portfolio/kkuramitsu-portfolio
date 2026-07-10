@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-800 text-slate-400 py-12 px-4 sm:px-6 mt-auto">
+    <footer className="print:hidden bg-slate-800 text-slate-400 py-12 px-4 sm:px-6 mt-auto">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm">
         
         {/* 左側：ロゴ・名前 */}
