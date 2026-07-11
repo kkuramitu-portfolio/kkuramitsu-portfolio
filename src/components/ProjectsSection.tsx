@@ -759,9 +759,80 @@ End Function`}
       }
     ]
   },
+
+  {
+    id: "schedule-backward-app",
+    title: "4. 予定逆算アプリ（Flutter/iOS）の開発とハイブリッド環境構築",
+    badge: "個人開発",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    summary: "「15:13のバスに乗るために、いつ何をすべきか」という日常の逆算作業において、メモ帳で上下逆に書き出すアナログな手法に不便さを感じていました。このペインを解消するため、「目標時刻からの自動逆算」「ドラッグ＆ドロップでの工程入れ替え」に特化したMVPを企画しました。Flutter/Dartを用いたiOS向けアプリであり、最大の特徴は「Windowsでの開発」と「10年落ちの古いMacでのiOSビルド」を組み合わせたハイブリッド開発環境を自律的に構築・完遂した点にあります。",
+    sections: [
+      { 
+        title: "見せ方のテーマ", 
+        fullWidth: true,
+        content: (
+          <p className="text-sm text-slate-700 leading-relaxed font-bold">
+            日常の不便をシステム化する「課題発見力」と、リソース制約下での「インフラ構築・トラブルシューティング能力」の証明
+          </p>
+        )
+      },
+      { 
+        title: "使用技術・開発期間", 
+        fullWidth: true,
+        content: (
+          <ul className="list-disc list-outside ml-4 text-sm text-slate-700 space-y-2">
+            <li className="pl-1"><span className="font-bold text-slate-800">使用技術:</span> Flutter / Dart / iOS (Xcode) / shared_preferences (ローカル保存) / intl (時間計算) / GitHub</li>
+            <li className="pl-1"><span className="font-bold text-slate-800">開発期間:</span> 約10時間（要件定義・環境構築・実機デプロイを含む ※Macの応答が非常に遅いため）</li>
+          </ul>
+        )
+      },
+      { 
+        title: "苦労した点（技術的課題・調査内容・解決方法）", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-bold text-slate-800 mb-1">課題1（リソース制約）: 手持ちのMacが10年落ちであり、快適な開発環境として機能しない問題。</p>
+              <p className="leading-relaxed">解決1: Macを「iOSのビルド・書き出し専用機」と割り切り、コーディングはWindowsで行うクロスプラットフォーム開発フローを設計。限られたリソースで最適解を導き出しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">課題2（環境依存のトラブル）: 個人用と企業用のGitHubアカウントが混在することによる複雑な認証エラーや、OS固有のセキュリティ制約（Gatekeeper等）。</p>
+              <p className="leading-relaxed">解決2: AIの回答を鵜呑みにせず、Gitの内部構造（資格情報マネージャー）やOSの仕様を根本から調査・理解することで、泥臭いトラブルシューティングを自力で突破しました。</p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "AI活用と自分で行った作業", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-bold text-slate-800 mb-1">AI活用（どこで利用したか）</p>
+              <p className="leading-relaxed">未経験のFlutter/DartにおけるUI構築（ドラッグハンドルの実装など）や、時間計算ロジックのベースコード生成にAIを活用し、コーディング時間を大幅に圧縮しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">自分で行った作業</p>
+              <p className="leading-relaxed">現場起点の要件定義（MVPの策定）、Windows/Mac間のインフラ環境設計、GitHubの認証トラブル解決、実機デプロイ、および時間計算というバグが起きやすい領域における品質管理（QA）視点でのテスト。</p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        content: (
+          <p className="text-sm text-slate-700 leading-relaxed">
+            AIはコードを書いてくれますが、「複雑なインフラ環境の構築」や「環境依存の認証トラブル」を解決し、最後までプロジェクトを完遂させるのは人間の泥臭い執念と調査力であると再認識しました。この「制約の中で最適解を見つけ、何が何でも完遂する力」は、社内SEとしての業務に直結すると確信しています。
+          </p>
+        )
+      }
+    ],
+    accordions: []
+  },
   {
     id: "web-scraper",
-    title: "4. Webサイト情報チェッカー",
+    title: "5. Webサイト情報チェッカー", // ← 4から5に変更
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "Pythonで一般的に行われるスクレイピング処理を、あえてNext.jsのAPI RoutesとNode.js環境で再現したシステムです。指定したWebサイトの情報をサーバーサイドで取得し、タイトルや概要を抽出します。",
@@ -777,7 +848,7 @@ End Function`}
             </ul>
             <div className="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-blue-800 text-xs font-bold flex items-center gap-2">
               <span>💡</span>
-              <p>※Pythonを用いた実務自動化の実績については「7. Pythonによる業務準備自動化」をご参照ください。</p>
+              <p>※Pythonを用いた実務自動化の実績については「8. Pythonによる業務準備自動化」をご参照ください。</p>
             </div>
           </div>
         )
@@ -835,7 +906,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "microservices",
-    title: "5. マイクロサービス連携デモ",
+    title: "6. マイクロサービス連携デモ", // ← 5から6に変更
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "GoとC#による複数サービス間通信を検証するための学習プロジェクト。",
@@ -886,7 +957,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "portfolio-renewal",
-    title: "6. ポートフォリオ刷新プロジェクト",
+    title: "7. ポートフォリオ刷新プロジェクト", // ← 6から7に変更
     badge: "学習・技術キャッチアップ事例",
     badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
     summary: "当初はHTML/CSS/JavaScriptでポートフォリオサイトを開発していましたが、開発途中でNext.jsを知り、保守性や拡張性を考慮してNext.jsへ移行しました。技術習得とサイト開発を並行しながら構築を進め、現在も継続的に機能追加・改善を行っています。",
@@ -985,10 +1056,16 @@ return NextResponse.json({ title, description });`}
           <div className="space-y-6 text-sm text-slate-700">
             <div>
               <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">Next.jsを選んだ理由</h4>
-              <p className="leading-relaxed">
+              <p className="leading-relaxed mb-3">
                 当初はHTML/CSSで制作を進めていましたが、情報収集の中でNext.jsが現在のWeb開発のトレンドであることを知りました。<br />
                 「良さそうだから実際に試してみよう」と考え、開発途中であったにもかかわらず、学習を兼ねて大胆に構成をNext.jsへ移行し、最後まで完成させました。
               </p>
+              <div className="bg-slate-50 border border-slate-200 rounded-md p-4">
+                <p className="font-bold text-slate-800 mb-1">💡 運用を見据えたインフラ選定（SSL自動化）</p>
+                <p className="leading-relaxed text-slate-600">
+                  ホスティング先にVercelを選定した理由は、単なるデプロイの容易さだけではありません。昨今の「SSL証明書の有効期限短縮化（90日化）」のトレンドを見据え、手動での証明書更新による運用負荷と更新忘れのリスクを排除するため、SSLの自動発行・自動更新機能が標準で組み込まれたモダンなPaaS環境を選択しました。
+                </p>
+              </div>
             </div>
             
             <div>
@@ -1001,15 +1078,105 @@ return NextResponse.json({ title, description });`}
             </div>
 
             <div>
-              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善予定</h4>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善予定（インフラ構築への挑戦）</h4>
               <p className="leading-relaxed mb-2">
-                本ポートフォリオは完成ではなく、継続的な技術検証の場（Lab）として拡張していく予定です。
+                現在はVercelのフルマネージド環境（PaaS）を利用してデプロイやSSL更新を自動化していますが、事業会社の社内SEとして既存の自社サーバー（IaaS/オンプレミス）を運用・改善するスキルを身につけるため、以下のインフラ構築に挑戦する予定です。
               </p>
-              <ul className="list-disc list-outside ml-4 space-y-1.5">
-                <li className="pl-1">AWS環境（EC2 / RDSなど）への展開</li>
-                <li className="pl-1">軽量なWebフレームワーク「Hono」の導入検証</li>
-                <li className="pl-1">フロントエンドとバックエンドの完全なAPI分離構成への挑戦</li>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1">
+                  <span className="font-bold text-slate-800">AWS環境（EC2 / RDS）への完全移行:</span> 
+                  インフラ層から自力でWebサーバー（Nginx等）とデータベースを構築・運用する。
+                </li>
+                <li className="pl-1">
+                  <span className="font-bold text-slate-800">SSL証明書更新の自力自動化:</span> 
+                  昨今の「SSL有効期限90日化」のトレンドを見据え、Let's EncryptとCertbotを用いた証明書の自動更新パイプラインをLinuxサーバー上に構築し、手動運用の限界を技術で解決する手法を体得する。
+                </li>
+                <li className="pl-1">
+                  <span className="font-bold text-slate-800">バックエンドのAPI分離:</span> 
+                  軽量フレームワーク「Hono」を導入し、フロントエンドとバックエンドを完全に分離したマイクロサービスアーキテクチャへ進化させる。
+                </li>
               </ul>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "データドリブンな改善運用（GA4 / GTM / Clarityによる行動分析）", 
+        content: (
+          <div className="space-y-6 text-sm text-slate-700">
+            <div className="bg-blue-50 border border-blue-100 rounded-md p-4 mb-4">
+              <p className="text-blue-800 text-xs font-bold flex items-center gap-1.5">
+                <span>💡</span> 導入の目的
+              </p>
+              <p className="text-blue-700 mt-1 leading-relaxed text-xs">
+                本サイトは「作って終わり」ではなく、実際のユーザー（採用担当者様）の行動データを分析し、UI/UXを継続的に改善するためのテストベッドとして運用しています。SPA（単一ページ）の特性に合わせ、GTMを用いた<span className="font-bold">SPAに最適化したイベントトラッキング</span>（定量分析）に加え、Microsoft Clarityを導入したヒートマップ・セッション録画（定性分析）を組み合わせることで、ユーザーの心理に寄り添ったデータドリブンな改善環境を構築しています。
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-3">トラッキングプラン（計測設計の一部）</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-100 text-slate-600 text-xs uppercase tracking-wider">
+                      <th className="p-3 border-b border-slate-200 font-bold whitespace-nowrap">計測イベント</th>
+                      <th className="p-3 border-b border-slate-200 font-bold whitespace-nowrap">トリガー（GTM / Next.js）</th>
+                      <th className="p-3 border-b border-slate-200 font-bold">分析の目的・仮説</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-xs">
+                    <tr className="border-b border-slate-100 hover:bg-slate-50">
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">読了率の測定</td>
+                      <td className="p-3 text-slate-600">スクロール深度（50%, 90%）</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">コンテンツ量が適切か、途中で離脱されていないかの検証。</td>
+                    </tr>
+                    <tr className="border-b border-slate-100 hover:bg-slate-50">
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">詳細情報の需要</td>
+                      <td className="p-3 text-slate-600">各アコーディオンの展開</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">どのプロジェクトの技術詳細が最も読まれているかの分析。<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-[10px]">data-accordion-name</code>属性を付与し、展開された要素を正確に特定。</td>
+                    </tr>
+                    <tr className="border-b border-slate-100 hover:bg-slate-50">
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">複雑なUI操作の計測</td>
+                      <td className="p-3 text-slate-600">カスタムイベント（Next.jsから送信）</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">標準機能では計測が難しい操作を、コード側からGTMへ直接データを送信（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-[10px]">DataLayer</code>）して正確に把握。</td>
+                    </tr>
+                    <tr className="hover:bg-slate-50">
+                      <td className="p-3 font-medium text-slate-800 whitespace-nowrap">デッドクリック検知</td>
+                      <td className="p-3 text-slate-600">リンク・ボタン以外のクリック</td>
+                      <td className="p-3 text-slate-600 leading-relaxed">ユーザーが「クリックできる」と誤認しているUI（無効なクリック）を特定し、誤解を与えないデザインへ修正するための検知。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">保守性・拡張性を考慮した計測設計</h4>
+              <p className="leading-relaxed mb-2">
+                コンテンツの追加や変更のたびにGTMの設定を修正する「運用コスト」を省くため、フロントエンドの実装と連携した汎用的な計測設計を行っています。
+              </p>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">動的なデータ属性の付与:</span> アコーディオン展開時、Reactの配列データから <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">data-accordion-name</code> を自動生成してGTMへ渡す仕組みを構築。プロジェクトを追加してもGTM側の修正は一切不要です。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">汎用トリガーの活用:</span> ページ内リンク（<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">#</code>から始まるURL）のクリックを正規表現で一括検知するトリガーを作成し、メニュー追加時の運用コストをゼロに抑えています。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">定性分析とUX改善（Microsoft Clarityの活用）</h4>
+              <p className="leading-relaxed mb-2">
+                GA4の数値データ（定量）だけでは見えない「なぜ離脱したか」「どこで迷ったか」を深掘りするため、Microsoft Clarityを導入しGA4と統合しています。
+              </p>
+              <ul className="list-disc list-outside ml-4 space-y-2">
+                <li className="pl-1"><span className="font-bold text-slate-800">ヒートマップ分析:</span> ユーザーのスクロール到達率や、クリックが集中している箇所を視覚的に把握。</li>
+                <li className="pl-1"><span className="font-bold text-slate-800">セッション録画:</span> デッドクリックやレイジクリック（怒りの連打）が発生したセッションの録画を確認し、UIのボトルネックを特定。</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-2">今後の改善サイクル</h4>
+              <p className="leading-relaxed">
+                例えば「特定のアコーディオンの展開率が著しく低い（GA4）」というデータが得られた場合、Clarityの録画データを確認して「見出しが目立たず素通りされている」などの原因を特定します。そこから「見出しのデザインや文言を修正する」という仮説を立てて実装し、再度計測を行うといった、<span className="font-bold text-slate-800">推測に頼らない、データに裏付けられたPDCAサイクル</span>を回していきます。
+              </p>
             </div>
           </div>
         )
@@ -1018,7 +1185,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "python-automation",
-    title: "7. Pythonによる業務準備自動化",
+    title: "8. Pythonによる業務準備自動化", // ← 7から8に変更
     badge: "個人生産性向上事例",
     badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
     summary: "日々の業務開始時に行っていた複数システムへのログインや打刻、スケジュール確認などの定型作業を効率化するため、Pythonを用いた業務準備自動化ツールを開発しました。業務開始前に必要な一連の操作をワンクリックで実行できるようにし、毎日の定型作業を削減しました。",
@@ -1116,6 +1283,116 @@ return NextResponse.json({ title, description });`}
                 <li className="pl-1"><span className="font-bold text-slate-800">UI変更への追従:</span> 社内システムのアップデートによりHTML構造（DOM）が変更された際も、要素の取得ロジック（XPathやCSSセレクタ）を迅速に修正し、運用を継続させました。</li>
                 <li className="pl-1"><span className="font-bold text-slate-800">実行の簡便化:</span> ターミナルを開かずともワンクリックで処理を開始できるよう、実行用のバッチファイル（.bat）を作成し、日々の利用ハードルを下げる工夫を行いました。</li>
               </ul>
+            </div>
+          </div>
+        )
+      }
+    ]
+  },
+  {
+    id: "tailscale-vpn",
+    title: "9. Tailscaleによる自宅VPN環境の構築とネットワーク検証", // ← 8から9に変更
+    badge: "学習・技術キャッチアップ事例",
+    badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+    summary: "外出先から自宅LANへ安全にアクセスできる環境の構築と、ネットワークの仕組み（VPN、ルーティング、プロトコル）を学習するため、Tailscaleを用いたVPN環境を構築しました。単なるツールの導入にとどまらず、Subnet Routerの構成やWiresharkを用いたパケット解析など、原因切り分けと仕組みの理解に重点を置いた検証を実施しました。",
+    sections: [
+      { 
+        title: "背景・目的", 
+        fullWidth: true,
+        items: [
+          "外出先から自宅LANへ安全にアクセスできる環境を構築したかった",
+          "単なるリモート接続ではなく、VPNやネットワークの仕組みそのものを学習する目的があった",
+          "将来的にはDockerやRaspberry Piによる自宅サーバー構築も視野に入れている"
+        ] 
+      },
+      { 
+        title: "環境構成", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-2 text-sm text-slate-700">
+            <p><span className="font-bold text-slate-800">ネットワーク:</span> ONU → NTT貸与ルーター → AirMac Extreme（ブリッジモード） → Windows PC</p>
+            <p><span className="font-bold text-slate-800">クライアント:</span> Windows, iPhone</p>
+            <p><span className="font-bold text-slate-800">VPN:</span> Tailscale</p>
+          </div>
+        )
+      },
+      { 
+        title: "実施内容と検証結果", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-bold text-slate-800 mb-1">1. TailDropによるファイル転送</p>
+              <p className="leading-relaxed">Windows⇔iPhone間の双方向転送を確認。途中で保存場所が分からず調査し、WindowsはDownloadsフォルダ、iPhoneは「このiPhone内→Tailscale」に保存される仕様を把握しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">2. Subnet Routerの構築とLANアクセス</p>
+              <p className="leading-relaxed">Windows PCをSubnet Routerとして構成。iPhoneからTailscaleのIP（100.x.x.x）ではなく、自宅LANのローカルIP（192.168.10.x）で共有フォルダにアクセスできることを確認し、「Tailscaleネットワークではなく、自宅LANへ参加している」というルーティングの概念を体感しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">3. DIGA（ブルーレイレコーダー）の宅外視聴検証</p>
+              <p className="leading-relaxed">宅外（4G回線）からライブ放送・録画番組の再生に成功。Subnet Router経由で同一LAN内として認識されたことを実証しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">4. IoT家電（eRemote mini）の通信解析</p>
+              <p className="leading-relaxed">VPN経由での操作可否を検証。ARP、ping、TCP/UDPポートの疎通確認、Wiresharkによるパケット解析を実施。結果としてVPN経由での操作は不可と判明しましたが、「なぜ使えないのか」をネットワーク層から切り分ける手法を実践しました。</p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        items: [
+          "VPNおよびSubnet Routerの仕組みと「LANへ参加する」という概念",
+          "CIDR表記（/24）やルーティングの基礎",
+          "ARP、ICMP、TCP、UDP、ポート番号など、ネットワークプロトコルの役割",
+          "Wiresharkを用いたパケット解析と、原因を推測・特定するための検証手法"
+        ] 
+      },
+      { 
+        title: "今後の展望", 
+        fullWidth: true,
+        items: [
+          "Raspberry Piの導入とDocker環境の構築",
+          "Subnet RouterをWindowsからRaspberry Piへ移行し、24時間稼働のVPN環境を構築",
+          "自宅サーバーの構築と、ネットワーク設計への理解の深化"
+        ] 
+      }
+    ],
+    accordions: [
+      { 
+        title: "技術的な詳細（Subnet Router構築とルーティング）", 
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              PowerShellを用いてWindows PCをSubnet Routerとして構成しました。単にコマンドを打つだけでなく、ネットワークの状態を確認しながら進めました。
+            </p>
+            <ul className="list-disc list-outside ml-4 space-y-2">
+              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">ipconfig</code> や <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale status</code> で現在のネットワーク状態を把握。</li>
+              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale set --advertise-routes=192.168.10.0/24</code> を実行し、自宅LANのサブネットをTailscaleネットワークに広告。この際、<code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">192.168.10.0/24</code> というCIDR表記の意味（サブネットマスク）を理解した上で設定。</li>
+              <li className="pl-1"><code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">tailscale debug prefs</code> で Advertise Routes の状態が正しく反映されているかを確認。</li>
+            </ul>
+          </div>
+        )
+      },
+      { 
+        title: "技術的な詳細（eRemote miniの通信解析プロセス）", 
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <p className="leading-relaxed">
+              IoT家電（eRemote mini）をVPN経由で操作できるか検証するため、以下の手順で通信の切り分けを行いました。「使えなかった」という結果で終わらせず、原因を特定するプロセスを重視しました。
+            </p>
+            <ol className="list-decimal list-outside ml-4 space-y-2">
+              <li className="pl-1"><span className="font-bold text-slate-800">存在確認:</span> MACアドレスを特定し、ARPテーブルと <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">ping</code> でLAN上に存在することを確認。</li>
+              <li className="pl-1"><span className="font-bold text-slate-800">TCPポートの疎通確認:</span> PowerShellの <code className="bg-slate-100 px-1.5 py-0.5 rounded text-pink-600 font-mono text-xs">Test-NetConnection</code> を使用し、HTTP/HTTPS（80/443）や特定ポート（7680等）へのアクセスを検証。HTTP/HTTPSでは応答がなく（Web UIを持たない可能性）、TCP 7680ではRST（リセット）応答が返ることを確認。</li>
+              <li className="pl-1"><span className="font-bold text-slate-800">パケット解析:</span> Wiresharkを導入し、スマホアプリから操作した際のUDP通信をキャプチャして解析。</li>
+            </ol>
+            <div className="bg-slate-50 border border-slate-200 rounded-md p-4 mt-2">
+              <p className="font-bold text-slate-800 mb-1">結論</p>
+              <p className="leading-relaxed text-slate-600">
+                通信方式（ブロードキャストやマルチキャストの利用）やクラウド側の仕様により、単純なL3 VPN（ルーティング）経由での直接操作は困難であると判断しました。
+              </p>
             </div>
           </div>
         )
@@ -1297,7 +1574,7 @@ export default function ProjectsSection() {
             ))}
             <li className="pt-2">
               <a href="#more-projects-accordion" onClick={handleOpenAccordion} className="inline-flex items-center gap-1.5 text-blue-700 hover:text-blue-800 font-bold transition-colors bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-2 rounded-md shadow-sm">
-                <span className="text-blue-600">＋</span> さらに4件の個人開発・技術キャッチアップ事例（クリックで展開して表示）
+                <span className="text-blue-600">＋</span> さらに6件の個人開発・技術キャッチアップ事例（クリックで展開して表示）
               </a>
             </li>
           </ul>
@@ -1310,7 +1587,7 @@ export default function ProjectsSection() {
             <ProjectCard key={p.id} p={p} isPickup={true} indexId="projects-index" />
           ))}
 
-          {/* 残り4件を格納するアコーディオン */}
+          {/* 残り6件を格納するアコーディオン */}
           <div className="pt-4">
             <details 
               id="more-projects-accordion" 
@@ -1320,10 +1597,10 @@ export default function ProjectsSection() {
               <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-6 sm:p-8 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-50 transition-colors duration-200">
                 <div className="flex items-center gap-2 text-lg sm:text-xl font-bold text-blue-700">
                   <span className="inline-block transition-transform group-open:rotate-90">▶</span>
-                  ＋ さらに実績を見る（個人開発・技術キャッチアップ事例：4件）
+                  ＋ さらに6件の実績を見る（個人開発・技術キャッチアップ事例）
                 </div>
-                <p className="mt-2 ml-6 text-sm text-slate-500 font-normal">
-                  収録内容：④ Webサイト情報チェッカー / ⑤ マイクロサービス連携デモ / ⑥ ポートフォリオ刷新 / ⑦ Pythonによる業務準備自動化
+                <p className="mt-2 ml-6 text-sm text-slate-500 font-normal leading-relaxed">
+                  収録内容：④ 予定逆算アプリ(Flutter/iOS) / ⑤ Webサイト情報チェッカー / ⑥ マイクロサービス連携デモ / ⑦ ポートフォリオ刷新 / ⑧ Python業務自動化 / ⑨ Tailscale VPN構築
                 </p>
               </summary>
               <div className="p-6 sm:p-8 border-t border-slate-200 bg-slate-50/50">
