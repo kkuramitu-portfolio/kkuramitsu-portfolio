@@ -765,14 +765,14 @@ End Function`}
     title: "4. 予定逆算アプリ（Flutter/iOS）の開発とハイブリッド環境構築",
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
-    summary: "「15:13のバスに乗るために、いつ何をすべきか」という日常の逆算作業において、メモ帳で上下逆に書き出すアナログな手法に不便さを感じていました。このペインを解消するため、「目標時刻からの自動逆算」「ドラッグ＆ドロップでの工程入れ替え」に特化したMVPを企画しました。Flutter/Dartを用いたiOS向けアプリであり、最大の特徴は「Windowsでの開発」と「10年落ちの古いMacでのiOSビルド」を組み合わせたハイブリッド開発環境を自律的に構築・完遂した点にあります。",
+    summary: "「15:13のバスに乗るために、いつ何をすべきか」という日常の逆算作業は、メモ帳でのアナログ管理では工程の入れ替えや時間変更に弱く、遅延リスクが高いという課題がありました。このペインを解消するため、目標時刻から逆算し、リアルタイムで「今何をすべきか」を可視化するモバイルアプリを企画しました。Flutter / Dartを用いたiOS向けアプリであり、動的逆算ロジックや1分単位のタイマー更新によるライブフィードバック機能を実装。さらに本プロジェクトの裏側では、「Windowsでの開発」と「10年落ちの古いMacでのiOSビルド」を組み合わせたハイブリッド開発環境を自律的に構築・完遂しています。",
     sections: [
       { 
         title: "見せ方のテーマ", 
         fullWidth: true,
         content: (
           <p className="text-sm text-slate-700 leading-relaxed font-bold">
-            日常の不便をシステム化する「課題発見力」と、リソース制約下での「インフラ構築・トラブルシューティング能力」の証明
+            ユーザー視点のUX設計（課題発見力）と、リソース制約下でのインフラ構築・トラブル解決を完遂する「ビジネスエンジニア」としての証明
           </p>
         )
       },
@@ -781,23 +781,23 @@ End Function`}
         fullWidth: true,
         content: (
           <ul className="list-disc list-outside ml-4 text-sm text-slate-700 space-y-2">
-            <li className="pl-1"><span className="font-bold text-slate-800">使用技術:</span> Flutter / Dart / iOS (Xcode) / shared_preferences (ローカル保存) / intl (時間計算) / GitHub</li>
-            <li className="pl-1"><span className="font-bold text-slate-800">開発期間:</span> 約10時間（要件定義・環境構築・実機デプロイを含む ※Macの応答が非常に遅いため）</li>
+            <li className="pl-1"><span className="font-bold text-slate-800">使用技術:</span> Flutter / Dart / iOS (Xcode) / shared_preferences (ローカル保存) / intl (時間計算) / GitHub (マルチアカウント運用)</li>
+            <li className="pl-1"><span className="font-bold text-slate-800">開発期間:</span> 約10時間（要件定義・環境構築・実機デプロイを含む）</li>
           </ul>
         )
       },
       { 
-        title: "苦労した点（技術的課題・調査内容・解決方法）", 
+        title: "苦労した点（技術的課題と解決アプローチ）", 
         fullWidth: true,
         content: (
           <div className="space-y-4 text-sm text-slate-700">
             <div>
-              <p className="font-bold text-slate-800 mb-1">課題1（リソース制約）: 手持ちのMacが10年落ちであり、快適な開発環境として機能しない問題。</p>
-              <p className="leading-relaxed">解決1: Macを「iOSのビルド・書き出し専用機」と割り切り、コーディングはWindowsで行うクロスプラットフォーム開発フローを設計。限られたリソースで最適解を導き出しました。</p>
+              <p className="font-bold text-slate-800 mb-1">課題1（リソース制約と環境依存のトラブル）: 10年落ちのMacという制約、および個人用と企業用のGitHubアカウントが混在する複雑な認証エラー。</p>
+              <p className="leading-relaxed">解決1: Macを「ビルド専用機」と割り切りWindowsで開発するフローを設計。Gitの内部構造（資格情報マネージャーやSSH設定）を理解し、泥臭いトラブルシューティングでマルチアカウント運用を実現しました。</p>
             </div>
             <div>
-              <p className="font-bold text-slate-800 mb-1">課題2（環境依存のトラブル）: 個人用と企業用のGitHubアカウントが混在することによる複雑な認証エラーや、OS固有のセキュリティ制約（Gatekeeper等）。</p>
-              <p className="leading-relaxed">解決2: AIの回答を鵜呑みにせず、Gitの内部構造（資格情報マネージャー）やOSの仕様を根本から調査・理解することで、泥臭いトラブルシューティングを自力で突破しました。</p>
+              <p className="font-bold text-slate-800 mb-1">課題2（エッジケースのバグとUXの追求）: 「日付が変わる深夜の予定」で計算が狂う仕様バグの発生と、時間が足りない時のユーザー行動の定義。</p>
+              <p className="leading-relaxed">解決2: 日付の正規化ロジックを導入してバグを解決。また、単なる完了チェックではなく、不足時間が即座に再計算される「スキップ（諦める）」機能を実装し、単なるタスク管理ではなく「意思決定支援ツール」へと昇華させました。</p>
             </div>
           </div>
         )
@@ -809,7 +809,7 @@ End Function`}
           <div className="space-y-4 text-sm text-slate-700">
             <div>
               <p className="font-bold text-slate-800 mb-1">AI活用（どこで利用したか）</p>
-              <p className="leading-relaxed">未経験のFlutter/DartにおけるUI構築（ドラッグハンドルの実装など）や、時間計算ロジックのベースコード生成にAIを活用し、コーディング時間を大幅に圧縮しました。</p>
+              <p className="leading-relaxed">コーディングの8割以上をAI（Gemini/Claude等）との対話で完遂。自身は「データ構造の設計」「エッジケースの特定」「UX上の優先順位付け」というディレクション業務に特化しました。</p>
             </div>
             <div>
               <p className="font-bold text-slate-800 mb-1">自分で行った作業</p>
@@ -823,7 +823,7 @@ End Function`}
         fullWidth: true,
         content: (
           <p className="text-sm text-slate-700 leading-relaxed">
-            AIはコードを書いてくれますが、「複雑なインフラ環境の構築」や「環境依存の認証トラブル」を解決し、最後までプロジェクトを完遂させるのは人間の泥臭い執念と調査力であると再認識しました。この「制約の中で最適解を見つけ、何が何でも完遂する力」は、社内SEとしての業務に直結すると確信しています。
+            AIはコードを高速で書いてくれますが、「複雑なインフラ環境の構築」や「ユーザーのリアルな行動（スキップ等）を想定した仕様策定」を行い、最後までプロジェクトを完遂させるのは人間の泥臭い執念とディレクション力であると再認識しました。この「制約の中で最適解を見つけ、何が何でも完遂する力」は、社内SEとしての業務に直結すると確信しています。
           </p>
         )
       }
