@@ -65,7 +65,7 @@ export default function ResumePdfPage() {
           </section>
 
           {/* 技術スタックとプロジェクト一覧を2カラムで配置 */}
-          <section className="flex-grow flex gap-6">
+          <section className="grow flex gap-6">
             {/* 左カラム：技術スタック */}
             <div className="flex-1">
               <h3 className="text-base font-bold text-slate-800 mb-3 border-l-4 border-slate-600 pl-3">
@@ -98,11 +98,12 @@ export default function ResumePdfPage() {
                 <li className="flex gap-1.5"><span className="text-blue-600 font-bold">2.</span> バックアップ運用改善 <span className="text-[10px] text-slate-400">(実務)</span></li>
                 <li className="flex gap-1.5"><span className="text-blue-600 font-bold">3.</span> メール事故防止チェックツール <span className="text-[10px] text-slate-400">(実務)</span></li>
                 <li className="flex gap-1.5"><span className="text-slate-400 font-bold">4.</span> 予定逆算アプリ(Flutter/iOS) <span className="text-[10px] text-slate-400">(個人)</span></li>
-                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">5.</span> Webサイト情報チェッカー <span className="text-[10px] text-slate-400">(個人)</span></li>
-                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">6.</span> マイクロサービス連携デモ <span className="text-[10px] text-slate-400">(個人)</span></li>
-                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">7.</span> ポートフォリオ刷新 <span className="text-[10px] text-slate-400">(学習)</span></li>
-                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">8.</span> Python業務準備自動化 <span className="text-[10px] text-slate-400">(個人)</span></li>
-                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">9.</span> Tailscale VPN構築・検証 <span className="text-[10px] text-slate-400">(学習)</span></li>
+                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">5.</span> 忘れ物チェッカー Pro(Flutter/iOS) <span className="text-[10px] text-slate-400">(個人)</span></li>
+                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">6.</span> Webサイト情報チェッカー <span className="text-[10px] text-slate-400">(個人)</span></li>
+                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">7.</span> マイクロサービス連携デモ <span className="text-[10px] text-slate-400">(個人)</span></li>
+                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">8.</span> ポートフォリオ刷新 <span className="text-[10px] text-slate-400">(学習)</span></li>
+                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">9.</span> Python業務準備自動化 <span className="text-[10px] text-slate-400">(個人)</span></li>
+                <li className="flex gap-1.5"><span className="text-slate-400 font-bold">10.</span> Tailscale VPN構築・検証 <span className="text-[10px] text-slate-400">(学習)</span></li>
               </ul>
             </div>
           </section>
@@ -121,7 +122,7 @@ export default function ResumePdfPage() {
               </p>
             </div>
             {/* QRコードの表示 */}
-            <div className="w-20 h-20 bg-white border-2 border-slate-200 flex items-center justify-center flex-shrink-0 p-1">
+            <div className="w-20 h-20 bg-white border-2 border-slate-200 flex items-center justify-center shrink-0 p-1">
               <img 
                 src="/qr-code.png" 
                 alt="Portfolio QR Code" 

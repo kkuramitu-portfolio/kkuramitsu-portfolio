@@ -831,8 +831,78 @@ End Function`}
     accordions: []
   },
   {
+    id: "forget-me-not-checker",
+    title: "5. 忘れ物チェッカー Pro（Flutter/iOS）",
+    badge: "個人開発",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    summary: "出発前の忘れ物確認において、物理的なラミネートリストを運用していましたが、項目の追加・削除が困難で「今日はいらない項目」を柔軟にスキップできない不便さがありました。このアナログ運用の限界を突破するため、状況（仕事・休日等）に合わせてリストを切り替え、一項目ずつ確実に確認していくアプリを企画しました。テンプレートごとのテーマカラー連動や、一つずつ項目を判断する「フォーカス・チェックUI」を実装。さらに、iOSショートカットとの連携機能や、入力履歴のサジェスト機能も備えています。",
+    sections: [
+      { 
+        title: "見せ方のテーマ", 
+        fullWidth: true,
+        content: (
+          <p className="text-sm text-slate-700 leading-relaxed font-bold">
+            物理的運用の限界を突破する「システム化の提案力」と、認知負荷を下げる「UX設計力」の証明
+          </p>
+        )
+      },
+      { 
+        title: "使用技術・開発期間", 
+        fullWidth: true,
+        content: (
+          <ul className="list-disc list-outside ml-4 text-sm text-slate-700 space-y-2">
+            <li className="pl-1"><span className="font-bold text-slate-800">使用技術:</span> Flutter / Dart / iOS (Xcode) / shared_preferences (データ永続化) / url_launcher (外部連携)</li>
+            <li className="pl-1"><span className="font-bold text-slate-800">開発期間:</span> 約2時間（要件定義・UI設計・実機デプロイを含む）</li>
+          </ul>
+        )
+      },
+      { 
+        title: "苦労した点（技術的課題と解決アプローチ）", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-bold text-slate-800 mb-1">課題1（UXの追求と認知負荷の低減）: 全項目を羅列すると「次は何を確認するか」探す手間が生じる問題。</p>
+              <p className="leading-relaxed">解決1: 項目が自動でせり上がってくる「授与式（フォーカス）型」UIを考案。また「後で」を選択した項目をリスト最後尾に回すキュー構造を実装し、ユーザーが目の前の判断に集中できるUXを実現しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">課題2（外部連携の入力コスト）: iOSショートカット連携において、複雑なURLスキームの入力がユーザーの負担になる問題。</p>
+              <p className="leading-relaxed">解決2: 過去に使用したショートカット名の履歴表示・サジェスト機能を搭載し、入力コストを最小化するUIを構築しました。</p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "AI活用と自分で行った作業", 
+        fullWidth: true,
+        content: (
+          <div className="space-y-4 text-sm text-slate-700">
+            <div>
+              <p className="font-bold text-slate-800 mb-1">AI活用（どこで利用したか）</p>
+              <p className="leading-relaxed">コーディングの大部分をAIと対話しながら進行。自身は「物理リストのペイン分析」「キュー構造のデータ設計」「ユーザーの認知負荷を下げるUI/UXの要件定義」に特化しました。</p>
+            </div>
+            <div>
+              <p className="font-bold text-slate-800 mb-1">自分で行った作業</p>
+              <p className="leading-relaxed">アナログ運用の課題抽出、MVPの策定、データ永続化（JSON）の設計、iOSショートカット連携の検証、および「授与式UI」のディレクション。</p>
+            </div>
+          </div>
+        )
+      },
+      { 
+        title: "学んだこと", 
+        fullWidth: true,
+        content: (
+          <p className="text-sm text-slate-700 leading-relaxed">
+            システム化の真の価値は「単なるデジタル化」ではなく、「ユーザーの認知負荷を下げ、行動を最適化すること」にあると再認識しました。現場のアナログな運用課題を深く観察し、最適なUXをもってシステムに落とし込む力は、DX推進において極めて重要だと確信しています。
+          </p>
+        )
+      }
+    ],
+    accordions: []
+  },
+  {
     id: "web-scraper",
-    title: "5. Webサイト情報チェッカー", // ← 4から5に変更
+    title: "6. Webサイト情報チェッカー", // ← 5から6に変更
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "Pythonで一般的に行われるスクレイピング処理を、あえてNext.jsのAPI RoutesとNode.js環境で再現したシステムです。指定したWebサイトの情報をサーバーサイドで取得し、タイトルや概要を抽出します。",
@@ -848,7 +918,7 @@ End Function`}
             </ul>
             <div className="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-blue-800 text-xs font-bold flex items-center gap-2">
               <span>💡</span>
-              <p>※Pythonを用いた実務自動化の実績については「8. Pythonによる業務準備自動化」をご参照ください。</p>
+              <p>※Pythonを用いた実務自動化の実績については「9. Pythonによる業務準備自動化」をご参照ください。</p>
             </div>
           </div>
         )
@@ -906,7 +976,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "microservices",
-    title: "6. マイクロサービス連携デモ", // ← 5から6に変更
+    title: "7. マイクロサービス連携デモ", // ← 6から7に変更
     badge: "個人開発",
     badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
     summary: "GoとC#による複数サービス間通信を検証するための学習プロジェクト。",
@@ -957,7 +1027,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "portfolio-renewal",
-    title: "7. ポートフォリオ刷新プロジェクト", // ← 6から7に変更
+    title: "8. ポートフォリオ刷新プロジェクト", // ← 7から8に変更
     badge: "学習・技術キャッチアップ事例",
     badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
     summary: "当初はHTML/CSS/JavaScriptでポートフォリオサイトを開発していましたが、開発途中でNext.jsを知り、保守性や拡張性を考慮してNext.jsへ移行しました。技術習得とサイト開発を並行しながら構築を進め、現在も継続的に機能追加・改善を行っています。",
@@ -1185,7 +1255,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "python-automation",
-    title: "8. Pythonによる業務準備自動化", // ← 7から8に変更
+    title: "9. Pythonによる業務準備自動化", // ← 8から9に変更
     badge: "個人生産性向上事例",
     badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
     summary: "日々の業務開始時に行っていた複数システムへのログインや打刻、スケジュール確認などの定型作業を効率化するため、Pythonを用いた業務準備自動化ツールを開発しました。業務開始前に必要な一連の操作をワンクリックで実行できるようにし、毎日の定型作業を削減しました。",
@@ -1291,7 +1361,7 @@ return NextResponse.json({ title, description });`}
   },
   {
     id: "tailscale-vpn",
-    title: "9. Tailscaleによる自宅VPN環境の構築とネットワーク検証", // ← 8から9に変更
+    title: "10. Tailscaleによる自宅VPN環境の構築とネットワーク検証", // ← 9から10に変更
     badge: "学習・技術キャッチアップ事例",
     badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
     summary: "外出先から自宅LANへ安全にアクセスできる環境の構築と、ネットワークの仕組み（VPN、ルーティング、プロトコル）を学習するため、Tailscaleを用いたVPN環境を構築しました。単なるツールの導入にとどまらず、Subnet Routerの構成やWiresharkを用いたパケット解析など、原因切り分けと仕組みの理解に重点を置いた検証を実施しました。",
@@ -1574,7 +1644,7 @@ export default function ProjectsSection() {
             ))}
             <li className="pt-2">
               <a href="#more-projects-accordion" onClick={handleOpenAccordion} className="inline-flex items-center gap-1.5 text-blue-700 hover:text-blue-800 font-bold transition-colors bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-2 rounded-md shadow-sm">
-                <span className="text-blue-600">＋</span> さらに6件の個人開発・技術キャッチアップ事例（クリックで展開して表示）
+                <span className="text-blue-600">＋</span> さらに7件の個人開発・技術キャッチアップ事例（クリックで展開して表示）
               </a>
             </li>
           </ul>
@@ -1587,7 +1657,7 @@ export default function ProjectsSection() {
             <ProjectCard key={p.id} p={p} isPickup={true} indexId="projects-index" />
           ))}
 
-          {/* 残り6件を格納するアコーディオン */}
+          {/* 残り7件を格納するアコーディオン */}
           <div className="pt-4">
             <details 
               id="more-projects-accordion" 
@@ -1597,15 +1667,15 @@ export default function ProjectsSection() {
               <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-6 sm:p-8 select-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-slate-50 transition-colors duration-200">
                 <div className="flex items-center gap-2 text-lg sm:text-xl font-bold text-blue-700">
                   <span className="inline-block transition-transform group-open:rotate-90">▶</span>
-                  ＋ さらに6件の実績を見る（個人開発・技術キャッチアップ事例）
+                  ＋ さらに7件の実績を見る（個人開発・技術キャッチアップ事例）
                 </div>
                 <p className="mt-2 ml-6 text-sm text-slate-500 font-normal leading-relaxed">
-                  収録内容：④ 予定逆算アプリ(Flutter/iOS) / ⑤ Webサイト情報チェッカー / ⑥ マイクロサービス連携デモ / ⑦ ポートフォリオ刷新 / ⑧ Python業務自動化 / ⑨ Tailscale VPN構築
+                  収録内容：④ 予定逆算アプリ / ⑤ 忘れ物チェッカー Pro / ⑥ Webサイト情報チェッカー / ⑦ マイクロサービス連携デモ / ⑧ ポートフォリオ刷新 / ⑨ Python業務自動化 / ⑩ Tailscale VPN構築
                 </p>
               </summary>
               <div className="p-6 sm:p-8 border-t border-slate-200 bg-slate-50/50">
                 
-                {/* ▼▼▼ 追加：アコーディオン内のミニ目次 ▼▼▼ */}
+                {/* アコーディオン内のミニ目次 */}
                 <div id="accordion-index" className="scroll-mt-24 mb-8 bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
                   <h4 className="text-slate-800 font-bold text-sm mb-3 border-b border-slate-100 pb-2 flex items-center gap-2">
                     <span>📂</span> 個人開発・技術キャッチアップ事例 一覧
@@ -1621,7 +1691,6 @@ export default function ProjectsSection() {
                     ))}
                   </ul>
                 </div>
-                {/* ▲▲▲ 追加ここまで ▲▲▲ */}
 
                 <div className="flex flex-col gap-10">
                   {/* アコーディオン内のプロジェクトレンダリング */}
