@@ -328,7 +328,7 @@ export default function HomeSection() {
           </div>
           
           <a
-            href="https://github.com/yayokichi/kuramitsu-portfolio" 
+            href="https://github.com/kkuramitu-portfolio/kkuramitsu-portfolio" 
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 flex items-center gap-2 shadow-sm"
@@ -384,7 +384,7 @@ export default function HomeSection() {
           {/* ▲▲▲ 修正ここまで ▲▲▲ */}
 
           {/* チャットウィンドウ */}
-          <div className="bg-slate-50 border border-slate-200 rounded-lg shadow-sm overflow-hidden flex flex-col h-[400px]">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg shadow-sm overflow-hidden flex flex-col h-100">
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg, idx) => {
                 const isAlert = msg.content.includes('🚨 **【セキュリティ・アラート検知】**');
