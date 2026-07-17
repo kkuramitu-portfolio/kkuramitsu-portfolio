@@ -11,7 +11,7 @@ export default function ResumePdfPage() {
       `}} />
 
       <div className="min-h-screen bg-gray-200 flex justify-center py-10 print:py-0 print:bg-white">
-        <div className="bg-white w-[210mm] h-[297mm] p-12 shadow-2xl print:shadow-none print:w-[210mm] print:h-[297mm] overflow-hidden flex flex-col">
+        <div className="bg-white w-[210mm] h-[297mm] p-4 shadow-2xl print:shadow-none print:w-[210mm] print:h-[297mm] overflow-hidden flex flex-col">
           
           {/* ヘッダー部分 */}
           <header className="border-b-2 border-slate-800 pb-5 mb-6">
